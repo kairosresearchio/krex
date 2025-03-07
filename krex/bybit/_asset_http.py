@@ -191,28 +191,6 @@ class AssetHTTP(_V5HTTPManager):
             auth=True,
         )
 
-    def enable_universal_transfer_for_sub_uid(self, **kwargs):
-        """Transfer between sub-sub or main-sub
-
-        Required args:
-            subMemberIds (array): This list has a single item. Separate multiple UIDs by comma, e.g., "uid1,uid2,uid3"
-
-        Returns:
-            Request results as dictionary.
-
-        Additional information:
-            https://bybit-exchange.github.io/docs/v5/asset/enable-unitransfer-subuid
-        """
-        self.logger.warning(
-            "enable_universal_transfer_for_sub_uid() is depreciated. You no longer need to configure transferable sub UIDs. Now, all sub UIDs are automatically enabled for universal transfer."
-        )
-        return self._submit_request(
-            method="POST",
-            path=f"{self.endpoint}{Asset.ENABLE_UT_FOR_SUB_UID}",
-            query=kwargs,
-            auth=True,
-        )
-
     def create_universal_transfer(self, **kwargs):
         """Transfer between sub-sub or main-sub. Please make sure you have enabled universal transfer on your sub UID in advance.
 

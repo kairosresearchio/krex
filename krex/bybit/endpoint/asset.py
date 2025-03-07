@@ -12,7 +12,6 @@ class Asset(str, Enum):
     CREATE_INTERNAL_TRANSFER = "/v5/asset/transfer/inter-transfer"
     GET_INTERNAL_TRANSFER_RECORDS = "/v5/asset/transfer/query-inter-transfer-list"
     GET_SUB_UID = "/v5/asset/transfer/query-sub-member-list"
-    ENABLE_UT_FOR_SUB_UID = "/v5/asset/transfer/save-transfer-sub-member"
     CREATE_UNIVERSAL_TRANSFER = "/v5/asset/transfer/universal-transfer"
     GET_UNIVERSAL_TRANSFER_RECORDS = "/v5/asset/transfer/query-universal-transfer-list"
     GET_ALLOWED_DEPOSIT_COIN_INFO = "/v5/asset/deposit/query-allowed-list"
