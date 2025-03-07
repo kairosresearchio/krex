@@ -1,0 +1,33 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=75.8.2"]
+
+[project]
+authors = [
+  {name = "Kairos Research", email = "labs@kairosresearch.io"},
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "pycryptodome>=3.21.0",
+  "requests>=2.32.3",
+]
+description = "A lightweight Python package providing minimal trading functions for selected exchanges, organized by exchange-specific modules."
+license = {text = "MIT"}
+name = "krex"
+readme = "README.md"
+requires-python = ">=3.11"
+version = "0.1.0"
+
+[project.urls]
+Repository = "https://github.com/kairos-research-ltd/krex"
+
+# uv sync
+[dependency-groups]
+dev = [
+  "ruff>=0.9.9",
+  "pre-commit>=4.1.0",
+]
