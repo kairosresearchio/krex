@@ -5,3 +5,9 @@ A lightweight Python package providing minimal trading functions for selected ex
 ## Contributing
 
 Check out the [Contributing Guide](.github/CONTRIBUTING.md).
+
+## References
+
+| Source        | Link                                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------------------- |
+| bybit         | [View File](https://github.com/bybit-exchange/pybit)                                                          |
