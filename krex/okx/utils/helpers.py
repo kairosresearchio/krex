@@ -59,18 +59,3 @@ def get_timestamp():
     now = datetime.now(timezone.utc)
     t = now.isoformat(timespec="milliseconds").replace("+00:00", "Z")
     return t
-
-
-def signature(timestamp, method, request_path, body, secret_key):
-    if str(body) == "{}" or str(body) == "None":
-        body = ""
-    message = str(timestamp) + str.upper(method) + request_path + str(body)
-
-    mac = hmac.new(
-        bytes(secret_key, encoding="utf8"),
-        bytes(message, encoding="utf-8"),
-        digestmod="sha256",
-    )
-    d = mac.digest()
-
-    return base64.b64encode(d)
