@@ -8,6 +8,7 @@ Check out the [Contributing Guide](.github/CONTRIBUTING.md).
 
 ## References
 
-| Source        | Link                                                                                                          |
-| ------------- | ------------------------------------------------------------------------------------------------------------- |
-| bybit         | [View File](https://github.com/bybit-exchange/pybit)                                                          |
+| Exchange      | Repo Link                                                                                                          |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ |
+| bybit         | [pybit](https://github.com/bybit-exchange/pybit)                                                                   |
+| okx           | [python-okx](https://github.com/okxapi/python-okx)、[python-okx-ext](https://github.com/parker1019/python-okx-ext) |
