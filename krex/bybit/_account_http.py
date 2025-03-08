@@ -1,8 +1,8 @@
-from ._http_manager import _V5HTTPManager
+from ._http_manager import HTTPManager
 from .endpoint.account import Account
 
 
-class AccountHTTP(_V5HTTPManager):
+class AccountHTTP(HTTPManager):
     def get_wallet_balance(self, **kwargs):
         """Obtain wallet balance, query asset information of each currency, and account risk rate information under unified margin mode.
         By default, currency information with assets or liabilities of 0 is not returned.
@@ -18,7 +18,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/wallet-balance
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_WALLET_BALANCE}",
             query=kwargs,
@@ -37,7 +37,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/unified-trans-amnt
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_TRANSFERABLE_AMOUNT}",
             query=kwargs,
@@ -53,7 +53,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/upgrade-unified-account
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Account.UPGRADE_TO_UNIFIED_ACCOUNT}",
             query=kwargs,
@@ -69,7 +69,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/borrow-history
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_BORROW_HISTORY}",
             query=kwargs,
@@ -85,7 +85,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/repay-liability
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Account.REPAY_LIABILITY}",
             query=kwargs,
@@ -101,7 +101,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/collateral-info
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_COLLATERAL_INFO}",
             query=kwargs,
@@ -121,7 +121,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/set-collateral
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Account.SET_COLLATERAL_COIN}",
             query=kwargs,
@@ -142,7 +142,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/batch-set-collateral
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Account.BATCH_SET_COLLATERAL_COIN}",
             query=kwargs,
@@ -158,7 +158,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/coin-greeks
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_COIN_GREEKS}",
             query=kwargs,
@@ -174,7 +174,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/fee-rate
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_FEE_RATE}",
             query=kwargs,
@@ -190,7 +190,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/account-info
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_ACCOUNT_INFO}",
             query=kwargs,
@@ -206,7 +206,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/transaction-log
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_TRANSACTION_LOG}",
             query=kwargs,
@@ -225,7 +225,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/set-margin-mode
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Account.SET_MARGIN_MODE}",
             query=kwargs,
@@ -254,7 +254,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/set-mmp
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Account.SET_MMP}",
             query=kwargs,
@@ -273,7 +273,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/reset-mmp
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Account.RESET_MMP}",
             query=kwargs,
@@ -292,7 +292,7 @@ class AccountHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/account/get-mmp-state
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Account.GET_MMP_STATE}",
             query=kwargs,

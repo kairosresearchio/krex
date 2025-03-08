@@ -24,3 +24,8 @@
    ```sh
    uv run ooo.py
    ```
+
+6. Run pre commit checks on all files:
+   ```sh
+   pre-commit run --all-files
+   ```

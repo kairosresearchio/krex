@@ -41,9 +41,7 @@ def generate_signature(use_rsa_authentication, secret, param_str):
 
     def generate_rsa():
         hash = SHA256.new(param_str.encode("utf-8"))
-        encoded_signature = base64.b64encode(
-            PKCS1_v1_5.new(RSA.importKey(secret)).sign(hash)
-        )
+        encoded_signature = base64.b64encode(PKCS1_v1_5.new(RSA.importKey(secret)).sign(hash))
         return encoded_signature.decode()
 
     if not use_rsa_authentication:
@@ -53,7 +51,7 @@ def generate_signature(use_rsa_authentication, secret, param_str):
 
 
 @dataclass
-class _V5HTTPManager:
+class HTTPManager:
     testnet: bool = field(default=False)
     domain: str = field(default=DOMAIN_MAIN)
     tld: str = field(default=TLD_MAIN)
@@ -144,13 +142,7 @@ class _V5HTTPManager:
                         parameters[key] = int(value)
 
         if method == "GET":
-            payload = "&".join(
-                [
-                    str(k) + "=" + str(v)
-                    for k, v in sorted(parameters.items())
-                    if v is not None
-                ]
-            )
+            payload = "&".join([str(k) + "=" + str(v) for k, v in sorted(parameters.items()) if v is not None])
             return payload
         else:
             cast_values()
@@ -177,7 +169,7 @@ class _V5HTTPManager:
                 return True
         return True
 
-    def _submit_request(self, method=None, path=None, query=None, auth=False):
+    def _request(self, method=None, path=None, query=None, auth=False):
         """
         Submits the request to the API.
 
@@ -246,31 +238,18 @@ class _V5HTTPManager:
 
             if method == "GET":
                 if req_params:
-                    r = self.client.prepare_request(
-                        requests.Request(
-                            method, path + f"?{req_params}", headers=headers
-                        )
-                    )
+                    r = self.client.prepare_request(requests.Request(method, path + f"?{req_params}", headers=headers))
                 else:
-                    r = self.client.prepare_request(
-                        requests.Request(method, path, headers=headers)
-                    )
+                    r = self.client.prepare_request(requests.Request(method, path, headers=headers))
             else:
-                r = self.client.prepare_request(
-                    requests.Request(method, path, data=req_params, headers=headers)
-                )
+                r = self.client.prepare_request(requests.Request(method, path, data=req_params, headers=headers))
 
             # Log the request.
             if self.log_requests:
                 if req_params:
-                    self.logger.debug(
-                        f"Request -> {method} {path}. Body: {req_params}. "
-                        f"Headers: {r.headers}"
-                    )
+                    self.logger.debug(f"Request -> {method} {path}. Body: {req_params}. " f"Headers: {r.headers}")
                 else:
-                    self.logger.debug(
-                        f"Request -> {method} {path}. Headers: {r.headers}"
-                    )
+                    self.logger.debug(f"Request -> {method} {path}. Headers: {r.headers}")
 
             # Attempt the request.
             try:
@@ -346,20 +325,13 @@ class _V5HTTPManager:
                     # X-Bapi-Limit-Reset-Timestamp and retry.
                     elif s_json[ret_code] == 10006:
                         self.logger.error(
-                            f"{error_msg}. Hit the API rate limit. "
-                            f"Sleeping, then trying again. Request: {path}"
+                            f"{error_msg}. Hit the API rate limit. " f"Sleeping, then trying again. Request: {path}"
                         )
 
                         # Calculate how long we need to wait in milliseconds.
-                        limit_reset_time = int(
-                            s.headers["X-Bapi-Limit-Reset-Timestamp"]
-                        )
-                        limit_reset_str = dt.fromtimestamp(
-                            limit_reset_time / 10**3
-                        ).strftime("%H:%M:%S.%f")[:-3]
-                        delay_time = (
-                            int(limit_reset_time) - helpers.generate_timestamp()
-                        ) / 10**3
+                        limit_reset_time = int(s.headers["X-Bapi-Limit-Reset-Timestamp"])
+                        limit_reset_str = dt.fromtimestamp(limit_reset_time / 10**3).strftime("%H:%M:%S.%f")[:-3]
+                        delay_time = (int(limit_reset_time) - helpers.generate_timestamp()) / 10**3
                         error_msg = (
                             f"API rate limit will reset at {limit_reset_str}. "
                             f"Sleeping for {int(delay_time * 10**3)} milliseconds"

@@ -1,8 +1,8 @@
-from ._http_manager import _V5HTTPManager
+from ._http_manager import HTTPManager
 from .endpoint.position import Position
 
 
-class PositionHTTP(_V5HTTPManager):
+class PositionHTTP(HTTPManager):
     def get_positions(self, **kwargs):
         """Query real-time position data, such as position size, cumulative realizedPNL.
 
@@ -19,7 +19,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Position.GET_POSITIONS}",
             query=kwargs,
@@ -47,7 +47,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position/leverage
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Position.SET_LEVERAGE}",
             query=kwargs,
@@ -72,7 +72,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position/tpsl-mode
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Position.SET_TP_SL_MODE}",
             query=kwargs,
@@ -96,7 +96,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position/position-mode
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Position.SWITCH_POSITION_MODE}",
             query=kwargs,
@@ -124,7 +124,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position/set-risk-limit
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Position.SET_RISK_LIMIT}",
             query=kwargs,
@@ -148,7 +148,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position/trading-stop
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Position.SET_TRADING_STOP}",
             query=kwargs,
@@ -169,7 +169,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position/auto-add-margin
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Position.SET_AUTO_ADD_MARGIN}",
             query=kwargs,
@@ -190,7 +190,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position/manual-add-margin
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Position.ADD_MARGIN}",
             query=kwargs,
@@ -213,7 +213,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/execution
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Position.GET_EXECUTIONS}",
             query=kwargs,
@@ -236,7 +236,7 @@ class PositionHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/position/close-pnl
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Position.GET_CLOSED_PNL}",
             query=kwargs,

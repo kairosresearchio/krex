@@ -17,8 +17,7 @@ class FailedRequestError(Exception):
         self.time = time
         self.resp_headers = resp_headers
         super().__init__(
-            f"{message.capitalize()} (ErrCode: {status_code}) (ErrTime: {time})"
-            f".\nRequest → {request}."
+            f"{message.capitalize()} (ErrCode: {status_code}) (ErrTime: {time})" f".\nRequest → {request}."
         )
 
 
@@ -40,7 +39,4 @@ class InvalidRequestError(Exception):
         self.status_code = status_code
         self.time = time
         self.resp_headers = resp_headers
-        super().__init__(
-            f"{message} (ErrCode: {status_code}) (ErrTime: {time})"
-            f".\nRequest → {request}."
-        )
+        super().__init__(f"{message} (ErrCode: {status_code}) (ErrTime: {time})" f".\nRequest → {request}.")

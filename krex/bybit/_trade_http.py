@@ -1,8 +1,8 @@
-from ._http_manager import _V5HTTPManager
+from ._http_manager import HTTPManager
 from .endpoint.trade import Trade
 
 
-class TradeHTTP(_V5HTTPManager):
+class TradeHTTP(HTTPManager):
     def place_order(self, **kwargs):
         """This method supports to create the order for spot, spot margin, linear perpetual, inverse futures and options.
 
@@ -18,7 +18,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/create-order
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Trade.PLACE_ORDER}",
             query=kwargs,
@@ -39,7 +39,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/amend-order
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Trade.AMEND_ORDER}",
             query=kwargs,
@@ -62,7 +62,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/cancel-order
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Trade.CANCEL_ORDER}",
             query=kwargs,
@@ -81,7 +81,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/open-order
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Trade.GET_OPEN_ORDERS}",
             query=kwargs,
@@ -104,7 +104,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/cancel-all
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Trade.CANCEL_ALL_ORDERS}",
             query=kwargs,
@@ -128,7 +128,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/order-list
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Trade.GET_ORDER_HISTORY}",
             query=kwargs,
@@ -152,7 +152,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/batch-place
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Trade.BATCH_PLACE_ORDER}",
             query=kwargs,
@@ -175,7 +175,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/batch-amend
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Trade.BATCH_AMEND_ORDER}",
             query=kwargs,
@@ -196,7 +196,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/batch-cancel
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Trade.BATCH_CANCEL_ORDER}",
             query=kwargs,
@@ -217,7 +217,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Trade.GET_BORROW_QUOTA}",
             query=kwargs,
@@ -236,7 +236,7 @@ class TradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/order/dcp
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Trade.SET_DCP}",
             query=kwargs,

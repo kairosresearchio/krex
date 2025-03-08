@@ -1,8 +1,8 @@
-from ._http_manager import _V5HTTPManager
+from ._http_manager import HTTPManager
 from .endpoint.asset import Asset
 
 
-class AssetHTTP(_V5HTTPManager):
+class AssetHTTP(HTTPManager):
     def get_coin_exchange_records(self, **kwargs):
         """Query the coin exchange records.
 
@@ -12,7 +12,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/exchange
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_COIN_EXCHANGE_RECORDS}",
             query=kwargs,
@@ -31,7 +31,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/option-delivery
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_OPTION_DELIVERY_RECORD}",
             query=kwargs,
@@ -50,7 +50,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/settlement
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_USDC_CONTRACT_SETTLEMENT}",
             query=kwargs,
@@ -69,7 +69,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/asset-info
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_SPOT_ASSET_INFO}",
             query=kwargs,
@@ -89,7 +89,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/all-balance
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_ALL_COINS_BALANCE}",
             query=kwargs,
@@ -109,7 +109,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/account-coin-balance
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_SINGLE_COIN_BALANCE}",
             query=kwargs,
@@ -129,7 +129,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/transferable-coin
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_TRANSFERABLE_COIN}",
             query=kwargs,
@@ -152,7 +152,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/create-inter-transfer
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Asset.CREATE_INTERNAL_TRANSFER}",
             query=kwargs,
@@ -168,7 +168,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/inter-transfer-list
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_INTERNAL_TRANSFER_RECORDS}",
             query=kwargs,
@@ -184,7 +184,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/sub-uid-list
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_SUB_UID}",
             query=kwargs,
@@ -209,7 +209,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/unitransfer
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Asset.CREATE_UNIVERSAL_TRANSFER}",
             query=kwargs,
@@ -225,7 +225,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/unitransfer-list
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_UNIVERSAL_TRANSFER_RECORDS}",
             query=kwargs,
@@ -241,7 +241,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/deposit-coin-spec
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_ALLOWED_DEPOSIT_COIN_INFO}",
             query=kwargs,
@@ -260,7 +260,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/set-deposit-acct
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Asset.SET_DEPOSIT_ACCOUNT}",
             query=kwargs,
@@ -276,7 +276,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/deposit-record
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_DEPOSIT_RECORDS}",
             query=kwargs,
@@ -295,7 +295,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/sub-deposit-record
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_SUB_ACCOUNT_DEPOSIT_RECORDS}",
             query=kwargs,
@@ -311,7 +311,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/internal-deposit-record
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_INTERNAL_DEPOSIT_RECORDS}",
             query=kwargs,
@@ -330,7 +330,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/master-deposit-addr
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_MASTER_DEPOSIT_ADDRESS}",
             query=kwargs,
@@ -350,7 +350,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/sub-deposit-addr
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_SUB_DEPOSIT_ADDRESS}",
             query=kwargs,
@@ -366,7 +366,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/coin-info
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_COIN_INFO}",
             query=kwargs,
@@ -382,7 +382,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/withdraw-record
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_WITHDRAWAL_RECORDS}",
             query=kwargs,
@@ -401,7 +401,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/delay-amount
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{Asset.GET_WITHDRAWABLE_AMOUNT}",
             query=kwargs,
@@ -425,7 +425,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/withdraw
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Asset.WITHDRAW}",
             query=kwargs,
@@ -444,7 +444,7 @@ class AssetHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/asset/cancel-withdraw
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{Asset.CANCEL_WITHDRAWAL}",
             query=kwargs,

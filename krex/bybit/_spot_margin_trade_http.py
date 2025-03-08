@@ -1,8 +1,8 @@
-from ._http_manager import _V5HTTPManager
+from ._http_manager import HTTPManager
 from .endpoint.spot_margin_trade import SpotMarginTrade
 
 
-class SpotMarginTradeHTTP(_V5HTTPManager):
+class SpotMarginTradeHTTP(HTTPManager):
     def spot_margin_trade_get_vip_margin_data(self, **kwargs):
         """
         Returns:
@@ -11,7 +11,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-uta/vip-margin
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.VIP_MARGIN_DATA}",
             query=kwargs,
@@ -29,7 +29,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-uta/switch-mode
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{SpotMarginTrade.TOGGLE_MARGIN_TRADE}",
             query=kwargs,
@@ -48,7 +48,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-leverage
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{SpotMarginTrade.SET_LEVERAGE}",
             query=kwargs,
@@ -63,7 +63,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-uta/status
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.STATUS_AND_LEVERAGE}",
             auth=True,
@@ -81,7 +81,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-uta/historical-interest
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.HISTORICAL_INTEREST}",
             query=kwargs,
@@ -96,7 +96,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/vip-margin
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_GET_MARGIN_COIN_INFO}",
             query=kwargs,
@@ -114,7 +114,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/margin-data
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_GET_MARGIN_COIN_INFO}",
             query=kwargs,
@@ -129,7 +129,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/borrowable-data
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_GET_BORROWABLE_COIN_INFO}",
             query=kwargs,
@@ -147,7 +147,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/interest-quota
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_GET_INTEREST_QUOTA}",
             query=kwargs,
@@ -163,7 +163,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/account-info
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_GET_LOAN_ACCOUNT_INFO}",
             query=kwargs,
@@ -183,7 +183,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/borrow
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_BORROW}",
             query=kwargs,
@@ -202,7 +202,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/repay
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_REPAY}",
             query=kwargs,
@@ -218,7 +218,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/borrow-order
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_GET_BORROW_ORDER_DETAIL}",
             query=kwargs,
@@ -234,7 +234,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/repay-order
         """
-        return self._submit_request(
+        return self._request(
             method="GET",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_GET_REPAYMENT_ORDER_DETAIL}",
             query=kwargs,
@@ -253,7 +253,7 @@ class SpotMarginTradeHTTP(_V5HTTPManager):
         Additional information:
             https://bybit-exchange.github.io/docs/v5/spot-margin-normal/switch-mode
         """
-        return self._submit_request(
+        return self._request(
             method="POST",
             path=f"{self.endpoint}{SpotMarginTrade.NORMAL_TOGGLE_MARGIN_TRADE}",
             query=kwargs,
