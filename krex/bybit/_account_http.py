@@ -1,5 +1,5 @@
 from ._http_manager import HTTPManager
-from .endpoint.account import Account
+from .endpoints.account import Account
 
 
 class AccountHTTP(HTTPManager):

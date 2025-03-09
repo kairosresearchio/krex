@@ -1,5 +1,5 @@
 from ._http_manager import HTTPManager
-from .endpoint.spot_margin_trade import SpotMarginTrade
+from .endpoints.spot_margin_trade import SpotMarginTrade
 
 
 class SpotMarginTradeHTTP(HTTPManager):

@@ -1,5 +1,5 @@
 from ._http_manager import HTTPManager
-from .endpoint.asset import Asset
+from .endpoints.asset import Asset
 
 
 class AssetHTTP(HTTPManager):

@@ -1,5 +1,5 @@
 from ._http_manager import HTTPManager
-from .endpoint.trade import Trade
+from .endpoints.trade import Trade
 
 
 class TradeHTTP(HTTPManager):

@@ -1,5 +1,5 @@
 from ._http_manager import HTTPManager
-from .endpoint.position import Position
+from .endpoints.position import Position
 
 
 class PositionHTTP(HTTPManager):
