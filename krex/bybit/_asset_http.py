@@ -10,20 +10,6 @@ class AssetHTTP(HTTPManager):
             query=kwargs,
         )
 
-    def get_option_delivery_record(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_OPTION_DELIVERY_RECORD,
-            query=kwargs,
-        )
-
-    def get_usdc_contract_settlement(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_USDC_CONTRACT_SETTLEMENT,
-            query=kwargs,
-        )
-
     def get_spot_asset_info(self, **kwargs):
         return self._request(
             method="GET",

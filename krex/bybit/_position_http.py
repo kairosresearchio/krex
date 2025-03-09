@@ -31,13 +31,6 @@ class PositionHTTP(HTTPManager):
             query=kwargs,
         )
 
-    def set_risk_limit(self, **kwargs):
-        return self._request(
-            method="POST",
-            path=Position.SET_RISK_LIMIT,
-            query=kwargs,
-        )
-
     def set_trading_stop(self, **kwargs):
         return self._request(
             method="POST",
