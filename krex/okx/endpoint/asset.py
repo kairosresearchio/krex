@@ -15,8 +15,8 @@ class Asset(str, Enum):
     CANCEL_WITHDRAWAL = "/api/v5/asset/cancel-withdrawal"
     WITHDRAWAL_HISTORY = "/api/v5/asset/withdrawal-history"
     GET_DEPOSIT_WITHDRAW_STATUS = "/api/v5/asset/deposit-withdraw-status"
-    EXCHANGE_LIST = "/api/v5/asset/exchange-list"  # Need to add
-    MONTHLY_STATEMENT = "/api/v5/asset/monthly-statement"  # Need to add
+    EXCHANGE_LIST = "/api/v5/asset/exchange-list"
+    MONTHLY_STATEMENT = "/api/v5/asset/monthly-statement"
     DEPOSIT_LIGHTNING = "/api/v5/asset/deposit-lightning"
     WITHDRAWAL_LIGHTNING = "/api/v5/asset/withdrawal-lightning"
 

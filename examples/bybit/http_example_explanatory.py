@@ -1,17 +1,8 @@
 from krex.bybit.client import Client
 
-import logging
-
-logging.basicConfig(
-    filename="bybit.log",
-    level=logging.DEBUG,
-    format="%(asctime)s %(levelname)s %(message)s",
-)
-
-
 BYBIT_API_KEY = "api_key"
 BYBIT_API_SECRET = "api_secret"
-TESTNET = True
+TESTNET = False  # True means your API keys were generated on testnet.bybit.com
 
 client = Client(
     api_key=BYBIT_API_KEY,

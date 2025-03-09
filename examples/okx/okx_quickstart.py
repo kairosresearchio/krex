@@ -40,14 +40,10 @@ if result["code"] == "0":
     }
     print(modes.get(acctLv, "unknown mode"))
 
-result = client.place_order(
-    instId="BTC-USDT", tdMode="cash", side="buy", ordType="limit", px="19000", sz="0.01"
-)
+result = client.place_order(instId="BTC-USDT", tdMode="cash", side="buy", ordType="limit", px="19000", sz="0.01")
 print(result)
 
-result = client.place_order(
-    instId="BTC-USDT", tdMode="cash", side="buy", ordType="market", sz="100"
-)
+result = client.place_order(instId="BTC-USDT", tdMode="cash", side="buy", ordType="market", sz="100")
 print(result)
 
 result = client.cancel_order(instId="BTC-USDT", ordId="489093931993509888")

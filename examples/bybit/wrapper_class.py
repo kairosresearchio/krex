@@ -17,7 +17,6 @@ class BybitWrapper:
             api_key=api_key,
             api_secret=api_secret,
             testnet=testnet,
-            log_requests=True,
         )
 
     def cancel_all_orders(

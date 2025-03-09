@@ -3,7 +3,7 @@ from krex.bybit.client import Client
 
 BYBIT_API_KEY = "api_key"
 BYBIT_API_SECRET = "api_secret"
-TESTNET = True
+TESTNET = False  # True means your API keys were generated on testnet.bybit.com
 
 client = Client(
     api_key=BYBIT_API_KEY,
@@ -13,14 +13,11 @@ client = Client(
 
 
 class HTTPTest(unittest.TestCase):
-    # We can't really test authenticated endpoints without keys, but we
-    # can make sure it raises a PermissionError.
-    def test_place_active_order(self):
-        with self.assertRaises(PermissionError):
-            client.place_order(
-                symbol="BTCUSD",
-                order_type="Market",
-                side="Buy",
-                qty=1,
-                category="spot",
-            )
+    def test_get_wallet_balance(self):
+        result = client.get_wallet_balance(accountType="UNIFIED")
+        print(result)
+        self.assertEqual(result.get("retCode"), 0)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -2,7 +2,7 @@ from krex.bybit.client import Client
 
 BYBIT_API_KEY = "api_key"
 BYBIT_API_SECRET = "api_secret"
-TESTNET = True
+TESTNET = False  # True means your API keys were generated on testnet.bybit.com
 
 client = Client(
     api_key=BYBIT_API_KEY,
@@ -10,12 +10,14 @@ client = Client(
     testnet=TESTNET,
 )
 
-print(
-    client.place_order(
-        category="linear",
-        symbol="BTCUSDT",
-        side="Buy",
-        orderType="Market",
-        qty="0.001",
-    )
-)
+print(client.get_wallet_balance(accountType="UNIFIED"))
+
+# print(
+#     client.get_wallet_balance(
+#         category="linear",
+#         symbol="BTCUSDT",
+#         side="Buy",
+#         orderType="Market",
+#         qty="0.001",
+#     )
+# )

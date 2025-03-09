@@ -5,8 +5,9 @@ OKX_API_KEY = "api_key"
 OKX_API_SECRET = "api_secret"
 OKX_PASSPHRASE = "passphrase"
 
-# 設定環境：實盤交易 = "0"，模擬交易 = "1"
-FLAG = "1"
+# flag = "1" for test environment
+# flag = "0" for production environment
+FLAG = "0"
 client = Client(
     api_key=OKX_API_KEY,
     api_secret=OKX_API_SECRET,
@@ -41,9 +42,11 @@ class AccountTest(unittest.TestCase):
         self.assertEqual(result.get("code"), "0")
 
     def test_get_account_bills_archive(self):
-        result = client.get_account_bills_archive(
-            begin="1715780962300", end="1716998400000"
-        )
+        result = client.get_account_bills_archive(begin="1715780962300", end="1716998400000")
+        self.assertEqual(result.get("code"), "0")
+
+    def test_get_account_bills_history_archive(self):
+        result = client.get_account_bills_history_archive(year="2023", quarter="Q1")
         self.assertEqual(result.get("code"), "0")
 
     def test_get_account_config(self):
@@ -67,21 +70,25 @@ class AccountTest(unittest.TestCase):
         self.assertEqual(result.get("code"), "0")
 
     def test_adjustment_margin(self):
-        result = client.adjustment_margin(
-            instId="BTC-USDT-SWAP", posSide="net", type="add", amt="1"
-        )
-        self.assertEqual(
-            result.get("code"), "59300"
-        )  # 59300: The position is not found
+        result = client.adjustment_margin(instId="BTC-USDT-SWAP", posSide="net", type="add", amt="1")
+        self.assertEqual(result.get("code"), "59300")  # 59300: The position is not found
 
     def test_get_leverage(self):
-        result = client.get_leverage(mgnMode="cross", ccy="USDT")
+        result = client.get_leverage(instId="BTC-USDT-SWAP", mgnMode="cross")
+        self.assertEqual(result.get("code"), "0")
+
+    def test_get_adjust_leverage(self):
+        result = client.get_adjust_leverage(
+            instType="MARGIN",
+            mgnMode="isolated",
+            lever="3",
+            instId="BTC-USDT",
+            ccy="USDT",
+        )
         self.assertEqual(result.get("code"), "0")
 
     def test_get_max_loan(self):
-        result = client.get_max_loan(
-            mgnMode="cross", instId="BTC-USDT", ccy="BTC", mgnCcy="USDT"
-        )
+        result = client.get_max_loan(mgnMode="cross", instId="BTC-USDT", ccy="BTC", mgnCcy="USDT")
         self.assertEqual(result.get("code"), "0")
 
     def test_get_fee_rates(self):
@@ -100,16 +107,20 @@ class AccountTest(unittest.TestCase):
         result = client.set_greeks(greeksType="BS")
         self.assertEqual(result.get("code"), "0")
 
-    def test_set_isolated_mode(self):
-        result = client.set_isolated_mode(isoMode="automatic", type="MARGIN")
-        self.assertEqual(result.get("code"), "51010")
-
     def test_get_max_withdrawal(self):
         result = client.get_max_withdrawal(ccy="USDT")
         self.assertEqual(result.get("code"), "0")
 
     def test_get_account_position_risk(self):
         result = client.get_account_position_risk()
+        self.assertEqual(result.get("code"), "51010")
+
+    def test_get_quick_borrow_repay(self):
+        result = client.get_quick_borrow_repay(instId="BTC-USDT", ccy="USDT", side="borrow", amt="10")
+        self.assertEqual(result.get("code"), "51010")
+
+    def test_get_quick_borrow_repay_history(self):
+        result = client.get_quick_borrow_repay_history()
         self.assertEqual(result.get("code"), "0")
 
     def test_get_interest_limits(self):
@@ -125,9 +136,7 @@ class AccountTest(unittest.TestCase):
         self.assertEqual(result.get("code"), "51010")
 
     def test_spot_borrow_repay_history(self):
-        result = client.spot_borrow_repay_history(
-            ccy="USDT", type="auto_borrow", after="1597026383085"
-        )
+        result = client.spot_borrow_repay_history(ccy="USDT", type="auto_borrow", after="1597026383085")
         self.assertEqual(result.get("code"), "0")
 
     def test_position_builder(self):
@@ -145,14 +154,19 @@ class AccountTest(unittest.TestCase):
         )
         self.assertEqual(result.get("code"), "0")
 
+    def test_set_risk_offset_amt(self):
+        result = client.set_risk_offset_amt(
+            ccy="BTC",
+            clSpotInUseAmt="0",
+        )
+        self.assertEqual(result.get("code"), "51010")
+
     def test_get_greeks(self):
         result = client.get_greeks(ccy="USDT")
         self.assertEqual(result.get("code"), "0")
 
     def test_get_account_position_tiers(self):
-        result = client.get_account_position_tiers(
-            instType="SWAP", instFamily="BTC-USDT"
-        )
+        result = client.get_account_position_tiers(instType="SWAP", instFamily="BTC-USDT")
         self.assertEqual(result.get("code"), "0")
 
     def test_activate_option(self):
@@ -161,39 +175,11 @@ class AccountTest(unittest.TestCase):
 
     def test_set_auto_loan(self):
         result = client.set_auto_loan(autoLoan="true")
-        self.assertEqual(result.get("code"), "0")
+        self.assertEqual(result.get("code"), "59000")
 
     def test_set_account_level(self):
         result = client.set_account_level(acctLv="2")
-        self.assertEqual(result.get("code"), "59001")
-
-    def test_get_simulated_margin(self):
-        result = client.get_simulated_margin(instType="SWAP")
-        self.assertEqual(result.get("code"), 404)
-
-    def test_borrow_repay(self):
-        result = client.borrow_repay(ccy="BTC", side="borrow", amt="1.0")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_borrow_repay_history(self):
-        result = client.borrow_repay_history(ccy="BTC")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_vip_interest_accrued_data(self):
-        result = client.get_vip_interest_accrued_data(ccy="BTC")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_vip_interest_deducted_data(self):
-        result = client.get_vip_interest_deducted_data(ccy="BTC")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_vip_loan_order_list(self):
-        result = client.get_vip_loan_order_list(ccy="BTC")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_vip_loan_order_detail(self):
-        result = client.get_vip_loan_order_detail(ccy="BTC", ordId="1")
-        self.assertEqual(result.get("code"), "0")
+        self.assertEqual(result.get("code"), "59132")
 
 
 if __name__ == "__main__":

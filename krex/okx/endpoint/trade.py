@@ -21,10 +21,10 @@ class Trade(str, Enum):
     ONE_CLICK_REPAY_SUPPORT = "/api/v5/trade/one-click-repay-currency-list"
     ONE_CLICK_REPAY = "/api/v5/trade/one-click-repay"
     ONE_CLICK_REPAY_HISTORY = "/api/v5/trade/one-click-repay-history"
-    MASS_CANCEL = "/api/v5/trade/mass-cancel"  # Need to add
-    CANCEL_ALL_AFTER = "/api/v5/trade/cancel-all-after"  # Need to add
-    ACCOUNT_RATE_LIMIT = "/api/v5/trade/account-rate-limit"  # Need to add
-    ORDER_PRECHECK = "/api/v5/trade/order-precheck"  # Need to add
+    MASS_CANCEL = "/api/v5/trade/mass-cancel"
+    CANCEL_ALL_AFTER = "/api/v5/trade/cancel-all-after"
+    ACCOUNT_RATE_LIMIT = "/api/v5/trade/account-rate-limit"
+    ORDER_PRECHECK = "/api/v5/trade/order-precheck"
     PLACE_ALGO_ORDER = "/api/v5/trade/order-algo"
     CANCEL_ALGOS = "/api/v5/trade/cancel-algos"
     AMEND_ALGO_ORDER = "/api/v5/trade/amend-algos"

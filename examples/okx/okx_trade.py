@@ -41,9 +41,7 @@ print(result)
 result = client.set_leverage(instId="BTC-USDT-SWAP", lever="5", mgnMode="isolated")
 print(result)
 
-result = client.set_leverage(
-    instId="BTC-USDT-SWAP", lever="5", posSide="long", mgnMode="isolated"
-)
+result = client.set_leverage(instId="BTC-USDT-SWAP", lever="5", posSide="long", mgnMode="isolated")
 print(result)
 
 result = client.set_position_mode(posMode="long_short_mode")
@@ -92,9 +90,7 @@ else:
 result = client.cancel_order(instId="BTC-USDT-SWAP", ordId="505073046126960640")
 print(result)
 
-result = client.amend_order(
-    instId="BTC-USDT-SWAP", ordId="505073046126960640", newSz="80"
-)
+result = client.amend_order(instId="BTC-USDT-SWAP", ordId="505073046126960640", newSz="80")
 print(result)
 
 result = client.get_order(instId="BTC-USDT-SWAP", ordId="505073046126960640")

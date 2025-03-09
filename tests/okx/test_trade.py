@@ -5,7 +5,8 @@ OKX_API_KEY = "api_key"
 OKX_API_SECRET = "api_secret"
 OKX_PASSPHRASE = "passphrase"
 
-# 設定環境：實盤交易 = "0"，模擬交易 = "1"
+# flag = "1" for test environment
+# flag = "0" for production environment
 FLAG = "1"
 client = Client(
     api_key=OKX_API_KEY,
@@ -40,7 +41,7 @@ class TradeTest(unittest.TestCase):
         self.assertEqual(result.get("code"), "0")
 
     def test_get_order_info(self):
-        result = client.get_orders("ETH-USDT", "480707205436669952")
+        result = client.get_order("ETH-USDT", "480707205436669952")
         print(result)
         self.assertEqual(result.get("code"), "0")
 
