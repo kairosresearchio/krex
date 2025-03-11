@@ -9,6 +9,7 @@ class PositionHTTP(HTTPManager):
         symbol: str = None,
         limit: int = 20,
     ):
+        #todo: dont need category after product table manager is implemented
         """
         :param category: str (inear, inverse, option)
         :param symbol: str
@@ -31,9 +32,9 @@ class PositionHTTP(HTTPManager):
         self,
         category: str,
         symbol: str,
-        buyLeverage: str,
-        sellLeverage: str,
+        leverage: str,
     ):
+        #todo: dont need category after product table manager is implemented
         """
         :param category: str (linear, inverse)
         :param symbol: str
@@ -43,8 +44,8 @@ class PositionHTTP(HTTPManager):
         payload = {
             "category": category,
             "symbol": symbol,
-            "buyLeverage": buyLeverage,
-            "sellLeverage": sellLeverage,
+            "buyLeverage": leverage,
+            "sellLeverage": leverage,
         }
 
         return self._request(
@@ -60,7 +61,7 @@ class PositionHTTP(HTTPManager):
         coin: str = None,
     ):
         """
-        :param mode: str
+        :param mode: str. 0: Merged Single. 3: Both Sides
         :param symbol: str
         :param coin: str
         """
@@ -81,6 +82,7 @@ class PositionHTTP(HTTPManager):
 
     def set_trading_stop(
         self,
+        category: str,
         symbol: str,
         tpslMode: str,
         positionIdx: str,
@@ -95,8 +97,7 @@ class PositionHTTP(HTTPManager):
     ):
         """
         :param symbol: str
-        :param tpslMode: str
-        :param positionIdx: str
+        :param tpslMode: str. `Full`: entire position TP/SL, `Partial`: partial position TP/SL
         :param takeProfit: str
         :param stopLoss: str
         :param tpSize: str
@@ -106,11 +107,12 @@ class PositionHTTP(HTTPManager):
         :param tpOrderType: str
         :param slOrderType: str
         """
+        #todo: dont need category after product table manager is implemented
         payload = {
-            "category": "linear",
+            "category": category,
             "symbol": symbol,
             "tpslMode": tpslMode,
-            "positionIdx": positionIdx,
+            "positionIdx": 0,
         }
         if takeProfit is not None:
             payload["takeProfit"] = takeProfit
@@ -142,7 +144,6 @@ class PositionHTTP(HTTPManager):
         positionIdx: int = None,
     ):
         """ "
-        :param category: str
         :param symbol: str
         :param autoAddMargin: int (0:closing, 1:opening)
         :param positionIdx: int (0: One-way position mode, 1: Buy-side two-way position mode, 2: Sell-side two-way position mode)
@@ -151,6 +152,7 @@ class PositionHTTP(HTTPManager):
             "category": "linear",
             "symbol": symbol,
             "autoAddMargin": autoAddMargin,
+            "positionIdx": 0,
         }
         if positionIdx is not None:
             payload["positionIdx"] = positionIdx
@@ -163,10 +165,11 @@ class PositionHTTP(HTTPManager):
 
     def add_or_reduce_margin(
         self,
+        category: str,
         symbol: str,
         margin: str,
-        positionIdx: int = None,
     ):
+        #todo: dont need category after product table manager is implemented
         """
         :param category: str
         :param symbol: str
@@ -174,12 +177,10 @@ class PositionHTTP(HTTPManager):
         :param positionIdx: int
         """
         payload = {
-            "category": "linear",
+            "category": category,
             "symbol": symbol,
             "margin": margin,
         }
-        if positionIdx is not None:
-            payload["positionIdx"] = positionIdx
 
         return self._request(
             method="POST",
@@ -189,10 +190,12 @@ class PositionHTTP(HTTPManager):
 
     def get_closed_pnl(
         self,
+        category: str,
         symbol: str = None,
         startTime: int = None,
         limit: int = 20,
     ):
+        #todo: dont need category after product table manager is implemented
         """
         :param category: str
         :param symbol: str
@@ -200,7 +203,7 @@ class PositionHTTP(HTTPManager):
         :param positionIdx: int
         """
         payload = {
-            "category": "linear",
+            "category": category,
             "limit": limit,
         }
         if symbol is not None:

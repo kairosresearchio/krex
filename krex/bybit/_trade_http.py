@@ -2,6 +2,7 @@ from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
 
 
+#todo: dont need category after product table manager is implemented
 class TradeHTTP(HTTPManager):
     def place_order(
         self,
@@ -19,7 +20,6 @@ class TradeHTTP(HTTPManager):
         triggerBy: str = None,
         orderIv: str = None,
         timeInForce: str = None,
-        positionIdx: str = None,
         takeProfit: str = None,
         stopLoss: str = None,
         tpTriggerBy: str = None,
@@ -57,8 +57,6 @@ class TradeHTTP(HTTPManager):
             payload["orderIv"] = orderIv
         if timeInForce is not None:
             payload["timeInForce"] = timeInForce
-        if positionIdx is not None:
-            payload["positionIdx"] = positionIdx
         if takeProfit is not None:
             payload["takeProfit"] = takeProfit
         if stopLoss is not None:
@@ -86,6 +84,183 @@ class TradeHTTP(HTTPManager):
             method="POST",
             path=Trade.PLACE_ORDER,
             query=payload,
+        )
+        
+    def place_market_order(
+        self,
+        category: str,
+        symbol: str,
+        side: str,
+        qty: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None
+    ):
+        return self.place_order(
+            category=category,
+            symbol=symbol,
+            side=side,
+            orderType="Market",
+            qty=qty,
+            reduceOnly=reduceOnly,
+            isLeverage=isLeverage
+        )
+    
+    def place_market_buy_order(
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None
+    ):
+        return self.place_market_order(
+            category=category,
+            symbol=symbol,
+            side="Buy",
+            qty=qty,
+            reduceOnly=reduceOnly,
+            isLeverage=isLeverage
+        )
+    
+    def place_market_sell_order(
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None
+    ):
+        return self.place_market_order(
+            category=category,
+            symbol=symbol,
+            side="Sell",
+            qty=qty,
+            reduceOnly=reduceOnly,
+            isLeverage=isLeverage
+        )
+    
+    def place_limit_order(
+        self,
+        category: str,
+        symbol: str,
+        side: str,
+        qty: str,
+        price: str,
+        reduceOnly: bool = None,
+        timeInForce: str = None,
+        isLeverage: int = None
+    ):
+        return self.place_order(
+            category=category,
+            symbol=symbol,
+            side=side,
+            orderType="Limit",
+            qty=qty,
+            price=price,
+            reduceOnly=reduceOnly,
+            timeInForce=timeInForce,
+            isLeverage=isLeverage
+        )
+    
+    def place_limit_buy_order(
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        price: str,
+        reduceOnly: bool = None,
+        timeInForce: str = None,
+        isLeverage: int = None
+    ):
+        return self.place_limit_order(
+            category=category,
+            symbol=symbol,
+            side="Buy",
+            qty=qty,
+            price=price,
+            reduceOnly=reduceOnly,
+            timeInForce=timeInForce,
+            isLeverage=isLeverage
+        )
+        
+    def place_limit_sell_order(
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        price: str,
+        reduceOnly: bool = None,
+        timeInForce: str = None,
+        isLeverage: int = None
+    ):
+        return self.place_limit_order(
+            category=category,
+            symbol=symbol,
+            side="Sell",
+            qty=qty,
+            price=price,
+            reduceOnly=reduceOnly,
+            timeInForce=timeInForce,
+            isLeverage=isLeverage
+        )
+        
+    def place_post_only_limit_order(
+        self,
+        category: str,
+        symbol: str,
+        side: str,
+        qty: str,
+        price: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None
+    ):
+        return self.place_limit_order(
+            category=category,
+            symbol=symbol,
+            side=side,
+            qty=qty,
+            price=price,
+            reduceOnly=reduceOnly,
+            timeInForce="PostOnly",
+            isLeverage=isLeverage
+        )
+    
+    def place_post_only_limit_buy_order(
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        price: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None
+    ):
+        return self.place_post_only_limit_order(
+            category=category,
+            symbol=symbol,
+            side="Buy",
+            qty=qty,
+            price=price,
+            reduceOnly=reduceOnly,
+            isLeverage=isLeverage
+        )
+        
+    def place_post_only_limit_sell_order(
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        price: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None,
+    ):
+        return self.place_post_only_limit_order(
+            category=category,
+            symbol=symbol,
+            side="Sell",
+            qty=qty,
+            price=price,
+            reduceOnly=reduceOnly,
+            isLeverage=isLeverage
         )
 
     def amend_order(

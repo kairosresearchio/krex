@@ -4,7 +4,6 @@ from enum import Enum
 class Asset(str, Enum):
     CURRENCY_INFO = "/api/v5/asset/currencies"
     GET_BALANCES = "/api/v5/asset/balances"
-    NON_TRADABLE_ASSETS = "/api/v5/asset/non-tradable-assets"
     ASSET_VALUATION = "/api/v5/asset/asset-valuation"
     FUNDS_TRANSFER = "/api/v5/asset/transfer"
     TRANSFER_STATE = "/api/v5/asset/transfer-state"
