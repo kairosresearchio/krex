@@ -38,16 +38,12 @@ class HTTPManager:
 
     def __post_init__(self):
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET
-        self.endpoint = HTTP_URL.format(
-            SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld
-        )
+        self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
         self.session = requests.Session()
 
     def _auth(self, payload, timestamp):
         param_str = f"{timestamp}{self.api_key}{self.recv_window}{payload}"
-        return hmac.new(
-            self.api_secret.encode(), param_str.encode(), hashlib.sha256
-        ).hexdigest()
+        return hmac.new(self.api_secret.encode(), param_str.encode(), hashlib.sha256).hexdigest()
 
     def _request(self, method, path, query=None):
         if query is None:
@@ -57,9 +53,7 @@ class HTTPManager:
 
         if method.upper() == "GET":
             if query:
-                sorted_query = "&".join(
-                    f"{k}={v}" for k, v in sorted(query.items()) if v
-                )
+                sorted_query = "&".join(f"{k}={v}" for k, v in sorted(query.items()) if v)
                 if sorted_query:
                     path += "?" + sorted_query
                 payload = sorted_query
@@ -76,9 +70,7 @@ class HTTPManager:
             if method.upper() == "GET":
                 response = self.session.get(url, headers=headers)
             elif method.upper() == "POST":
-                response = self.session.post(
-                    url, json=query if query else {}, headers=headers
-                )
+                response = self.session.post(url, json=query if query else {}, headers=headers)
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 

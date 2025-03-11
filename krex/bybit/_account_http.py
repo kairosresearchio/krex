@@ -47,9 +47,7 @@ class AccountHTTP(HTTPManager):
             query=None,
         )
 
-    def get_borrow_history(
-        self, coin: str = None, startTime: int = None, limit: int = 20
-    ):
+    def get_borrow_history(self, coin: str = None, startTime: int = None, limit: int = 20):
         """
         :param coin: str
         :param startTime: int
