@@ -10,7 +10,7 @@ client = Client(
     testnet=TESTNET,
 )
 
-print(client.get_wallet_balance(accountType="UNIFIED"))
+print(client.get_wallet_balance())
 
 print(
     client.place_order(

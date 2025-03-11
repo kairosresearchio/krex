@@ -10,14 +10,4 @@ client = Client(
     testnet=TESTNET,
 )
 
-print(client.get_wallet_balance(accountType="UNIFIED"))
-
-# print(
-#     client.get_wallet_balance(
-#         category="linear",
-#         symbol="BTCUSDT",
-#         side="Buy",
-#         orderType="Market",
-#         qty="0.001",
-#     )
-# )
+print(client.get_wallet_balance())

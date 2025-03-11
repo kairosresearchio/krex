@@ -14,7 +14,7 @@ client = Client(
 
 class HTTPTest(unittest.TestCase):
     def test_get_wallet_balance(self):
-        result = client.get_wallet_balance(accountType="UNIFIED")
+        result = client.get_wallet_balance()
         print(result)
         self.assertEqual(result.get("retCode"), 0)
 

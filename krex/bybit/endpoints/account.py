@@ -9,15 +9,10 @@ class Account(str, Enum):
     REPAY_LIABILITY = "/v5/account/quick-repayment"
     GET_COLLATERAL_INFO = "/v5/account/collateral-info"
     SET_COLLATERAL_COIN = "/v5/account/set-collateral-switch"
-    BATCH_SET_COLLATERAL_COIN = "/v5/account/set-collateral-switch-batch"
-    GET_COIN_GREEKS = "/v5/asset/coin-greeks"
     GET_FEE_RATE = "/v5/account/fee-rate"
     GET_ACCOUNT_INFO = "/v5/account/info"
     GET_TRANSACTION_LOG = "/v5/account/transaction-log"
     SET_MARGIN_MODE = "/v5/account/set-margin-mode"
-    SET_MMP = "/v5/account/mmp-modify"
-    RESET_MMP = "/v5/account/mmp-reset"
-    GET_MMP_STATE = "/v5/account/mmp-state"
 
     def __str__(self) -> str:
         return self.value

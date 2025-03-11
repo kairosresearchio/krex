@@ -8,6 +8,7 @@ class Trade(str, Enum):
     GET_OPEN_ORDERS = "/v5/order/realtime"
     CANCEL_ALL_ORDERS = "/v5/order/cancel-all"
     GET_ORDER_HISTORY = "/v5/order/history"
+    GET_EXECUTION_LIST = "/v5/execution/list"
     BATCH_PLACE_ORDER = "/v5/order/create-batch"
     BATCH_AMEND_ORDER = "/v5/order/amend-batch"
     BATCH_CANCEL_ORDER = "/v5/order/cancel-batch"

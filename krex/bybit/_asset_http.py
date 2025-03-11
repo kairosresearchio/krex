@@ -1,158 +1,506 @@
 from ._http_manager import HTTPManager
 from .endpoints.asset import Asset
+import uuid
 
 
 class AssetHTTP(HTTPManager):
-    def get_coin_exchange_records(self, **kwargs):
+    def get_coin_exchange_records(
+        self,
+        fromCoin: str = None,
+        toCoin: str = None,
+        limit: int = 20,
+    ):
+        """
+        :param fromCoin: str
+        :param toCoin: str
+        """
+        payload = {
+            "limit": limit,
+        }
+        if fromCoin is not None:
+            payload["fromCoin"] = fromCoin
+        if toCoin is not None:
+            payload["toCoin"] = toCoin
+
         return self._request(
             method="GET",
             path=Asset.GET_COIN_EXCHANGE_RECORDS,
-            query=kwargs,
+            query=payload,
         )
 
-    def get_spot_asset_info(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_SPOT_ASSET_INFO,
-            query=kwargs,
-        )
+    def get_coin_info(
+        self,
+        coin: str = None,
+    ):
+        """
+        :param coin: str
+        """
+        payload = {}
+        if coin is not None:
+            payload["coin"] = coin
 
-    def get_coins_balance(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_ALL_COINS_BALANCE,
-            query=kwargs,
-        )
-
-    def get_coin_balance(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_SINGLE_COIN_BALANCE,
-            query=kwargs,
-        )
-
-    def get_transferable_coin(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_TRANSFERABLE_COIN,
-            query=kwargs,
-        )
-
-    def create_internal_transfer(self, **kwargs):
-        return self._request(
-            method="POST",
-            path=Asset.CREATE_INTERNAL_TRANSFER,
-            query=kwargs,
-        )
-
-    def get_internal_transfer_records(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_INTERNAL_TRANSFER_RECORDS,
-            query=kwargs,
-        )
-
-    def get_sub_uid(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_SUB_UID,
-            query=kwargs,
-        )
-
-    def create_universal_transfer(self, **kwargs):
-        return self._request(
-            method="POST",
-            path=Asset.CREATE_UNIVERSAL_TRANSFER,
-            query=kwargs,
-        )
-
-    def get_universal_transfer_records(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_UNIVERSAL_TRANSFER_RECORDS,
-            query=kwargs,
-        )
-
-    def get_allowed_deposit_coin_info(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_ALLOWED_DEPOSIT_COIN_INFO,
-            query=kwargs,
-        )
-
-    def set_deposit_account(self, **kwargs):
-        return self._request(
-            method="POST",
-            path=Asset.SET_DEPOSIT_ACCOUNT,
-            query=kwargs,
-        )
-
-    def get_deposit_records(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_DEPOSIT_RECORDS,
-            query=kwargs,
-        )
-
-    def get_sub_deposit_records(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_SUB_ACCOUNT_DEPOSIT_RECORDS,
-            query=kwargs,
-        )
-
-    def get_internal_deposit_records(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_INTERNAL_DEPOSIT_RECORDS,
-            query=kwargs,
-        )
-
-    def get_master_deposit_address(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_MASTER_DEPOSIT_ADDRESS,
-            query=kwargs,
-        )
-
-    def get_sub_deposit_address(self, **kwargs):
-        return self._request(
-            method="GET",
-            path=Asset.GET_SUB_DEPOSIT_ADDRESS,
-            query=kwargs,
-        )
-
-    def get_coin_info(self, **kwargs):
         return self._request(
             method="GET",
             path=Asset.GET_COIN_INFO,
-            query=kwargs,
+            query=payload,
         )
 
-    def get_withdrawal_records(self, **kwargs):
+    def get_sub_uid(self):
         return self._request(
             method="GET",
-            path=Asset.GET_WITHDRAWAL_RECORDS,
-            query=kwargs,
+            path=Asset.GET_SUB_UID,
+            query=None,
         )
 
-    def get_withdrawable_amount(self, **kwargs):
+    def get_spot_asset_info(
+        self,
+        coin: str = None,
+    ):
+        """
+        default accountType: SPOT
+        :param coin: str
+        """
+        payload = {
+            "accountType": "SPOT",
+        }
+        if coin is not None:
+            payload["coin"] = coin
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_SPOT_ASSET_INFO,
+            query=payload,
+        )
+
+    def get_coins_balance(
+        self,
+        accountType: str,
+        coin: str = None,
+    ):
+        """
+        :param accountType: str
+        :param coin: str
+        """
+        payload = {
+            "accountType": accountType,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_ALL_COINS_BALANCE,
+            query=payload,
+        )
+
+    def get_coin_balance(
+        self,
+        accountType: str,
+        coin: str = None,
+    ):
+        """
+        :param accountType: str
+        :param coin: str
+        """
+        payload = {
+            "accountType": accountType,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_SINGLE_COIN_BALANCE,
+            query=payload,
+        )
+
+    def get_withdrawable_amount(
+        self,
+        coin: str,
+    ):
+        """
+        :param coin: str
+        """
+        payload = {
+            "coin": coin,
+        }
+
         return self._request(
             method="GET",
             path=Asset.GET_WITHDRAWABLE_AMOUNT,
-            query=kwargs,
+            query=payload,
         )
 
-    def withdraw(self, **kwargs):
+    def get_internal_transfer_records(
+        self,
+        coin: str = None,
+        startTime: int = None,
+        limit: int = 20,
+    ):
+        """
+        :param coin: str
+        :param startTime: int
+        :param limit: int
+        """
+        payload = {
+            "limit": limit,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+        if startTime is not None:
+            payload["startTime"] = startTime
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_INTERNAL_TRANSFER_RECORDS,
+            query=payload,
+        )
+
+    def get_transferable_coin(
+        self,
+        fromAccountType: str,
+        toAccountType: str,
+    ):
+        """ "
+        :param fromAccountType: str
+        :param toAccountType: str
+        """
+        payload = {
+            "fromAccountType": fromAccountType,
+            "toAccountType": toAccountType,
+        }
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_TRANSFERABLE_COIN,
+            query=payload,
+        )
+
+    def create_internal_transfer(
+        self,
+        coin: str,
+        amount: str,
+        fromAccountType: str,
+        toAccountType: str,
+    ):
+        """
+        :param coin: str
+        :param amount: str
+        :param fromAccountType: str
+        :param toAccountType: str
+        """
+        transfer_id = str(uuid.uuid4())
+        payload = {
+            "transferId": transfer_id,
+            "coin": coin,
+            "amount": amount,
+            "fromAccountType": fromAccountType,
+            "toAccountType": toAccountType,
+        }
+
+        return self._request(
+            method="POST",
+            path=Asset.CREATE_INTERNAL_TRANSFER,
+            query=payload,
+        )
+
+    def create_universal_transfer(
+        self,
+        coin: str,
+        amount: str,
+        fromMemberId: int,
+        toMemberId: int,
+        fromAccountType: str,
+        toAccountType: str,
+    ):
+        """
+        :coin: str
+        :amount: str
+        :fromMemberId: int
+        :toMemberId: int
+        :fromAccountType: str
+        :toAccountType: str
+        """
+        transfer_id = str(uuid.uuid4())
+        payload = {
+            "transferId": transfer_id,
+            "coin": coin,
+            "amount": amount,
+            "fromMemberId": fromMemberId,
+            "toMemberId": toMemberId,
+            "fromAccountType": fromAccountType,
+            "toAccountType": toAccountType,
+        }
+
+        return self._request(
+            method="POST",
+            path=Asset.CREATE_UNIVERSAL_TRANSFER,
+            query=payload,
+        )
+
+    def get_universal_transfer_records(
+        self,
+        coin: str = None,
+        startTime: int = None,
+        limit: int = 20,
+    ):
+        """
+        :param coin: str
+        :param startTime: int
+        :param limit: int
+        """
+        payload = {
+            "limit": limit,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+        if startTime is not None:
+            payload["startTime"] = startTime
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_UNIVERSAL_TRANSFER_RECORDS,
+            query=payload,
+        )
+
+    def get_allowed_deposit_coin_info(
+        self,
+        coin: str = None,
+        chain: str = None,
+        limit: int = 20,
+    ):
+        """
+        :param coin: str
+        :param chain: str
+        :param limit: int
+        """
+        payload = {
+            "limit": limit,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+        if chain is not None:
+            payload["chain"] = chain
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_ALLOWED_DEPOSIT_COIN_INFO,
+            query=payload,
+        )
+
+    def set_deposit_account(
+        self,
+        accountType: str,
+    ):
+        """
+        :param accountType: str
+        :param coin: str
+        """
+        payload = {
+            "accountType": accountType,
+        }
+
+        return self._request(
+            method="POST",
+            path=Asset.SET_DEPOSIT_ACCOUNT,
+            query=payload,
+        )
+
+    def get_deposit_records(
+        self,
+        coin: str = None,
+        startTime: int = None,
+        limit: int = 20,
+    ):
+        """
+        :param coin: str
+        :param startTime: str
+        :param limit: int
+        """
+        payload = {
+            "limit": limit,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+        if startTime is not None:
+            payload["startTime"] = startTime
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_DEPOSIT_RECORDS,
+            query=payload,
+        )
+
+    def get_sub_deposit_records(
+        self,
+        coin: str = None,
+        startTime: int = None,
+        limit: int = 20,
+    ):
+        """
+        :param coin: str
+        :param startTime: str
+        :param limit: int
+        """
+        payload = {
+            "limit": limit,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+        if startTime is not None:
+            payload["startTime"] = startTime
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_SUB_ACCOUNT_DEPOSIT_RECORDS,
+            query=payload,
+        )
+
+    def get_internal_deposit_records(
+        self,
+        coin: str = None,
+        startTime: int = None,
+        limit: int = 20,
+    ):
+        """
+        :param coin: str
+        :param startTime: str
+        :param limit: int
+        """
+        payload = {
+            "limit": limit,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+        if startTime is not None:
+            payload["startTime"] = startTime
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_INTERNAL_DEPOSIT_RECORDS,
+            query=payload,
+        )
+
+    def get_master_deposit_address(
+        self,
+        coin: str,
+    ):
+        """
+        :param coin: str
+        """
+        payload = {
+            "coin": coin,
+        }
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_MASTER_DEPOSIT_ADDRESS,
+            query=payload,
+        )
+
+    def get_sub_deposit_address(
+        self,
+        coin: str,
+        chainType: str,
+        subMemberId: str,
+    ):
+        """
+        :param coin: str
+        :param chainType: str
+        :param subMemberId: srt
+        """
+        payload = {
+            "coin": coin,
+            "chainType": chainType,
+            "subMemberId": subMemberId,
+        }
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_SUB_DEPOSIT_ADDRESS,
+            query=payload,
+        )
+
+    def get_withdrawal_records(
+        self,
+        coin: str = None,
+        withdrawType: int = None,
+        startTime: int = None,
+        limit: int = 20,
+    ):
+        """
+        :param coin: str
+        :param withdrawType: int
+        :param startTime: int
+        :param limit: int
+        """
+        payload = {
+            "limit": limit,
+        }
+        if coin is not None:
+            payload["coin"] = coin
+        if withdrawType is not None:
+            payload["withdrawType"] = withdrawType
+        if startTime is not None:
+            payload["startTime"] = startTime
+
+        return self._request(
+            method="GET",
+            path=Asset.GET_WITHDRAWAL_RECORDS,
+            query=payload,
+        )
+
+    def withdraw(
+        self,
+        coin: str,
+        address: str,
+        amount: str,
+        timestamp: int,
+        vaspEntityId: str,
+        chain: str = None,
+        tag: str = None,
+        accountType: str = None,
+    ):
+        """
+        :param coin: str
+        :param address: str
+        :param amount: str
+        :param timestamp: int
+        :param vaspEntityId: str
+        """
+        payload = {
+            "coin": coin,
+            "address": address,
+            "amount": amount,
+            "timestamp": timestamp,
+            "vaspEntityId": vaspEntityId,
+        }
+        if chain is not None:
+            payload["chain"] = chain
+        if tag is not None:
+            payload["tag"] = tag
+        if accountType is not None:
+            payload["accountType"] = accountType
+
         return self._request(
             method="POST",
             path=Asset.WITHDRAW,
-            query=kwargs,
+            query=payload,
         )
 
-    def cancel_withdrawal(self, **kwargs):
+    def cancel_withdrawal(
+        self,
+        id: str,
+    ):
+        """
+        :param id: str
+        """
+        payload = {
+            "id": id,
+        }
+
         return self._request(
             method="POST",
             path=Asset.CANCEL_WITHDRAWAL,
-            query=kwargs,
+            query=payload,
         )
