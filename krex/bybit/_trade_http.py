@@ -2,7 +2,6 @@ from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
 
 
-# todo: dont need category after product table manager is implemented
 class TradeHTTP(HTTPManager):
     def place_order(
         self,
@@ -87,7 +86,13 @@ class TradeHTTP(HTTPManager):
         )
 
     def place_market_order(
-        self, category: str, symbol: str, side: str, qty: str, reduceOnly: bool = None, isLeverage: int = None
+        self,
+        category: str,
+        symbol: str,
+        side: str,
+        qty: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None,
     ):
         return self.place_order(
             category=category,
@@ -100,17 +105,37 @@ class TradeHTTP(HTTPManager):
         )
 
     def place_market_buy_order(
-        self, category: str, symbol: str, qty: str, reduceOnly: bool = None, isLeverage: int = None
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None,
     ):
         return self.place_market_order(
-            category=category, symbol=symbol, side="Buy", qty=qty, reduceOnly=reduceOnly, isLeverage=isLeverage
+            category=category,
+            symbol=symbol,
+            side="Buy",
+            qty=qty,
+            reduceOnly=reduceOnly,
+            isLeverage=isLeverage,
         )
 
     def place_market_sell_order(
-        self, category: str, symbol: str, qty: str, reduceOnly: bool = None, isLeverage: int = None
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None,
     ):
         return self.place_market_order(
-            category=category, symbol=symbol, side="Sell", qty=qty, reduceOnly=reduceOnly, isLeverage=isLeverage
+            category=category,
+            symbol=symbol,
+            side="Sell",
+            qty=qty,
+            reduceOnly=reduceOnly,
+            isLeverage=isLeverage,
         )
 
     def place_limit_order(
@@ -200,7 +225,13 @@ class TradeHTTP(HTTPManager):
         )
 
     def place_post_only_limit_buy_order(
-        self, category: str, symbol: str, qty: str, price: str, reduceOnly: bool = None, isLeverage: int = None
+        self,
+        category: str,
+        symbol: str,
+        qty: str,
+        price: str,
+        reduceOnly: bool = None,
+        isLeverage: int = None,
     ):
         return self.place_post_only_limit_order(
             category=category,
