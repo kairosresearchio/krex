@@ -83,7 +83,7 @@ class HTTPManager:
             if method.upper() == "GET":
                 response = self.session.get(url, headers=header)
             elif method.upper() == "POST":
-                response = self.session.post(url, data=body, headers=header)
+                response = self.session.post(url, json=body, headers=header)
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 

@@ -23,6 +23,7 @@ class Account(str, Enum):
     INTEREST_ACCRUED = "/api/v5/account/interest-accrued"
     INTEREST_RATE = "/api/v5/account/interest-rate"
     SET_GREEKS = "/api/v5/account/set-greeks"
+    SET_ISOLATED_MODE = "/api/v5/account/set-isolated-mode"
     MAX_WITHDRAWAL = "/api/v5/account/max-withdrawal"
     ACCOUNT_RISK = "/api/v5/account/risk-state"
     QUICK_BORROW_REPAY = "/api/v5/account/quick-margin-borrow-repay"

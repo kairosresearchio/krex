@@ -2,7 +2,7 @@ from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
 
 
-#todo: dont need category after product table manager is implemented
+# todo: dont need category after product table manager is implemented
 class TradeHTTP(HTTPManager):
     def place_order(
         self,
@@ -85,15 +85,9 @@ class TradeHTTP(HTTPManager):
             path=Trade.PLACE_ORDER,
             query=payload,
         )
-        
+
     def place_market_order(
-        self,
-        category: str,
-        symbol: str,
-        side: str,
-        qty: str,
-        reduceOnly: bool = None,
-        isLeverage: int = None
+        self, category: str, symbol: str, side: str, qty: str, reduceOnly: bool = None, isLeverage: int = None
     ):
         return self.place_order(
             category=category,
@@ -102,43 +96,23 @@ class TradeHTTP(HTTPManager):
             orderType="Market",
             qty=qty,
             reduceOnly=reduceOnly,
-            isLeverage=isLeverage
+            isLeverage=isLeverage,
         )
-    
+
     def place_market_buy_order(
-        self,
-        category: str,
-        symbol: str,
-        qty: str,
-        reduceOnly: bool = None,
-        isLeverage: int = None
+        self, category: str, symbol: str, qty: str, reduceOnly: bool = None, isLeverage: int = None
     ):
         return self.place_market_order(
-            category=category,
-            symbol=symbol,
-            side="Buy",
-            qty=qty,
-            reduceOnly=reduceOnly,
-            isLeverage=isLeverage
+            category=category, symbol=symbol, side="Buy", qty=qty, reduceOnly=reduceOnly, isLeverage=isLeverage
         )
-    
+
     def place_market_sell_order(
-        self,
-        category: str,
-        symbol: str,
-        qty: str,
-        reduceOnly: bool = None,
-        isLeverage: int = None
+        self, category: str, symbol: str, qty: str, reduceOnly: bool = None, isLeverage: int = None
     ):
         return self.place_market_order(
-            category=category,
-            symbol=symbol,
-            side="Sell",
-            qty=qty,
-            reduceOnly=reduceOnly,
-            isLeverage=isLeverage
+            category=category, symbol=symbol, side="Sell", qty=qty, reduceOnly=reduceOnly, isLeverage=isLeverage
         )
-    
+
     def place_limit_order(
         self,
         category: str,
@@ -148,7 +122,7 @@ class TradeHTTP(HTTPManager):
         price: str,
         reduceOnly: bool = None,
         timeInForce: str = None,
-        isLeverage: int = None
+        isLeverage: int = None,
     ):
         return self.place_order(
             category=category,
@@ -159,9 +133,9 @@ class TradeHTTP(HTTPManager):
             price=price,
             reduceOnly=reduceOnly,
             timeInForce=timeInForce,
-            isLeverage=isLeverage
+            isLeverage=isLeverage,
         )
-    
+
     def place_limit_buy_order(
         self,
         category: str,
@@ -170,7 +144,7 @@ class TradeHTTP(HTTPManager):
         price: str,
         reduceOnly: bool = None,
         timeInForce: str = None,
-        isLeverage: int = None
+        isLeverage: int = None,
     ):
         return self.place_limit_order(
             category=category,
@@ -180,9 +154,9 @@ class TradeHTTP(HTTPManager):
             price=price,
             reduceOnly=reduceOnly,
             timeInForce=timeInForce,
-            isLeverage=isLeverage
+            isLeverage=isLeverage,
         )
-        
+
     def place_limit_sell_order(
         self,
         category: str,
@@ -191,7 +165,7 @@ class TradeHTTP(HTTPManager):
         price: str,
         reduceOnly: bool = None,
         timeInForce: str = None,
-        isLeverage: int = None
+        isLeverage: int = None,
     ):
         return self.place_limit_order(
             category=category,
@@ -201,9 +175,9 @@ class TradeHTTP(HTTPManager):
             price=price,
             reduceOnly=reduceOnly,
             timeInForce=timeInForce,
-            isLeverage=isLeverage
+            isLeverage=isLeverage,
         )
-        
+
     def place_post_only_limit_order(
         self,
         category: str,
@@ -212,7 +186,7 @@ class TradeHTTP(HTTPManager):
         qty: str,
         price: str,
         reduceOnly: bool = None,
-        isLeverage: int = None
+        isLeverage: int = None,
     ):
         return self.place_limit_order(
             category=category,
@@ -222,17 +196,11 @@ class TradeHTTP(HTTPManager):
             price=price,
             reduceOnly=reduceOnly,
             timeInForce="PostOnly",
-            isLeverage=isLeverage
+            isLeverage=isLeverage,
         )
-    
+
     def place_post_only_limit_buy_order(
-        self,
-        category: str,
-        symbol: str,
-        qty: str,
-        price: str,
-        reduceOnly: bool = None,
-        isLeverage: int = None
+        self, category: str, symbol: str, qty: str, price: str, reduceOnly: bool = None, isLeverage: int = None
     ):
         return self.place_post_only_limit_order(
             category=category,
@@ -241,9 +209,9 @@ class TradeHTTP(HTTPManager):
             qty=qty,
             price=price,
             reduceOnly=reduceOnly,
-            isLeverage=isLeverage
+            isLeverage=isLeverage,
         )
-        
+
     def place_post_only_limit_sell_order(
         self,
         category: str,
@@ -260,7 +228,7 @@ class TradeHTTP(HTTPManager):
             qty=qty,
             price=price,
             reduceOnly=reduceOnly,
-            isLeverage=isLeverage
+            isLeverage=isLeverage,
         )
 
     def amend_order(

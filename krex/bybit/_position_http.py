@@ -9,7 +9,7 @@ class PositionHTTP(HTTPManager):
         symbol: str = None,
         limit: int = 20,
     ):
-        #todo: dont need category after product table manager is implemented
+        # todo: dont need category after product table manager is implemented
         """
         :param category: str (inear, inverse, option)
         :param symbol: str
@@ -34,7 +34,7 @@ class PositionHTTP(HTTPManager):
         symbol: str,
         leverage: str,
     ):
-        #todo: dont need category after product table manager is implemented
+        # todo: dont need category after product table manager is implemented
         """
         :param category: str (linear, inverse)
         :param symbol: str
@@ -107,7 +107,7 @@ class PositionHTTP(HTTPManager):
         :param tpOrderType: str
         :param slOrderType: str
         """
-        #todo: dont need category after product table manager is implemented
+        # todo: dont need category after product table manager is implemented
         payload = {
             "category": category,
             "symbol": symbol,
@@ -169,7 +169,7 @@ class PositionHTTP(HTTPManager):
         symbol: str,
         margin: str,
     ):
-        #todo: dont need category after product table manager is implemented
+        # todo: dont need category after product table manager is implemented
         """
         :param category: str
         :param symbol: str
@@ -195,7 +195,7 @@ class PositionHTTP(HTTPManager):
         startTime: int = None,
         limit: int = 20,
     ):
-        #todo: dont need category after product table manager is implemented
+        # todo: dont need category after product table manager is implemented
         """
         :param category: str
         :param symbol: str

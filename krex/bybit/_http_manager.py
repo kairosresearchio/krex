@@ -35,11 +35,11 @@ class HTTPManager:
     recv_window: int = field(default=5000)
     max_retries: int = field(default=3)
     retry_delay: int = field(default=3)
+    session: requests.Session = field(default_factory=requests.Session, init=False)
 
     def __post_init__(self):
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
-        self.session = requests.Session()
 
     def _auth(self, payload, timestamp):
         param_str = f"{timestamp}{self.api_key}{self.recv_window}{payload}"

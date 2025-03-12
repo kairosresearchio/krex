@@ -16,9 +16,6 @@ class Asset(str, Enum):
     GET_DEPOSIT_WITHDRAW_STATUS = "/api/v5/asset/deposit-withdraw-status"
     EXCHANGE_LIST = "/api/v5/asset/exchange-list"
     MONTHLY_STATEMENT = "/api/v5/asset/monthly-statement"
-    DEPOSIT_LIGHTNING = "/api/v5/asset/deposit-lightning"
-    WITHDRAWAL_LIGHTNING = "/api/v5/asset/withdrawal-lightning"
-
     GET_CURRENCIES = "/api/v5/asset/convert/currencies"
     GET_CURRENCY_PAIR = "/api/v5/asset/convert/currency-pair"
     ESTIMATE_QUOTE = "/api/v5/asset/convert/estimate-quote"
