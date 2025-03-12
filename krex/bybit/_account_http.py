@@ -116,7 +116,7 @@ class AccountHTTP(HTTPManager):
         """
         payload = {
             "coin": coin,
-            "switch": switch,
+            "collateralSwitch": switch,
         }
 
         return self._request(

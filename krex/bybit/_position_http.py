@@ -7,6 +7,7 @@ class PositionHTTP(HTTPManager):
         self,
         category: str,
         symbol: str = None,
+        settleCoin: str = None,
         limit: int = 20,
     ):
         """
@@ -20,6 +21,8 @@ class PositionHTTP(HTTPManager):
         }
         if symbol is not None:
             payload["symbol"] = symbol
+        if settleCoin is not None:
+            payload["settleCoin"] = settleCoin
 
         return self._request(
             method="GET",

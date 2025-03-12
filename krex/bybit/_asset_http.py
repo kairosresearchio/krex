@@ -1,32 +1,10 @@
 from ._http_manager import HTTPManager
 from .endpoints.asset import Asset
 import uuid
+import time
 
 
 class AssetHTTP(HTTPManager):
-    def get_coin_exchange_records(
-        self,
-        fromCoin: str = None,
-        toCoin: str = None,
-        limit: int = 20,
-    ):
-        """
-        :param fromCoin: str
-        :param toCoin: str
-        """
-        payload = {
-            "limit": limit,
-        }
-        if fromCoin is not None:
-            payload["fromCoin"] = fromCoin
-        if toCoin is not None:
-            payload["toCoin"] = toCoin
-
-        return self._request(
-            method="GET",
-            path=Asset.GET_COIN_EXCHANGE_RECORDS,
-            query=payload,
-        )
 
     def get_coin_info(
         self,
@@ -331,6 +309,7 @@ class AssetHTTP(HTTPManager):
             query=payload,
         )
 
+    #todo: this is wrong
     def get_sub_deposit_records(
         self,
         coin: str = None,
@@ -453,34 +432,31 @@ class AssetHTTP(HTTPManager):
     def withdraw(
         self,
         coin: str,
+        chain: str,
         address: str,
         amount: str,
-        timestamp: int,
-        vaspEntityId: str,
-        chain: str = None,
         tag: str = None,
-        accountType: str = None,
     ):
         """
         :param coin: str
+        :param chain: str
         :param address: str
         :param amount: str
-        :param timestamp: int
-        :param vaspEntityId: str
+        :param tag: str
         """
         payload = {
             "coin": coin,
+            "chain": chain,
             "address": address,
             "amount": amount,
-            "timestamp": timestamp,
-            "vaspEntityId": vaspEntityId,
+            "timestamp": int(time.time() * 1000),
+            "accountType": "FUND",
+            "feeType": 1,
         }
         if chain is not None:
             payload["chain"] = chain
         if tag is not None:
             payload["tag"] = tag
-        if accountType is not None:
-            payload["accountType"] = accountType
 
         return self._request(
             method="POST",
