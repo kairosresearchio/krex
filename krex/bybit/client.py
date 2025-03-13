@@ -4,6 +4,7 @@ from ._account_http import AccountHTTP
 from ._asset_http import AssetHTTP
 from ._position_http import PositionHTTP
 from ._spot_margin_trade_http import SpotMarginTradeHTTP
+from ._market_http import MarketHTTP
 
 
 @dataclass
@@ -13,6 +14,7 @@ class Client(
     AssetHTTP,
     PositionHTTP,
     SpotMarginTradeHTTP,
+    MarketHTTP,
 ):
     def __init__(self, **args):
         super().__init__(**args)

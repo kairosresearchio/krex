@@ -5,7 +5,6 @@ import time
 
 
 class AssetHTTP(HTTPManager):
-
     def get_coin_info(
         self,
         coin: str = None,
@@ -309,19 +308,21 @@ class AssetHTTP(HTTPManager):
             query=payload,
         )
 
-    #todo: this is wrong
     def get_sub_deposit_records(
         self,
+        subMemberId: str,
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
     ):
         """
+        :param subMemberId: str
         :param coin: str
         :param startTime: str
         :param limit: int
         """
         payload = {
+            "subMemberId": subMemberId,
             "limit": limit,
         }
         if coin is not None:
