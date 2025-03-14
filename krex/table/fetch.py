@@ -13,9 +13,9 @@ def fetch_bybit() -> Dict[str, Dict[str, str]]:
     markets = {}
     for market in response["result"]["list"]:
         markets[market["symbol"]] = {
-            "price_precision": market["priceScale"],
-            "size_precision": market["lotSizeFilter"]["qtyStep"],
-            "contract_value": "1",  # Bybit 並未提供 contract value，通常默認為 1
+            "price_precision": market["priceFilter"]["minPrice"],
+            "size_precision": market["priceFilter"]["tickSize"],
+            "contract_value": market["leverageFilter"]["maxLeverage"],
             "min_size": market["lotSizeFilter"]["minOrderQty"],
             "min_notional": market["lotSizeFilter"].get("minNotionalValue", "0"),
         }

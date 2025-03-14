@@ -14,9 +14,7 @@ async def test_fetch_product_tables():
         product_table.to_csv(csv_filename, index=False, encoding="utf-8-sig")
         print(f"📁 Data successfully exported to {csv_filename}")
     else:
-        print(
-            "❌ _fetch_product_tables test failed. The returned DataFrame is either empty or of an incorrect type."
-        )
+        print("❌ _fetch_product_tables test failed. The returned DataFrame is either empty or of an incorrect type.")
 
 
 if __name__ == "__main__":

@@ -62,9 +62,7 @@ class ProductTableManager:
         try:
             yield clients
         finally:
-            await asyncio.gather(
-                *[client.close() for client in clients if hasattr(client, "close")]
-            )
+            await asyncio.gather(*[client.close() for client in clients if hasattr(client, "close")])
 
     def get(
         self,
@@ -116,9 +114,7 @@ class ProductTableManager:
         return self.get("exchange_symbol", product_symbol, exchange)
 
     def get_product_symbol(self, exchange_symbol, exchange):
-        return self.get(
-            "product_symbol", exchange_symbol=exchange_symbol, exchange=exchange
-        )
+        return self.get("product_symbol", exchange_symbol=exchange_symbol, exchange=exchange)
 
     def get_product_type(self, product_symbol):
         return product_symbol.split("-")[-1]
