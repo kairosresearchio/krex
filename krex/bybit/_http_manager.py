@@ -24,6 +24,10 @@ def get_header(api_key, signature, timestamp, recv_window):
     }
 
 
+def get_header_no_sign():
+    return {"Content-Type": "application/json"}
+
+
 @dataclass
 class HTTPManager:
     testnet: bool = field(default=False)
@@ -62,8 +66,12 @@ class HTTPManager:
         else:
             payload = json.dumps(query)
 
-        signature = self._auth(payload, timestamp)
-        headers = get_header(self.api_key, signature, timestamp, self.recv_window)
+        if self.api_key and self.api_secret:
+            signature = self._auth(payload, timestamp)
+            headers = get_header(self.api_key, signature, timestamp, self.recv_window)
+        else:
+            headers = get_header_no_sign()
+
         url = self.endpoint + path
 
         try:

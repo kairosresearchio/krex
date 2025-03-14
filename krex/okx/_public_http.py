@@ -3,6 +3,35 @@ from .endpoints.public import Public
 
 
 class PublicHTTP(HTTPManager):
+    def get_instruments(
+        self,
+        instType: str,
+        uly: str = None,
+        instFamily: str = None,
+        instId: str = None,
+    ):
+        """
+        :param instType: str
+        :param uly: str
+        :param instFamily: str
+        :param instId: str
+        """
+        payload = {
+            "instType": instType,
+        }
+        if uly is not None:
+            payload["uly"] = uly
+        if instFamily is not None:
+            payload["instFamily"] = instFamily
+        if instId is not None:
+            payload["instId"] = instId
+
+        return self._request(
+            method="GET",
+            path=Public.GET_INSTRUMENT_INFO,
+            query=payload,
+        )
+
     def get_funding_rate(
         self,
         instId: str,
@@ -16,7 +45,7 @@ class PublicHTTP(HTTPManager):
 
         return self._request(
             method="GET",
-            path=Public.FUNDING_RATE,
+            path=Public.GET_FUNDING_RATE,
             query=payload,
         )
 
@@ -42,6 +71,6 @@ class PublicHTTP(HTTPManager):
 
         return self._request(
             method="GET",
-            path=Public.FUNDING_RATE_HISTORY,
+            path=Public.GET_FUNDING_RATE_HISTORY,
             query=payload,
         )
