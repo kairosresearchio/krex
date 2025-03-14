@@ -10,7 +10,6 @@ class FundingAccount(str, Enum):
     WITHDRAW = "/account/v1/withdraw/apply"
     GET_DEPOSIT_WITHDRAW_HISTORY = "/account/v2/deposit-withdraw/history"
     GET_DEPOSIT_WITHDRAW_HISTORY_DETAIL = "/account/v1/deposit-withdraw/detail"
-    
 
     def __str__(self) -> str:
         return self.value
@@ -18,8 +17,6 @@ class FundingAccount(str, Enum):
 
 class FuturesAccount(str, Enum):
     GET_CONTRACT_ASSETS = "/contract/private/assets-detail"
-    
+
     def __str__(self) -> str:
         return self.value
-    
-

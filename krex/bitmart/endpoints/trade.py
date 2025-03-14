@@ -31,7 +31,6 @@ class FuturesTrade(str, Enum):
     CANCEL_ALL_ORDERS = "/contract/private/cancel-orders"
     TRANSFER = "/account/v1/transfer-contract"
     SUBMIT_LEVERAGE = "/contract/private/submit-leverage"
-    
 
     def __str__(self) -> str:
         return self.value
