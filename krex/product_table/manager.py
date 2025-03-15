@@ -1,7 +1,7 @@
 import pandas as pd
 import asyncio
 from contextlib import asynccontextmanager
-from krex.table.fetch import bybit, okx
+from krex.product_table.fetch import bybit, okx
 
 VALID_EXCHANGES = [bybit, okx]
 
