@@ -93,7 +93,6 @@ async def bybit() -> Dict[str, Dict[str, str]]:
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["qtyStep"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
-                min_notional=market["lotSizeFilter"].get("minNotionalValue", "0"),
             )
         )
 
@@ -148,7 +147,6 @@ async def okx() -> Dict[str, Dict[str, str]]:
                 price_precision=market["tickSz"],
                 size_precision=market["lotSz"],
                 min_size=market["minSz"],
-                size_per_contract=market["ctVal"],
             )
         )
 
