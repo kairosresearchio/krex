@@ -6,7 +6,7 @@ sys.path.append(ROOT)
 
 import asyncio
 import pandas as pd
-from krex.table.manager import ProductTableManager
+from krex.product_table.manager import ProductTableManager
 
 
 async def test_fetch_product_tables():
