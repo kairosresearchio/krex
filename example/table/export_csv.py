@@ -1,10 +1,11 @@
-import sys, os
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.append(ROOT)
-
+import sys
+import os
 import asyncio
 import pandas as pd
 from krex.table.manager import ProductTableManager
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(ROOT)
 
 
 async def test_fetch_product_tables():
