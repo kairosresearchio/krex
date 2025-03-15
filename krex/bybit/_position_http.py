@@ -5,13 +5,13 @@ from .endpoints.position import Position
 class PositionHTTP(HTTPManager):
     def get_positions(
         self,
-        category: str,
-        symbol: str = None,
+        category: str = "linear",
+        product_symbol: str = None,
         settleCoin: str = None,
         limit: int = 20,
     ):
         """
-        :param category: str (inear, inverse, option)
+        :param category: str (linear, inverse, option)
         :param symbol: str
         :param limit: str
         """
@@ -19,8 +19,9 @@ class PositionHTTP(HTTPManager):
             "category": category,
             "limit": limit,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
+            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
         if settleCoin is not None:
             payload["settleCoin"] = settleCoin
 
@@ -32,8 +33,7 @@ class PositionHTTP(HTTPManager):
 
     def set_leverage(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         leverage: str,
     ):
         """
@@ -43,8 +43,8 @@ class PositionHTTP(HTTPManager):
         :param sellLeverage: str
         """
         payload = {
-            "category": category,
-            "symbol": symbol,
+            "category": self.ptm.get_product_type(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             "buyLeverage": leverage,
             "sellLeverage": leverage,
         }
@@ -139,7 +139,7 @@ class PositionHTTP(HTTPManager):
 
     def set_auto_add_margin(
         self,
-        symbol: str,
+        product_symbol: str,
         autoAddMargin: int,
         positionIdx: int = None,
     ):
@@ -150,7 +150,7 @@ class PositionHTTP(HTTPManager):
         """
         payload = {
             "category": "linear",
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             "autoAddMargin": autoAddMargin,
             "positionIdx": 0,
         }
@@ -165,19 +165,17 @@ class PositionHTTP(HTTPManager):
 
     def add_or_reduce_margin(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         margin: str,
     ):
         """
         :param category: str
         :param symbol: str
         :param margin: str
-        :param positionIdx: int
         """
         payload = {
-            "category": category,
-            "symbol": symbol,
+            "category": self.ptm.get_product_type(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             "margin": margin,
         }
 
@@ -189,8 +187,8 @@ class PositionHTTP(HTTPManager):
 
     def get_closed_pnl(
         self,
-        category: str,
-        symbol: str = None,
+        category: str = "linear",
+        product_symbol: str = None,
         startTime: int = None,
         limit: int = 20,
     ):
@@ -204,8 +202,9 @@ class PositionHTTP(HTTPManager):
             "category": category,
             "limit": limit,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
+            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
         if startTime is not None:
             payload["startTime"] = startTime
 

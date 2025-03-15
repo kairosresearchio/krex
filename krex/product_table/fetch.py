@@ -1,6 +1,4 @@
 from typing import Dict
-from krex.bybit._market_http import MarketHTTP
-from krex.okx._public_http import PublicHTTP
 from dataclasses import dataclass, asdict
 import pandas as pd
 import re
@@ -63,6 +61,7 @@ def format_product_symbol(symbol: str) -> str:
 
 
 async def bybit() -> Dict[str, Dict[str, str]]:
+    from krex.bybit._market_http import MarketHTTP
     market_http = MarketHTTP()
 
     markets = []
@@ -74,7 +73,7 @@ async def bybit() -> Dict[str, Dict[str, str]]:
                 exchange="bybit",
                 exchange_symbol=market["symbol"],
                 product_symbol=format_product_symbol(market["symbol"]),
-                product_type="SWAP",
+                product_type="linear",
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["qtyStep"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -89,7 +88,7 @@ async def bybit() -> Dict[str, Dict[str, str]]:
                 exchange="bybit",
                 exchange_symbol=market["symbol"],
                 product_symbol=format_product_symbol(market["symbol"]),
-                product_type="SWAP",
+                product_type="inverse",
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["qtyStep"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -105,7 +104,7 @@ async def bybit() -> Dict[str, Dict[str, str]]:
                 exchange="bybit",
                 exchange_symbol=market["symbol"],
                 product_symbol=f"{market['symbol'][:-4]}-{market['symbol'][-4:]}-SPOT",
-                product_type="SPOT",
+                product_type="spot",
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["basePrecision"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -117,6 +116,7 @@ async def bybit() -> Dict[str, Dict[str, str]]:
 
 
 async def okx() -> Dict[str, Dict[str, str]]:
+    from krex.okx._public_http import PublicHTTP
     public_http = PublicHTTP()
 
     markets = []

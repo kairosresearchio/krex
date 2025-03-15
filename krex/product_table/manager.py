@@ -116,8 +116,8 @@ class ProductTableManager:
     def get_product_symbol(self, exchange_symbol, exchange):
         return self.get("product_symbol", exchange_symbol=exchange_symbol, exchange=exchange)
 
-    def get_product_type(self, product_symbol):
-        return product_symbol.split("-")[-1]
+    def get_product_type(self, product_symbol, exchange):
+        return self.get("product_type", product_symbol, exchange)
 
     def convert_product_type(self, product_code, from_product_type, to_product_type):
         base, quote, product_type = product_code.split("-")

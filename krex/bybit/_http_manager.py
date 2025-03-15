@@ -2,9 +2,13 @@ import hmac
 import hashlib
 import json
 import requests
+import asyncio
+import nest_asyncio
 from dataclasses import dataclass, field
 from ..utils.errors import FailedRequestError
 from ..utils.helpers import generate_timestamp
+from ..product_table.manager import ProductTableManager
+nest_asyncio.apply()
 
 HTTP_URL = "https://{SUBDOMAIN}.{DOMAIN}.{TLD}"
 SUBDOMAIN_TESTNET = "api-testnet"
@@ -40,10 +44,13 @@ class HTTPManager:
     max_retries: int = field(default=3)
     retry_delay: int = field(default=3)
     session: requests.Session = field(default_factory=requests.Session, init=False)
+    ptm: ProductTableManager = field(init=False)
+
 
     def __post_init__(self):
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
+        self.ptm = asyncio.run(ProductTableManager())
 
     def _auth(self, payload, timestamp):
         param_str = f"{timestamp}{self.api_key}{self.recv_window}{payload}"

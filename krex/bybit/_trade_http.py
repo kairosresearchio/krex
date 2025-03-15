@@ -5,8 +5,7 @@ from .endpoints.trade import Trade
 class TradeHTTP(HTTPManager):
     def place_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         side: str,
         orderType: str,
         qty: str,
@@ -32,8 +31,8 @@ class TradeHTTP(HTTPManager):
         slOrderType: str = None,
     ):
         payload = {
-            "category": category,
-            "symbol": symbol,
+            "category": self.ptm.get_product_type(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             "side": side,
             "orderType": orderType,
             "qty": qty,
@@ -87,16 +86,15 @@ class TradeHTTP(HTTPManager):
 
     def place_market_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         side: str,
         qty: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
     ):
         return self.place_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side=side,
             orderType="Market",
             qty=qty,
@@ -106,15 +104,14 @@ class TradeHTTP(HTTPManager):
 
     def place_market_buy_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         qty: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
     ):
         return self.place_market_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side="Buy",
             qty=qty,
             reduceOnly=reduceOnly,
@@ -123,15 +120,14 @@ class TradeHTTP(HTTPManager):
 
     def place_market_sell_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         qty: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
     ):
         return self.place_market_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side="Sell",
             qty=qty,
             reduceOnly=reduceOnly,
@@ -140,8 +136,7 @@ class TradeHTTP(HTTPManager):
 
     def place_limit_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         side: str,
         qty: str,
         price: str,
@@ -150,8 +145,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side=side,
             orderType="Limit",
             qty=qty,
@@ -163,8 +158,7 @@ class TradeHTTP(HTTPManager):
 
     def place_limit_buy_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         qty: str,
         price: str,
         reduceOnly: bool = None,
@@ -172,8 +166,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side="Buy",
             qty=qty,
             price=price,
@@ -184,8 +178,7 @@ class TradeHTTP(HTTPManager):
 
     def place_limit_sell_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         qty: str,
         price: str,
         reduceOnly: bool = None,
@@ -193,8 +186,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side="Sell",
             qty=qty,
             price=price,
@@ -205,8 +198,7 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         side: str,
         qty: str,
         price: str,
@@ -214,8 +206,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side=side,
             qty=qty,
             price=price,
@@ -226,16 +218,15 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_buy_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         qty: str,
         price: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
     ):
         return self.place_post_only_limit_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side="Buy",
             qty=qty,
             price=price,
@@ -245,16 +236,15 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_sell_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         qty: str,
         price: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
     ):
         return self.place_post_only_limit_order(
-            category=category,
-            symbol=symbol,
+            category=self.ptm.get_product_type(product_symbol, "bybit"),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             side="Sell",
             qty=qty,
             price=price,
@@ -264,8 +254,7 @@ class TradeHTTP(HTTPManager):
 
     def amend_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         orderId: str = None,
         orderLinkId: str = None,
         orderIv: str = None,
@@ -285,8 +274,8 @@ class TradeHTTP(HTTPManager):
         :param category: str (linear, option, spot, inverse)
         """
         payload = {
-            "category": category,
-            "symbol": symbol,
+            "category": self.ptm.get_product_type(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -325,8 +314,7 @@ class TradeHTTP(HTTPManager):
 
     def cancel_order(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         orderId: str = None,
     ):
         """
@@ -335,8 +323,8 @@ class TradeHTTP(HTTPManager):
         :param orderId: str
         """
         payload = {
-            "category": category,
-            "symbol": symbol,
+            "category": self.ptm.get_product_type(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -373,8 +361,8 @@ class TradeHTTP(HTTPManager):
 
     def cancel_all_orders(
         self,
-        category: str,
-        symbol: str = None,
+        category: str = "linear",
+        product_symbol: str = None,
     ):
         """
         :param category: str (linear, option, spot, inverse)
@@ -383,8 +371,9 @@ class TradeHTTP(HTTPManager):
         payload = {
             "category": category,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
+            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
 
         return self._request(
             method="POST",
@@ -394,8 +383,8 @@ class TradeHTTP(HTTPManager):
 
     def get_order_history(
         self,
-        category: str,
-        symbol: str = None,
+        category: str = "linear",
+        product_symbol: str = None,
         startTime: int = None,
         limit: int = 20,
     ):
@@ -409,8 +398,9 @@ class TradeHTTP(HTTPManager):
             "category": category,
             "limit": limit,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
+            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
         if startTime is not None:
             payload["startTime"] = startTime
 
@@ -422,8 +412,8 @@ class TradeHTTP(HTTPManager):
 
     def get_execution_list(
         self,
-        category: str,
-        symbol: str = None,
+        category: str = "linear",
+        product_symbol: str = None,
         startTime: int = None,
         limit: int = 50,
     ):
@@ -437,8 +427,9 @@ class TradeHTTP(HTTPManager):
             "category": category,
             "limit": limit,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
+            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
         if startTime is not None:
             payload["startTime"] = startTime
 
@@ -536,7 +527,7 @@ class TradeHTTP(HTTPManager):
 
     def get_borrow_quota(
         self,
-        symbol: str,
+        product_symbol: str,
         side: str,
     ):
         """
@@ -545,7 +536,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {
             "category": "spot",
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
             "side": side,
         }
 

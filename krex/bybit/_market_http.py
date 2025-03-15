@@ -38,9 +38,8 @@ class MarketHTTP(HTTPManager):
 
     def get_kline(
         self,
-        symbol: str,
+        product_symbol: str,
         interval: str,
-        category: str = None,
         startTime: int = None,
         limit: int = None,
     ):
@@ -52,11 +51,10 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "category": self.ptm.get_product_type(product_symbol, "bybit"),
             "interval": interval,
         }
-        if category is not None:
-            payload["category"] = category
         if startTime is not None:
             payload["start"] = startTime
         if limit is not None:
@@ -70,8 +68,7 @@ class MarketHTTP(HTTPManager):
 
     def get_orderbook(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         limit: int = None,
     ):
         """
@@ -80,8 +77,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": category,
-            "symbol": symbol,
+            "category": self.ptm.get_product_type(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
         }
         if limit is not None:
             payload["limit"] = limit
@@ -94,8 +91,8 @@ class MarketHTTP(HTTPManager):
 
     def get_tickers(
         self,
-        category: str,
-        symbol: str = None,
+        category: str = "linear",
+        product_symbol: str = None,
         baseCoin: str = None,
     ):
         """
@@ -106,8 +103,9 @@ class MarketHTTP(HTTPManager):
         payload = {
             "category": category,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
+            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
         if baseCoin is not None:
             payload["baseCoin"] = baseCoin
 
@@ -119,8 +117,7 @@ class MarketHTTP(HTTPManager):
 
     def get_funding_rate_history(
         self,
-        category: str,
-        symbol: str,
+        product_symbol: str,
         startTime: int = None,
         limit: int = None,
     ):
@@ -131,8 +128,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": category,
-            "symbol": symbol,
+            "category": self.ptm.get_product_type(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
         }
         if startTime is not None:
             payload["startTime"] = startTime
