@@ -47,8 +47,8 @@ def format_product_symbol(symbol: str) -> str:
         base, date = match.groups()
         return f"{base}-{date}-SWAP"
 
-    # ETHUSDH25 --> ETH-USD-H25-SWAP
-    match = re.match(r"([A-Z]+)(USD[T]?)(H\d{2})$", symbol)
+    # ETHUSDH25 --> ETH-USD-H25-SWAP 
+    match = re.match(r"([A-Z]+)(USD[T]?)([HMU]\d{2})$", symbol)
     if match:
         base, quote, date = match.groups()
         return f"{base}-{quote}-{date}-SWAP"
@@ -99,6 +99,8 @@ async def bybit() -> Dict[str, Dict[str, str]]:
 
     response = market_http.get_instruments_info(category="spot")
     for market in response["result"]["list"]:
+        if not market["symbol"].endswith(("USDT", "USDC")):
+            continue
         markets.append(
             MarketInfo(
                 exchange="bybit",
