@@ -171,3 +171,4 @@ cython_debug/
 .pypirc
 .DS_Store
 .csv
+*.ipynb linguist-vendored
