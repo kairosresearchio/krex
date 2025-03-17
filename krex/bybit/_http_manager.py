@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from ..utils.errors import FailedRequestError
 from ..utils.helpers import generate_timestamp
 from ..product_table.manager import ProductTableManager
+
 nest_asyncio.apply()
 
 HTTP_URL = "https://{SUBDOMAIN}.{DOMAIN}.{TLD}"
@@ -45,7 +46,6 @@ class HTTPManager:
     retry_delay: int = field(default=3)
     session: requests.Session = field(default_factory=requests.Session, init=False)
     ptm: ProductTableManager = field(init=False)
-
 
     def __post_init__(self):
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET

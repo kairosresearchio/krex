@@ -2,7 +2,8 @@ from enum import Enum
 
 
 class SpotTrade(str, Enum):
-    NEW_ORDER = "/spot/v2/submit_order"
+    #  https://api-cloud.bitmart.com
+    SUBMIT_ORDER = "/spot/v2/submit_order"
     CANCEL_ORDER = "/spot/v3/cancel_order"
     CANCEL_ALL_ORDERS = "/spot/v4/cancel_all"
     NEW_MARGIN_ORDER = "/spot/v1/margin/submit_order"
@@ -18,6 +19,13 @@ class SpotTrade(str, Enum):
 
 
 class FuturesTrade(str, Enum):
+    # https://api-cloud-v2.bitmart.com
+    SUBMIT_ORDER = "/contract/private/submit-order"
+    MODIFY_LIMIT_ORDER = "/contract/private/modify-limit-order"
+    CANCEL_ORDER = "/contract/private/cancel-order"
+    CANCEL_ALL_ORDERS = "/contract/private/cancel-orders"
+    TRANSFER = "/account/v1/transfer-contract"
+    SUBMIT_LEVERAGE = "/contract/private/submit-leverage"
     GET_ORDER_DETAIL = "/contract/private/order"
     GET_ORDER_HISTORY = "/contract/private/order-history"
     GET_ALL_OPEN_ORDERS = "/contract/private/get-open-orders"
@@ -25,12 +33,6 @@ class FuturesTrade(str, Enum):
     GET_ORDER_TRADE = "/contract/private/trades"
     GET_TRANSACTION_HISTORY = "/contract/private/transaction-history"
     GET_TRANSFER_LIST = "/account/v1/transfer-contract-list"
-    SUBMIT_ORDER = "/contract/private/submit-order"
-    MODIFY_LIMIT_ORDER = "/contract/private/modify-limit-order"
-    CANCEL_ORDER = "/contract/private/cancel-order"
-    CANCEL_ALL_ORDERS = "/contract/private/cancel-orders"
-    TRANSFER = "/account/v1/transfer-contract"
-    SUBMIT_LEVERAGE = "/contract/private/submit-leverage"
 
     def __str__(self) -> str:
         return self.value

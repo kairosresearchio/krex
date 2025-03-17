@@ -2,8 +2,9 @@ from enum import Enum
 
 
 class FundingAccount(str, Enum):
+    # https://api-cloud.bitmart.com
     GET_ACCOUNT_BALANCE = "/account/v1/wallet"
-    GET_CURRENCIES = "/v1/currencies"
+    GET_ACCOUNT_CURRENCIES = "/account/v1/currencies"
     GET_SPOT_WALLET_BALANCE = "/spot/v1/wallet"
     DEPOSIT_ADDRESS = "/account/v1/deposit/address"
     WITHDRAW_QUOTA = "/account/v1/withdraw/charge"
@@ -16,6 +17,7 @@ class FundingAccount(str, Enum):
 
 
 class FuturesAccount(str, Enum):
+    # https://api-cloud-v2.bitmart.com
     GET_CONTRACT_ASSETS = "/contract/private/assets-detail"
 
     def __str__(self) -> str:

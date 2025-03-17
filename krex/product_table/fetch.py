@@ -45,7 +45,7 @@ def format_product_symbol(symbol: str) -> str:
         base, date = match.groups()
         return f"{base}-{date}-SWAP"
 
-    # ETHUSDH25 --> ETH-USD-H25-SWAP 
+    # ETHUSDH25 --> ETH-USD-H25-SWAP
     match = re.match(r"([A-Z]+)(USD[T]?)([HMU]\d{2})$", symbol)
     if match:
         base, quote, date = match.groups()
@@ -62,6 +62,7 @@ def format_product_symbol(symbol: str) -> str:
 
 async def bybit() -> Dict[str, Dict[str, str]]:
     from krex.bybit._market_http import MarketHTTP
+
     market_http = MarketHTTP()
 
     markets = []
@@ -117,6 +118,7 @@ async def bybit() -> Dict[str, Dict[str, str]]:
 
 async def okx() -> Dict[str, Dict[str, str]]:
     from krex.okx._public_http import PublicHTTP
+
     public_http = PublicHTTP()
 
     markets = []

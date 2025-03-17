@@ -133,17 +133,17 @@ class AccountHTTP(HTTPManager):
         """
         Get the trading fee rate
         if product_symbol is not specified, pls specify the category
-        
+
         :param product_symbol: str
         :param category: str Product type. spot, linear, inverse, option
         """
         payload = {}
         if product_symbol is not None:
-            payload['category'] = self.ptm.get_product_type(product_symbol, "bybit")
-            payload['symbol'] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
-        
+            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
+
         if category is not None:
-            payload['category'] = category
+            payload["category"] = category
 
         return self._request(
             method="GET",
