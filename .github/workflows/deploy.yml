@@ -1,0 +1,69 @@
+name: Deploy Python Package
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine requests
+        sudo apt-get install -y sshpass
+
+    - name: Get package version and name
+      id: get_package_info
+      run: |
+        VERSION=$(python setup.py --version)
+        PKG_NAME=$(python setup.py --name)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "pkg_name=$PKG_NAME" >> $GITHUB_OUTPUT
+        echo "Package name: $PKG_NAME"
+        echo "Package version: $VERSION"
+    
+    - name: Add host to known_hosts
+      run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+    - name: Check and delete existing version via SSH
+      id: version_check
+      env:
+        SSHPASS: ${{ secrets.SSH_PASSWORD }}
+      run: |
+        PKG_NAME="${{ steps.get_package_info.outputs.pkg_name }}"
+        VERSION="${{ steps.get_package_info.outputs.version }}"
+        WHL_FILE="${PKG_NAME}-${VERSION}-py3-none-any.whl"
+        TAR_FILE="${PKG_NAME}-${VERSION}.tar.gz"
+        
+        sshpass -e ssh -o StrictHostKeyChecking=no ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} "
+          cd /root/pypi_packages && \
+          if [ -f ${WHL_FILE} ] || [ -f ${TAR_FILE} ]; then \
+            rm -f ${WHL_FILE} ${TAR_FILE}; \
+            echo 'Deleted existing package files'; \
+          else \
+            echo 'No existing package files found'; \
+          fi
+        "
+
+    - name: Build package
+      run: python setup.py sdist bdist_wheel
+
+    - name: Upload package
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: twine upload --repository-url http://kairosresearch.io:8010/ dist/*
