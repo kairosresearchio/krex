@@ -33,19 +33,16 @@ def test_get_contract_kline():
     end_time = int(time.time())
     start_time = end_time - 3600
     assert (
-        client.get_contract_kline(
-            contract_symbol="ETHUSDT", step=5, start_time=start_time, end_time=end_time
-        )[0]["code"]
+        client.get_contract_kline(contract_symbol="ETHUSDT", step=5, start_time=start_time, end_time=end_time)[0][
+            "code"
+        ]
         == 1000
     )
 
 
 def test_get_funding_rate_history():
     """Test GET https://api-cloud-v2.bitmart.com/contract/public/funding-rate-history"""
-    assert (
-        client.get_funding_rate_history(contract_symbol="ETHUSDT", limit=10)[0]["code"]
-        == 1000
-    )
+    assert client.get_funding_rate_history(contract_symbol="ETHUSDT", limit=10)[0]["code"] == 1000
 
 
 def test_get_contract_assets():
@@ -55,20 +52,15 @@ def test_get_contract_assets():
 
 def test_get_contract_order_detail():
     """Test GET https://api-cloud-v2.bitmart.com/contract/private/order"""
-    assert (
-        client.get_contract_order_detail(
-            contract_symbol="BTCUSDT", order_id="220609666322019"
-        )[0]["code"]
-        == 1000
-    )
+    assert client.get_contract_order_detail(contract_symbol="BTCUSDT", order_id="220609666322019")[0]["code"] == 1000
 
 
 def test_get_contract_order_history():
     """Test GET https://api-cloud-v2.bitmart.com/contract/private/order-history"""
     assert (
-        client.get_contract_order_history(
-            contract_symbol="BTCUSDT", start_time=1662368173, end_time=1662368179
-        )[0]["code"]
+        client.get_contract_order_history(contract_symbol="BTCUSDT", start_time=1662368173, end_time=1662368179)[0][
+            "code"
+        ]
         == 1000
     )
 
@@ -76,9 +68,7 @@ def test_get_contract_order_history():
 def test_get_contract_open_order():
     """Test GET https://api-cloud-v2.bitmart.com/contract/private/get-open-orders"""
     assert (
-        client.get_contract_open_order(
-            contract_symbol="BTCUSDT", type="limit", order_state="all", limit=5
-        )[0]["code"]
+        client.get_contract_open_order(contract_symbol="BTCUSDT", type="limit", order_state="all", limit=5)[0]["code"]
         == 1000
     )
 
@@ -90,9 +80,7 @@ def test_get_contract_position():
 
 def test_get_contract_trade():
     """Test GET https://api-cloud-v2.bitmart.com/contract/private/trades"""
-    trades = client.get_contract_trade(
-        contract_symbol="BTCUSDT", start_time=1662368173, end_time=1662368179
-    )
+    trades = client.get_contract_trade(contract_symbol="BTCUSDT", start_time=1662368173, end_time=1662368179)
     assert trades[0]["code"] == 1000
 
 
@@ -129,53 +117,29 @@ def test_place_contract_order():
 
 def test_modify_limit_order():
     """Test POST https://api-cloud-v2.bitmart.com/contract/private/modify-limit-order"""
-    response = client.modify_limit_order(
-        contract_symbol="BTCUSDT", order_id=62970000003, price="77000"
-    )
+    response = client.modify_limit_order(contract_symbol="BTCUSDT", order_id=62970000003, price="77000")
     assert response[0]["code"] == 1000
 
 
 def test_cancel_contract_order():
     """Test POST https://api-cloud-v2.bitmart.com/contract/private/cancel-order"""
-    assert (
-        client.cancel_contract_order(
-            contract_symbol="ETHUSDT", order_id="220906179559421"
-        )[0]["code"]
-        == 1000
-    )
+    assert client.cancel_contract_order(contract_symbol="ETHUSDT", order_id="220906179559421")[0]["code"] == 1000
 
     assert client.cancel_contract_order(contract_symbol="ETHUSDT")[0]["code"] == 1000
 
-    assert (
-        client.cancel_contract_order(
-            contract_symbol="ETHUSDT", client_order_id="220906179559421"
-        )[0]["code"]
-        == 1000
-    )
+    assert client.cancel_contract_order(contract_symbol="ETHUSDT", client_order_id="220906179559421")[0]["code"] == 1000
 
 
 def test_cancel_all_contract_order():
     """Test POST https://api-cloud-v2.bitmart.com/contract/private/cancel-orders"""
-    assert (
-        client.cancel_all_contract_order(contract_symbol="ETHUSDT")[0]["code"] == 1000
-    )
+    assert client.cancel_all_contract_order(contract_symbol="ETHUSDT")[0]["code"] == 1000
 
 
 def test_transfer_contract():
     """Test POST https://api-cloud-v2.bitmart.com/account/v1/transfer-contract"""
-    assert (
-        client.transfer_contract(currency="USDT", amount="10", type="spot_to_contract")[
-            0
-        ]["code"]
-        == 1000
-    )
+    assert client.transfer_contract(currency="USDT", amount="10", type="spot_to_contract")[0]["code"] == 1000
 
 
 def test_submit_leverage():
     """POST https://api-cloud-v2.bitmart.com/contract/private/submit-leverage"""
-    assert (
-        client.submit_leverage(
-            contract_symbol="BTCUSDT", open_type="cross", leverage="1"
-        )[0]["code"]
-        == 1000
-    )
+    assert client.submit_leverage(contract_symbol="BTCUSDT", open_type="cross", leverage="1")[0]["code"] == 1000

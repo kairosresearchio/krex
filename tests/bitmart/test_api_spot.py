@@ -31,12 +31,7 @@ def test_get_spot_kline():
     """Test GET https://api-cloud.bitmart.com/spot/quotation/v3/lite-klines"""
     before = int(time.time())
     after = before - 3600
-    assert (
-        client.get_spot_kline(
-            symbol="BTC_USDT", before=before, after=after, step=60, limit=5
-        )[0]["code"]
-        == 1000
-    )
+    assert client.get_spot_kline(symbol="BTC_USDT", before=before, after=after, step=60, limit=5)[0]["code"] == 1000
 
 
 def test_get_account_currencies():
@@ -47,9 +42,7 @@ def test_get_account_currencies():
 def test_place_spot_order():
     """Test POST https://api-cloud.bitmart.com/spot/v2/submit_order"""
     assert (
-        client.place_spot_order(
-            symbol="BTC_USDT", side="buy", type="limit", size="0.01", price="8800"
-        )[0]["code"]
+        client.place_spot_order(symbol="BTC_USDT", side="buy", type="limit", size="0.01", price="8800")[0]["code"]
         == 1000
     )
 
@@ -57,39 +50,25 @@ def test_place_spot_order():
 def test_place_margin_order():
     """Test POST https://api-cloud.bitmart.com/spot/v1/margin/submit_order"""
     assert (
-        client.place_margin_order(
-            symbol="BTC_USDT", side="buy", type="limit", size="0.01", price="8800"
-        )[0]["code"]
+        client.place_margin_order(symbol="BTC_USDT", side="buy", type="limit", size="0.01", price="8800")[0]["code"]
         == 1000
     )
 
 
 def test_cacel_spot_order():
     """Test POST https://api-cloud.bitmart.com/spot/v3/cancel_order"""
-    assert (
-        client.cacel_spot_order(symbol="BTC_USDT", client_order_id="ID125783")[0][
-            "code"
-        ]
-        == 1000
-    )
+    assert client.cacel_spot_order(symbol="BTC_USDT", client_order_id="ID125783")[0]["code"] == 1000
 
 
 def test_get_spot_order_by_order_id():
     """Test POST https://api-cloud.bitmart.com/spot/v4/query/order"""
-    assert (
-        client.get_spot_order_by_order_id(
-            order_id="118100034543076010", query_state="open"
-        )[0]["code"]
-        == 1000
-    )
+    assert client.get_spot_order_by_order_id(order_id="118100034543076010", query_state="open")[0]["code"] == 1000
 
 
 def test_get_spot_order_by_order_client_id():
     """Test POST https://api-cloud.bitmart.com/spot/v4/query/client-order"""
     assert (
-        client.get_spot_order_by_order_client_id(
-            client_order_id="118100034543076010", query_state="open"
-        )[0]["code"]
+        client.get_spot_order_by_order_client_id(client_order_id="118100034543076010", query_state="open")[0]["code"]
         == 1000
     )
 
@@ -114,7 +93,4 @@ def test_get_spot_account_trade_list():
 
 def test_get_spot_order_trade_list():
     """Test POST https://api-cloud.bitmart.com/spot/v4/query/order-trades"""
-    assert (
-        client.get_spot_order_trade_list(order_id="118100034543076010")[0]["code"]
-        == 1000
-    )
+    assert client.get_spot_order_trade_list(order_id="118100034543076010")[0]["code"] == 1000
