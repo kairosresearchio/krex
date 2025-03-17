@@ -72,7 +72,7 @@ def format_product_symbol(symbol: str) -> str:
     return f"{symbol}-SWAP"
 
 
-def bybit() -> Dict[str, Dict[str, str]]:
+async def bybit() -> Dict[str, Dict[str, str]]:
     from ..bybit._market_http import MarketHTTP
 
     market_http = MarketHTTP()
@@ -128,7 +128,7 @@ def bybit() -> Dict[str, Dict[str, str]]:
     return pd.DataFrame(markets)
 
 
-def okx() -> Dict[str, Dict[str, str]]:
+async def okx() -> Dict[str, Dict[str, str]]:
     from ..okx._public_http import PublicHTTP
 
     public_http = PublicHTTP()
@@ -170,7 +170,7 @@ def okx() -> Dict[str, Dict[str, str]]:
     return pd.DataFrame(markets)
 
 
-def bitmart() -> Dict[str, Dict[str, str]]:
+async def bitmart() -> Dict[str, Dict[str, str]]:
     from ..bitmart._market_http import MarketHTTP
 
     market_http = MarketHTTP()

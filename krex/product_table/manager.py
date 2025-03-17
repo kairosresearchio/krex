@@ -44,12 +44,14 @@ class ProductTableManager:
 
     _instance = None
 
-    async def __new__(cls):
+    @classmethod
+    async def get_instance(cls):
+        """Get the singleton instance of ProductTableManager."""
         if cls._instance is None:
-            cls._instance = object.__new__(cls)
+            cls._instance = cls()
             await cls._instance._initialize()
         return cls._instance
-
+    
     async def _initialize(self):
         """Initialize the product table by fetching data from valid exchanges."""
         self.product_table = await self._fetch_product_tables()
