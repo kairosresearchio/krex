@@ -46,7 +46,7 @@ class ProductTableManager:
 
     async def __new__(cls):
         if cls._instance is None:
-            cls._instance = object.__new__(cls)  # 避免調用 super().__new__()
+            cls._instance = object.__new__(cls)
             await cls._instance._initialize()
         return cls._instance
 
