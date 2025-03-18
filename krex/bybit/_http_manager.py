@@ -47,7 +47,7 @@ class HTTPManager:
     def __post_init__(self):
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
-        self.ptm = ProductTableManager()
+        self.ptm = ProductTableManager.get_instance()
 
     def _auth(self, payload, timestamp):
         param_str = f"{timestamp}{self.api_key}{self.recv_window}{payload}"

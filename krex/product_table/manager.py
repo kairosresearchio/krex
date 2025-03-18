@@ -45,11 +45,14 @@ class ProductTableManager:
     _instance = None
 
     @classmethod
-    async def get_instance(cls):
-        """Get the singleton instance of ProductTableManager."""
+    def get_instance(cls):
         if cls._instance is None:
             cls._instance = cls()
-            await cls._instance._initialize()
+            loop = asyncio.get_running_loop()
+            if loop.is_running():
+                asyncio.create_task(cls._instance._initialize())
+            else:
+                loop.run_until_complete(cls._instance._initialize())
         return cls._instance
     
     async def _initialize(self):
