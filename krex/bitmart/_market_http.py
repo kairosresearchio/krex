@@ -1,3 +1,4 @@
+from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.market import SpotMarket, FuturesMarket
 
@@ -33,13 +34,13 @@ class MarketHTTP(HTTPManager):
 
     def get_ticker_of_a_pair(
         self,
-        symbol: str,
+        product_symbol: str,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
 
         return self._request(
@@ -50,19 +51,19 @@ class MarketHTTP(HTTPManager):
 
     def get_spot_kline(
         self,
-        symbol: str,
+        product_symbol: str,
         before: int = None,
         after: int = None,
         limit: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param before: int
         :param after: int
         :param limit: int
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if before is not None:
             payload["before"] = before
@@ -79,14 +80,14 @@ class MarketHTTP(HTTPManager):
 
     def get_contracts_details(
         self,
-        symbol: str = None,
+        product_symbol: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         """
         payload = {}
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
 
         return self._request(
             method="GET",
@@ -96,13 +97,13 @@ class MarketHTTP(HTTPManager):
 
     def get_depth(
         self,
-        symbol: str,
+        product_symbol: str,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
 
         return self._request(
@@ -113,17 +114,17 @@ class MarketHTTP(HTTPManager):
 
     def get_contract_kline(
         self,
-        symbol: str,
+        product_symbol: str,
         startTime: int,
         endTime: int,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param startTime: int
         :param endTime: int
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             "startTime": startTime,
             "endTime": endTime,
         }
@@ -136,13 +137,13 @@ class MarketHTTP(HTTPManager):
 
     def get_current_funding_rate(
         self,
-        symbol: str,
+        product_symbol: str,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
 
         return self._request(
@@ -153,15 +154,15 @@ class MarketHTTP(HTTPManager):
 
     def get_funding_rate_history(
         self,
-        symbol: str,
+        product_symbol: str,
         limit: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param limit: int
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if limit is not None:
             payload["limit"] = limit

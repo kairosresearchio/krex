@@ -50,7 +50,7 @@ class ProductTableManager:
             cls._instance = cls()
             asyncio.run(cls._instance._initialize())
         return cls._instance
-    
+
     async def _initialize(self):
         """Initialize the product table by fetching data from valid exchanges."""
         self.product_table = await self._fetch_product_tables()

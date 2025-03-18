@@ -1,3 +1,4 @@
+from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.trade import SpotTrade, FuturesTrade
 
@@ -5,7 +6,7 @@ from .endpoints.trade import SpotTrade, FuturesTrade
 class TradeHTTP(HTTPManager):
     def place_spot_order(
         self,
-        symbol: str,
+        product_symbol: str,
         side: str,
         type: str,
         size: str,
@@ -14,7 +15,7 @@ class TradeHTTP(HTTPManager):
         clientOrderId: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param side: str (buy, sell)
         :param type: str (limit, market, limit_maker, ioc)
         :param size: str
@@ -23,7 +24,7 @@ class TradeHTTP(HTTPManager):
         :param clientOrderId: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             "side": side,
             "type": type,
             "size": size,
@@ -41,13 +42,13 @@ class TradeHTTP(HTTPManager):
 
     def place_spot_market_order(
         self,
-        symbol: str,
+        product_symbol: str,
         side: str,
         size: str,
         notional: bool = None,
     ):
         return self.place_spot_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side=side,
             type="market",
             size=size,
@@ -56,12 +57,12 @@ class TradeHTTP(HTTPManager):
 
     def place_spot_market_buy_order(
         self,
-        symbol: str,
+        product_symbol: str,
         size: str,
         notional: bool = None,
     ):
         return self.place_spot_market_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side="buy",
             size=size,
             notional=notional,
@@ -69,12 +70,12 @@ class TradeHTTP(HTTPManager):
 
     def place_spot_market_sell_order(
         self,
-        symbol: str,
+        product_symbol: str,
         size: str,
         notional: bool = None,
     ):
         return self.place_spot_market_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side="sell",
             size=size,
             notional=notional,
@@ -82,14 +83,14 @@ class TradeHTTP(HTTPManager):
 
     def place_spot_limit_order(
         self,
-        symbol: str,
+        product_symbol: str,
         side: str,
         size: str,
         price: str,
         notional: bool = None,
     ):
         return self.place_spot_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side=side,
             type="limit",
             size=size,
@@ -99,13 +100,13 @@ class TradeHTTP(HTTPManager):
 
     def place_spot_limit_buy_order(
         self,
-        symbol: str,
+        product_symbol: str,
         size: str,
         price: str,
         notional: bool = None,
     ):
         return self.place_spot_limit_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side="buy",
             size=size,
             price=price,
@@ -114,13 +115,13 @@ class TradeHTTP(HTTPManager):
 
     def place_spot_limit_sell_order(
         self,
-        symbol: str,
+        product_symbol: str,
         size: str,
         price: str,
         notional: bool = None,
     ):
         return self.place_spot_limit_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side="sell",
             size=size,
             price=price,
@@ -129,14 +130,14 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_order(
         self,
-        symbol: str,
+        product_symbol: str,
         side: str,
         size: str,
         price: str,
         notional: bool = None,
     ):
         return self.place_spot_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side=side,
             type="limit_maker",
             size=size,
@@ -146,13 +147,13 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_buy_order(
         self,
-        symbol: str,
+        product_symbol: str,
         size: str,
         price: str,
         notional: bool = None,
     ):
         return self.place_post_only_limit_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side="buy",
             size=size,
             price=price,
@@ -161,13 +162,13 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_sell_order(
         self,
-        symbol: str,
+        product_symbol: str,
         size: str,
         price: str,
         notional: bool = None,
     ):
         return self.place_post_only_limit_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side="sell",
             size=size,
             price=price,
@@ -176,17 +177,17 @@ class TradeHTTP(HTTPManager):
 
     def cacel_spot_order(
         self,
-        symbol: str,
+        product_symbol: str,
         order_id: str = None,
         client_order_id: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param order_id: str (order_id, client_order_id, one of them is required)
         :param client_order_id: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if order_id is not None:
             payload["order_id"] = order_id
@@ -201,16 +202,16 @@ class TradeHTTP(HTTPManager):
 
     def cacel_spot_all_order(
         self,
-        symbol: str = None,
+        product_symbol: str = None,
         side: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param side: str
         """
         payload = {}
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
         if side is not None:
             payload["side"] = side
 
@@ -222,19 +223,19 @@ class TradeHTTP(HTTPManager):
 
     def place_margin_order(
         self,
-        symbol: str,
+        product_symbol: str,
         side: str,
         type: str,
         clientOrderId: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param side: str (buy, sell)
         :param type: str (limit, market, limit_maker, ioc)
         :param clientOrderId: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             "side": side,
             "type": type,
         }
@@ -291,22 +292,22 @@ class TradeHTTP(HTTPManager):
 
     def get_spot_open_orders(
         self,
-        symbol: str = None,
+        product_symbol: str = None,
         orderMode: str = None,
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
         :param startTime: int
         :param endTime: int
         :param limit: int
         """
         payload = {}
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
         if orderMode is not None:
             payload["orderMode"] = orderMode
         if startTime is not None:
@@ -324,22 +325,22 @@ class TradeHTTP(HTTPManager):
 
     def get_spot_account_orders(
         self,
-        symbol: str = None,
+        product_symbol: str = None,
         orderMode: str = None,
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
         :param startTime: int
         :param endTime: int
         :param limit: int
         """
         payload = {}
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
         if orderMode is not None:
             payload["orderMode"] = orderMode
         if startTime is not None:
@@ -357,22 +358,22 @@ class TradeHTTP(HTTPManager):
 
     def get_spot_account_trade_list(
         self,
-        symbol: str = None,
+        product_symbol: str = None,
         orderMode: str = None,
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
         :param startTime: int
         :param endTime: int
         :param limit: int
         """
         payload = {}
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
         if orderMode is not None:
             payload["orderMode"] = orderMode
         if startTime is not None:
@@ -407,7 +408,7 @@ class TradeHTTP(HTTPManager):
 
     def place_contract_order(
         self,
-        symbol: str,
+        product_symbol: str,
         side: str,
         price: str,
         size: str,
@@ -423,7 +424,7 @@ class TradeHTTP(HTTPManager):
         stp_mode: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param side: str (1=buy_open_long, 2=buy_close_short, 3=sell_close_long, 4=sell_open_short)
         :param price: str
         :param size: str
@@ -439,7 +440,7 @@ class TradeHTTP(HTTPManager):
         :param stp_mode: int (1: cancel_maker(default), 2: cancel_taker, 3: cancel_both)
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             "side": side,
             "price": price,
             "size": size,
@@ -473,13 +474,13 @@ class TradeHTTP(HTTPManager):
 
     def place_contract_market_order(
         self,
-        symbol: str,
+        product_symbol: str,
         side: int,
         price: str,
         size: str,
     ):
         return self.place_contract_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side=side,
             type="market",
             price=price,
@@ -488,13 +489,13 @@ class TradeHTTP(HTTPManager):
 
     def place_contract_limit_order(
         self,
-        symbol: str,
+        product_symbol: str,
         side: int,
         price: str,
         size: str,
     ):
         return self.place_contract_order(
-            symbol=symbol,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             side=side,
             type="limit",
             price=price,
@@ -503,21 +504,21 @@ class TradeHTTP(HTTPManager):
 
     def modify_limit_order(
         self,
-        symbol: str,
+        product_symbol: str,
         order_id: str = None,
         client_order_id: str = None,
         price: int = None,
         size: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param order_id: str
         :param client_order_id: str
         :param price: int
         :param size: int
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if order_id is not None:
             payload["order_id"] = order_id
@@ -536,17 +537,17 @@ class TradeHTTP(HTTPManager):
 
     def cancel_contract_order(
         self,
-        symbol: str,
+        product_symbol: str,
         order_id: str = None,
         client_order_id: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param order_id: str
         :param client_order_id: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if order_id is not None:
             payload["order_id"] = order_id
@@ -561,13 +562,13 @@ class TradeHTTP(HTTPManager):
 
     def cancel_all_contract_order(
         self,
-        symbol: str,
+        product_symbol: str,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
 
         return self._request(
@@ -600,17 +601,17 @@ class TradeHTTP(HTTPManager):
 
     def submit_leverage(
         self,
-        symbol: str,
+        product_symbol: str,
         leverage: str = None,
         openType: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param leverage: str
         :param openType: str (cross, isolated)
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if leverage is not None:
             payload["leverage"] = leverage
@@ -625,15 +626,15 @@ class TradeHTTP(HTTPManager):
 
     def get_contract_order_detail(
         self,
-        symbol: str,
+        product_symbol: str,
         order_id: str,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param order_id: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             "order_id": order_id,
         }
 
@@ -645,17 +646,17 @@ class TradeHTTP(HTTPManager):
 
     def get_contract_order_history(
         self,
-        symbol: str,
+        product_symbol: str,
         start_time: str = None,
         end_time: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param start_time: str
         :param end_time: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if start_time is not None:
             payload["start_time"] = start_time
@@ -670,20 +671,20 @@ class TradeHTTP(HTTPManager):
 
     def get_contract_open_order(
         self,
-        symbol: str = None,
+        product_symbol: str = None,
         type: str = None,
         order_state: str = None,
         limit: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param type: str (limit, market, trailing)
         :param order_state: str (all(default), partially_filled)
         :param limit: int
         """
         payload = {}
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
         if type is not None:
             payload["type"] = type
         if order_state is not None:
@@ -699,14 +700,14 @@ class TradeHTTP(HTTPManager):
 
     def get_contract_position(
         self,
-        symbol: str = None,
+        product_symbol: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         """
         payload = {}
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
 
         return self._request(
             method="GET",
@@ -716,17 +717,17 @@ class TradeHTTP(HTTPManager):
 
     def get_contract_trade(
         self,
-        symbol: str,
+        product_symbol: str,
         start_time: str = None,
         end_time: str = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param start_time: str
         :param end_time: str
         """
         payload = {
-            "symbol": symbol,
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if start_time is not None:
             payload["start_time"] = start_time
@@ -741,22 +742,22 @@ class TradeHTTP(HTTPManager):
 
     def get_contract_transaction_history(
         self,
-        symbol: str = None,
+        product_symbol: str = None,
         flow_type: int = None,
         start_time: int = None,
         end_time: int = None,
         page_size: int = None,
     ):
         """
-        :param symbol: str
+        :param product_symbol: str
         :param flow_type: int (0 = All (default), 1 = Transfer, 2 = Realized PNL, 3 = Funding Fee, 4 = Commission Fee, 5 = Liquidation)
         :param start_time: int
         :param end_time: int
         :param page_size: int
         """
         payload = {}
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
         if flow_type is not None:
             payload["flow_type"] = flow_type
         if start_time is not None:
