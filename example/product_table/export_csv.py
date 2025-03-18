@@ -4,13 +4,12 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(ROOT)
 
-import asyncio
 import pandas as pd
 from krex.product_table.manager import ProductTableManager
 
 
-async def test_fetch_product_tables():
-    manager = await ProductTableManager.get_instance()
+def test_fetch_product_tables():
+    manager = ProductTableManager.get_instance()
 
     if isinstance(manager.product_table, pd.DataFrame) and not manager.product_table.empty:
         print(manager.product_table.head())
@@ -23,4 +22,4 @@ async def test_fetch_product_tables():
 
 
 if __name__ == "__main__":
-    asyncio.run(test_fetch_product_tables())
+    test_fetch_product_tables()

@@ -53,16 +53,20 @@ class AssetHTTP(HTTPManager):
         self,
         accountType: str,
         coin: str = None,
+        memberId: str = None,
     ):
         """
         :param accountType: str
         :param coin: str
+        :param memberId: str
         """
         payload = {
             "accountType": accountType,
         }
         if coin is not None:
             payload["coin"] = coin
+        if memberId is not None:
+            payload["memberId"] = memberId
 
         return self._request(
             method="GET",
@@ -73,17 +77,24 @@ class AssetHTTP(HTTPManager):
     def get_coin_balance(
         self,
         accountType: str,
-        coin: str = None,
+        coin: str,
+        memberId: str = None,
+        toAccountType: str = None,
     ):
         """
         :param accountType: str
         :param coin: str
+        :param memberId: str
+        :param toAccountType: str
         """
         payload = {
             "accountType": accountType,
+            "coin": coin,
         }
-        if coin is not None:
-            payload["coin"] = coin
+        if memberId is not None:
+            payload["memberId"] = memberId
+        if toAccountType is not None:
+            payload["toAccountType"] = toAccountType
 
         return self._request(
             method="GET",
@@ -218,11 +229,13 @@ class AssetHTTP(HTTPManager):
     def get_universal_transfer_records(
         self,
         coin: str = None,
+        status: str = None,
         startTime: int = None,
         limit: int = 20,
     ):
         """
         :param coin: str
+        :param status: str
         :param startTime: int
         :param limit: int
         """
@@ -231,37 +244,14 @@ class AssetHTTP(HTTPManager):
         }
         if coin is not None:
             payload["coin"] = coin
+        if status is not None:
+            payload["status"] = status
         if startTime is not None:
             payload["startTime"] = startTime
 
         return self._request(
             method="GET",
             path=Asset.GET_UNIVERSAL_TRANSFER_RECORDS,
-            query=payload,
-        )
-
-    def get_allowed_deposit_coin_info(
-        self,
-        coin: str = None,
-        chain: str = None,
-        limit: int = 20,
-    ):
-        """
-        :param coin: str
-        :param chain: str
-        :param limit: int
-        """
-        payload = {
-            "limit": limit,
-        }
-        if coin is not None:
-            payload["coin"] = coin
-        if chain is not None:
-            payload["chain"] = chain
-
-        return self._request(
-            method="GET",
-            path=Asset.GET_ALLOWED_DEPOSIT_COIN_INFO,
             query=payload,
         )
 

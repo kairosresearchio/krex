@@ -1,10 +1,12 @@
 import requests
 import json
-from ..utils.errors import FailedRequestError
-from ..utils.helpers import generate_timestamp
-from dataclasses import dataclass, field
+import logging
 import hmac
 import base64
+from dataclasses import dataclass, field
+from ..utils.errors import FailedRequestError
+from ..utils.helpers import generate_timestamp
+from ..product_table.manager import ProductTableManager
 
 
 def _sign(message, secretKey):
@@ -59,7 +61,17 @@ class HTTPManager:
     base_api: str = field(default="https://www.okx.com")
     max_retries: int = field(default=3)
     retry_delay: int = field(default=3)
+    logger: logging.Logger = field(default=None)
     session: requests.Session = field(default_factory=requests.Session, init=False)
+    ptm: ProductTableManager = field(init=False)
+
+    def __post_init__(self):
+        if self.logger is None:
+            self._logger = logging.getLogger(__name__)
+        else:
+            self._logger = self.logger
+
+        self.ptm = ProductTableManager.get_instance()
 
     def _request(self, method, path, query=None):
         if query is None:

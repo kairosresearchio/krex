@@ -1,5 +1,6 @@
 import hmac
 import hashlib
+import logging
 import json
 import requests
 from dataclasses import dataclass, field
@@ -41,10 +42,16 @@ class HTTPManager:
     recv_window: int = field(default=5000)
     max_retries: int = field(default=3)
     retry_delay: int = field(default=3)
+    logger: logging.Logger = field(default=None)
     session: requests.Session = field(default_factory=requests.Session, init=False)
     ptm: ProductTableManager = field(init=False)
 
     def __post_init__(self):
+        if self.logger is None:
+            self._logger = logging.getLogger(__name__)
+        else:
+            self._logger = self.logger
+
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
         self.ptm = ProductTableManager.get_instance()

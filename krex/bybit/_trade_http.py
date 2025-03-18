@@ -1,3 +1,4 @@
+from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
 
@@ -31,8 +32,8 @@ class TradeHTTP(HTTPManager):
         slOrderType: str = None,
     ):
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, "bybit"),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             "side": side,
             "orderType": orderType,
             "qty": qty,
@@ -93,8 +94,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side=side,
             orderType="Market",
             qty=qty,
@@ -110,8 +111,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_market_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side="Buy",
             qty=qty,
             reduceOnly=reduceOnly,
@@ -126,8 +127,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_market_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side="Sell",
             qty=qty,
             reduceOnly=reduceOnly,
@@ -145,8 +146,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side=side,
             orderType="Limit",
             qty=qty,
@@ -166,8 +167,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side="Buy",
             qty=qty,
             price=price,
@@ -186,8 +187,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side="Sell",
             qty=qty,
             price=price,
@@ -206,8 +207,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side=side,
             qty=qty,
             price=price,
@@ -225,8 +226,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_post_only_limit_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side="Buy",
             qty=qty,
             price=price,
@@ -243,8 +244,8 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_post_only_limit_order(
-            category=self.ptm.get_product_type(product_symbol, "bybit"),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             side="Sell",
             qty=qty,
             price=price,
@@ -274,8 +275,8 @@ class TradeHTTP(HTTPManager):
         :param category: str (linear, option, spot, inverse)
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, "bybit"),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -323,8 +324,8 @@ class TradeHTTP(HTTPManager):
         :param orderId: str
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, "bybit"),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -372,8 +373,8 @@ class TradeHTTP(HTTPManager):
             "category": category,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
-            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
 
         return self._request(
             method="POST",
@@ -399,8 +400,8 @@ class TradeHTTP(HTTPManager):
             "limit": limit,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
-            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
         if startTime is not None:
             payload["startTime"] = startTime
 
@@ -428,8 +429,8 @@ class TradeHTTP(HTTPManager):
             "limit": limit,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
-            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
         if startTime is not None:
             payload["startTime"] = startTime
 
@@ -536,7 +537,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {
             "category": "spot",
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             "side": side,
         }
 

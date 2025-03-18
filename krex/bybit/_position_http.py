@@ -1,3 +1,4 @@
+from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.position import Position
 
@@ -20,8 +21,8 @@ class PositionHTTP(HTTPManager):
             "limit": limit,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
-            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
         if settleCoin is not None:
             payload["settleCoin"] = settleCoin
 
@@ -43,8 +44,8 @@ class PositionHTTP(HTTPManager):
         :param sellLeverage: str
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, "bybit"),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             "buyLeverage": leverage,
             "sellLeverage": leverage,
         }
@@ -150,7 +151,7 @@ class PositionHTTP(HTTPManager):
         """
         payload = {
             "category": "linear",
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             "autoAddMargin": autoAddMargin,
             "positionIdx": 0,
         }
@@ -174,8 +175,8 @@ class PositionHTTP(HTTPManager):
         :param margin: str
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, "bybit"),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             "margin": margin,
         }
 
@@ -203,8 +204,8 @@ class PositionHTTP(HTTPManager):
             "limit": limit,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
-            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
         if startTime is not None:
             payload["startTime"] = startTime
 

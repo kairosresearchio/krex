@@ -1,3 +1,4 @@
+from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
 
@@ -5,7 +6,7 @@ from .endpoints.trade import Trade
 class TradeHTTP(HTTPManager):
     def place_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         side: str,
         ordType: str,
@@ -25,7 +26,7 @@ class TradeHTTP(HTTPManager):
         stpMode: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param tdMode: str
         :param side: str
         :param ordType: str
@@ -45,7 +46,7 @@ class TradeHTTP(HTTPManager):
         :param stpMode: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             "tdMode": tdMode,
             "side": side,
             "ordType": ordType,
@@ -86,7 +87,7 @@ class TradeHTTP(HTTPManager):
 
     def place_market_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         side: str,
         sz: str,
@@ -94,7 +95,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side=side,
             ordType="market",
@@ -105,14 +106,14 @@ class TradeHTTP(HTTPManager):
 
     def place_market_buy_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         sz: str,
         reduceOnly: bool = None,
         ccy: str = None,
     ):
         return self.place_market_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side="buy",
             sz=sz,
@@ -122,14 +123,14 @@ class TradeHTTP(HTTPManager):
 
     def place_market_sell_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         sz: str,
         reduceOnly: bool = None,
         ccy: str = None,
     ):
         return self.place_market_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side="sell",
             sz=sz,
@@ -139,7 +140,7 @@ class TradeHTTP(HTTPManager):
 
     def place_limit_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         side: str,
         sz: str,
@@ -148,7 +149,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side=side,
             ordType="limit",
@@ -160,7 +161,7 @@ class TradeHTTP(HTTPManager):
 
     def place_limit_buy_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         sz: str,
         px: str,
@@ -168,7 +169,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_limit_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side="buy",
             sz=sz,
@@ -179,7 +180,7 @@ class TradeHTTP(HTTPManager):
 
     def place_limit_sell_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         sz: str,
         px: str,
@@ -187,7 +188,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_limit_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side="sell",
             sz=sz,
@@ -198,7 +199,7 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         side: str,
         sz: str,
@@ -207,7 +208,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_limit_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side=side,
             ordType="post_only",
@@ -219,7 +220,7 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_buy_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         sz: str,
         px: str,
@@ -227,7 +228,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_post_only_limit_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side="buy",
             sz=sz,
@@ -238,7 +239,7 @@ class TradeHTTP(HTTPManager):
 
     def place_post_only_limit_sell_order(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         sz: str,
         px: str,
@@ -246,7 +247,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_post_only_limit_order(
-            instId=instId,
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             tdMode=tdMode,
             side="sell",
             sz=sz,
@@ -257,7 +258,7 @@ class TradeHTTP(HTTPManager):
 
     def place_multiple_orders(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         side: str,
         ordType: str,
@@ -277,7 +278,7 @@ class TradeHTTP(HTTPManager):
         stpMode: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param tdMode: str
         :param side: str
         :param ordType: str
@@ -297,7 +298,7 @@ class TradeHTTP(HTTPManager):
         :param stpMode: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             "tdMode": tdMode,
             "side": side,
             "ordType": ordType,
@@ -338,17 +339,17 @@ class TradeHTTP(HTTPManager):
 
     def cancel_order(
         self,
-        instId: str,
+        product_symbol: str,
         ordId: str = None,
         clOrdId: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param ordId: str
         :param clOrdId: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -363,17 +364,17 @@ class TradeHTTP(HTTPManager):
 
     def cancel_multiple_orders(
         self,
-        instId: str,
+        product_symbol: str,
         ordId: str = None,
         clOrdId: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param ordId: str
         :param clOrdId: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -388,7 +389,7 @@ class TradeHTTP(HTTPManager):
 
     def amend_order(
         self,
-        instId: str,
+        product_symbol: str,
         ordId: str = None,
         clOrdId: str = None,
         newSz: str = None,
@@ -399,7 +400,7 @@ class TradeHTTP(HTTPManager):
         reqId: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param ordId: str
         :param clOrdId: str
         :param newSz: str
@@ -410,7 +411,7 @@ class TradeHTTP(HTTPManager):
         :param reqId: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -437,7 +438,7 @@ class TradeHTTP(HTTPManager):
 
     def amend_multiple_orders(
         self,
-        instId: str,
+        product_symbol: str,
         ordId: str = None,
         clOrdId: str = None,
         newSz: str = None,
@@ -448,7 +449,7 @@ class TradeHTTP(HTTPManager):
         reqId: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param ordId: str
         :param clOrdId: str
         :param newSz: str
@@ -459,7 +460,7 @@ class TradeHTTP(HTTPManager):
         :param reqId: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -486,19 +487,19 @@ class TradeHTTP(HTTPManager):
 
     def close_positions(
         self,
-        instId: str,
+        product_symbol: str,
         mgnMode: str,
         posSide: str = None,
         ccy: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param mgnMode: str
         :param posSide: str
         :param ccy: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             "mgnMode": mgnMode,
         }
         if posSide is not None:
@@ -514,17 +515,17 @@ class TradeHTTP(HTTPManager):
 
     def get_order(
         self,
-        instId: str,
+        product_symbol: str,
         ordId: str = None,
         clOrdId: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param ordId: str
         :param clOrdId: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -636,7 +637,7 @@ class TradeHTTP(HTTPManager):
         instType: str,
         uly: str = None,
         instFamily: str = None,
-        instId: str = None,
+        product_symbol: str = None,
         ordType: str = None,
         state: str = None,
         category: str = None,
@@ -648,7 +649,7 @@ class TradeHTTP(HTTPManager):
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
         :param instFamily: str
-        :param instId: str
+        :param product_symbol: str
         :param ordType: str
         :param state: str
         :param category: str
@@ -663,8 +664,8 @@ class TradeHTTP(HTTPManager):
             payload["uly"] = uly
         if instFamily is not None:
             payload["instFamily"] = instFamily
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ordType is not None:
             payload["ordType"] = ordType
         if state is not None:
@@ -689,7 +690,7 @@ class TradeHTTP(HTTPManager):
         instType: str = None,
         uly: str = None,
         instFamily: str = None,
-        instId: str = None,
+        product_symbol: str = None,
         ordId: str = None,
         subType: str = None,
         begin: str = None,
@@ -700,7 +701,7 @@ class TradeHTTP(HTTPManager):
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
         :param instFamily: str
-        :param instId: str
+        :param product_symbol: str
         :param ordId: str
         :param subType: str
         :param begin: str
@@ -714,8 +715,8 @@ class TradeHTTP(HTTPManager):
             payload["uly"] = uly
         if instFamily is not None:
             payload["instFamily"] = instFamily
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ordId is not None:
             payload["ordId"] = ordId
         if subType is not None:
@@ -738,7 +739,7 @@ class TradeHTTP(HTTPManager):
         instType: str,
         uly: str = None,
         instFamily: str = None,
-        instId: str = None,
+        product_symbol: str = None,
         ordId: str = None,
         subType: str = None,
         begin: str = None,
@@ -749,7 +750,7 @@ class TradeHTTP(HTTPManager):
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
         :param instFamily: str
-        :param instId: str
+        :param product_symbol: str
         :param ordId: str
         :param subType: str
         :param begin: str
@@ -763,8 +764,8 @@ class TradeHTTP(HTTPManager):
             payload["uly"] = uly
         if instFamily is not None:
             payload["instFamily"] = instFamily
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ordId is not None:
             payload["ordId"] = ordId
         if subType is not None:
@@ -888,7 +889,7 @@ class TradeHTTP(HTTPManager):
 
     def order_precheck(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         side: str,
         ordType: str,
@@ -900,7 +901,7 @@ class TradeHTTP(HTTPManager):
         attachAlgoOrds: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         :param tdMode: str
         :param side: str
         :param ordType: str
@@ -912,7 +913,7 @@ class TradeHTTP(HTTPManager):
         :param attachAlgoOrds: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             "tdMode": tdMode,
             "side": side,
             "ordType": ordType,

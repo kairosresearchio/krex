@@ -1,3 +1,4 @@
+from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.public import Public
 
@@ -8,13 +9,13 @@ class PublicHTTP(HTTPManager):
         instType: str,
         uly: str = None,
         instFamily: str = None,
-        instId: str = None,
+        product_symbol: str = None,
     ):
         """
         :param instType: str
         :param uly: str
         :param instFamily: str
-        :param instId: str
+        :param product_symbol: str
         """
         payload = {
             "instType": instType,
@@ -23,8 +24,8 @@ class PublicHTTP(HTTPManager):
             payload["uly"] = uly
         if instFamily is not None:
             payload["instFamily"] = instFamily
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
 
         return self._request(
             method="GET",
@@ -34,13 +35,13 @@ class PublicHTTP(HTTPManager):
 
     def get_funding_rate(
         self,
-        instId: str,
+        product_symbol: str,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
 
         return self._request(
@@ -51,16 +52,19 @@ class PublicHTTP(HTTPManager):
 
     def get_funding_rate_history(
         self,
-        instId: str,
+        product_symbol: str,
         before: str = None,
         after: str = None,
         limit: str = None,
     ):
         """
-        :param instId: str
+        :param product_symbol: str
+        :param before: str
+        :param after: str
+        :param limit: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
         if before is not None:
             payload["before"] = before

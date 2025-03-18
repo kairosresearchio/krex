@@ -1,3 +1,4 @@
+from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.market import Market
 
@@ -51,8 +52,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
-            "category": self.ptm.get_product_type(product_symbol, "bybit"),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
             "interval": interval,
         }
         if startTime is not None:
@@ -77,8 +78,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, "bybit"),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
         }
         if limit is not None:
             payload["limit"] = limit
@@ -104,8 +105,8 @@ class MarketHTTP(HTTPManager):
             "category": category,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, "bybit")
-            payload["category"] = self.ptm.get_product_type(product_symbol, "bybit")
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
         if baseCoin is not None:
             payload["baseCoin"] = baseCoin
 
@@ -128,8 +129,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, "bybit"),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, "bybit"),
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
         }
         if startTime is not None:
             payload["startTime"] = startTime

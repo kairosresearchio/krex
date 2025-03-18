@@ -4,12 +4,12 @@ import logging
 import requests
 import hashlib
 from dataclasses import dataclass, field
-
 from .endpoints.account import FundingAccount, FuturesAccount
 from ..bitmart.endpoints.market import FuturesMarket, SpotMarket
 from ..bitmart.endpoints.trade import FuturesTrade, SpotTrade
 from ..utils.errors import FailedRequestError
 from ..utils.helpers import generate_timestamp
+from ..product_table.manager import ProductTableManager
 
 
 def sign_message(timestamp, memo, body, secret_key):
@@ -41,6 +41,7 @@ class HTTPManager:
     retry_delay: int = field(default=3)
     logger: logging.Logger = field(default=None)
     session: requests.Session = field(default_factory=requests.Session, init=False)
+    ptm: ProductTableManager = field(init=False)
 
     api_map = {
         "https://api-cloud.bitmart.com": {
@@ -60,6 +61,8 @@ class HTTPManager:
             self._logger = logging.getLogger(__name__)
         else:
             self._logger = self.logger
+
+        self.ptm = ProductTableManager.get_instance()
 
     def _get_base_url(self, path):
         for base_url, enums in self.api_map.items():

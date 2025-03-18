@@ -3,6 +3,7 @@ from dataclasses import dataclass, asdict
 import pandas as pd
 import re
 from ..utils.decimal_utils import reverse_decimal_places
+from ..utils.common import Common
 
 
 @dataclass
@@ -83,7 +84,7 @@ async def bybit() -> Dict[str, Dict[str, str]]:
     for market in response["result"]["list"]:
         markets.append(
             MarketInfo(
-                exchange="bybit",
+                exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
                 product_symbol=format_product_symbol(strip_number(market["symbol"])),
                 product_type="linear",
@@ -98,7 +99,7 @@ async def bybit() -> Dict[str, Dict[str, str]]:
     for market in response["result"]["list"]:
         markets.append(
             MarketInfo(
-                exchange="bybit",
+                exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
                 product_symbol=format_product_symbol(market["symbol"]),
                 product_type="inverse",
@@ -114,7 +115,7 @@ async def bybit() -> Dict[str, Dict[str, str]]:
             continue
         markets.append(
             MarketInfo(
-                exchange="bybit",
+                exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
                 product_symbol=f"{market['symbol'][:-4]}-{market['symbol'][-4:]}-SPOT",
                 product_type="spot",
@@ -139,10 +140,10 @@ async def okx() -> Dict[str, Dict[str, str]]:
     for market in response["data"]:
         markets.append(
             MarketInfo(
-                exchange="okx",
+                exchange=Common.OKX,
                 exchange_symbol=market["instId"],
                 product_symbol=strip_number(market["instId"]),
-                product_type=market["instType"].lower(),
+                product_type=market["instType"],
                 price_precision=market["tickSz"],
                 size_precision=market["lotSz"],
                 min_size=market["minSz"],
@@ -156,10 +157,10 @@ async def okx() -> Dict[str, Dict[str, str]]:
             continue
         markets.append(
             MarketInfo(
-                exchange="okx",
+                exchange=Common.OKX,
                 exchange_symbol=market["instId"],
                 product_symbol=market["instId"] + "-SPOT",
-                product_type=market["instType"].lower(),
+                product_type=market["instType"],
                 price_precision=market["tickSz"],
                 size_precision=market["lotSz"],
                 min_size=market["minSz"],
@@ -193,7 +194,7 @@ async def bitmart() -> Dict[str, Dict[str, str]]:
 
         markets.append(
             MarketInfo(
-                exchange="bitmart",
+                exchange=Common.BITMART,
                 exchange_symbol=market["symbol"],
                 product_symbol=product_symbol,
                 product_type="swap",
@@ -219,7 +220,7 @@ async def bitmart() -> Dict[str, Dict[str, str]]:
 
         markets.append(
             MarketInfo(
-                exchange="bitmart",
+                exchange=Common.BITMART,
                 exchange_symbol=market["symbol"],
                 product_symbol=product_symbol,
                 product_type="spot",

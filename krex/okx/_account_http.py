@@ -1,3 +1,4 @@
+from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.account import Account
 
@@ -6,21 +7,21 @@ class AccountHTTP(HTTPManager):
     def get_instruments(
         self,
         instType: str,
-        instId: str = None,
+        product_symbol: str = None,
         instFamily: str = None,
         uly: str = None,
     ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
-        :param instId: str Only applicable to FUTURES/SWAP/OPTION.If instType is OPTION, either uly or instFamily is required.
+        :param product_symbol: str Only applicable to FUTURES/SWAP/OPTION.If instType is OPTION, either uly or instFamily is required.
         :param instFamily: str Only applicable to FUTURES/SWAP/OPTION. If instType is OPTION, either uly or instFamily is required.
         :param uly: str
         """
         payload = {
             "instType": instType,
         }
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if instFamily is not None:
             payload["instFamily"] = instFamily
         if uly is not None:
@@ -41,7 +42,10 @@ class AccountHTTP(HTTPManager):
         """
         payload = {}
         if ccy is not None:
-            payload["ccy"] = ccy
+            coinName = ",".join(ccy)
+            payload = {
+                "ccy": coinName,
+            }
 
         return self._request(
             method="GET",
@@ -52,17 +56,17 @@ class AccountHTTP(HTTPManager):
     def get_positions(
         self,
         instType: str = None,
-        instId: str = None,
+        product_symbol: str = None,
     ):
         """
         :param instType: str (MARGIN, SWAP, FUTURES, OPTION) instId will be checked against instType when both parameters are passed.
-        :param instId: str
+        :param product_symbol: str
         """
         payload = {}
         if instType is not None:
             payload["instType"] = instType
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
 
         return self._request(
             method="GET",
@@ -73,7 +77,7 @@ class AccountHTTP(HTTPManager):
     def get_positions_history(
         self,
         instType: str = None,
-        instId: str = None,
+        product_symbol: str = None,
         mgnMode: str = None,
         type: str = None,
         after: str = None,
@@ -82,7 +86,7 @@ class AccountHTTP(HTTPManager):
     ):
         """
         :param instType: str (MARGIN, SWAP, FUTURES, OPTION)
-        :param instId: str
+        :param product_symbol: str
         :param mgnMode: str (cross, isolated)
         :param type: str (1: Close position partially; 2: Close all; 3: Liquidation; 4: Partial liquidation; 5: ADL;)
         :param after: str
@@ -92,8 +96,8 @@ class AccountHTTP(HTTPManager):
         payload = {}
         if instType is not None:
             payload["instType"] = instType
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if mgnMode is not None:
             payload["mgnMode"] = mgnMode
         if type is not None:
@@ -421,19 +425,19 @@ class AccountHTTP(HTTPManager):
     def get_leverage(
         self,
         mgnMode: str,
-        instId: str = None,
+        product_symbol: str = None,
         ccy: str = None,
     ):
         """
         :param mgnMode: str (cross, isolated)
-        :param instId: str
+        :param product_symbol: str
         :param ccy: str used for getting leverage of currency level. Applicable to cross MARGIN of Spot mode/Multi-currency margin/Portfolio margin. Supported single currency or multiple currencies (no more than 20) separated with comma.
         """
         payload = {
             "mgnMode": mgnMode,
         }
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ccy is not None:
             payload["ccy"] = ccy
 

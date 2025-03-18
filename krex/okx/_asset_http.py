@@ -12,7 +12,10 @@ class AssetHTTP(HTTPManager):
         """
         payload = {}
         if ccy is not None:
-            payload["ccy"] = ccy
+            ccyName = ",".join(ccy)
+            payload = {
+                "ccy": ccyName,
+            }
 
         return self._request(
             method="GET",
@@ -29,7 +32,10 @@ class AssetHTTP(HTTPManager):
         """
         payload = {}
         if ccy is not None:
-            payload["ccy"] = ccy
+            ccyName = ",".join(ccy)
+            payload = {
+                "ccy": ccyName,
+            }
 
         return self._request(
             method="GET",
@@ -46,7 +52,10 @@ class AssetHTTP(HTTPManager):
         """
         payload = {}
         if ccy is not None:
-            payload["ccy"] = ccy
+            ccyName = ",".join(ccy)
+            payload = {
+                "ccy": ccyName,
+            }
 
         return self._request(
             method="GET",

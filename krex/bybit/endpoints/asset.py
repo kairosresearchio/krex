@@ -2,7 +2,6 @@ from enum import Enum
 
 
 class Asset(str, Enum):
-    GET_COIN_EXCHANGE_RECORDS = "/v5/asset/exchange/order-record"
     GET_COIN_INFO = "/v5/asset/coin/query-info"
     GET_SUB_UID = "/v5/asset/transfer/query-sub-member-list"
     GET_SPOT_ASSET_INFO = "/v5/asset/transfer/query-asset-info"
@@ -14,7 +13,6 @@ class Asset(str, Enum):
     CREATE_INTERNAL_TRANSFER = "/v5/asset/transfer/inter-transfer"
     CREATE_UNIVERSAL_TRANSFER = "/v5/asset/transfer/universal-transfer"
     GET_UNIVERSAL_TRANSFER_RECORDS = "/v5/asset/transfer/query-universal-transfer-list"
-    GET_ALLOWED_DEPOSIT_COIN_INFO = "/v5/asset/deposit/query-allowed-list"
     SET_DEPOSIT_ACCOUNT = "/v5/asset/deposit/deposit-to-account"
     GET_DEPOSIT_RECORDS = "/v5/asset/deposit/query-record"
     GET_SUB_ACCOUNT_DEPOSIT_RECORDS = "/v5/asset/deposit/query-sub-member-record"
