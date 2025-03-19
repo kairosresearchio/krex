@@ -34,7 +34,7 @@ dev = [
 ]
 
 [[tool.uv.index]]
-explicit = true
+explicit = false
 name = "kairosresearch"
 publish-url = "http://kairosresearch.io:8010/"
 url = "http://kairosresearch.io:8010/simple/"
