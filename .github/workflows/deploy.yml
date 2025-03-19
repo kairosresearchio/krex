@@ -13,20 +13,23 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
 
       - name: Set up Python
-        run: uv python install
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
 
       - name: Install dependencies
-        run: uv pip install --system requests
+        run: |
+          uv venv .venv
+          source .venv/bin/activate
+          uv pip install requests paramiko
 
       - name: Get package version and name
         id: get_package_info
         run: |
-          VERSION=$(uv pip show pyproject.toml | grep "Version:" | awk '{print $2}')
-          PKG_NAME=$(uv pip show pyproject.toml | grep "Name:" | awk '{print $2}')
+          VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          PKG_NAME=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['name'])")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "pkg_name=$PKG_NAME" >> $GITHUB_OUTPUT
           echo "Package name: $PKG_NAME"
@@ -39,31 +42,51 @@ jobs:
           ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Check and delete existing version via SSH
-        id: version_check
+      - name: Check and delete existing version via SSH (using Python)
         env:
-          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+          VM_HOST: ${{ secrets.VM_HOST }}
+          VM_USERNAME: ${{ secrets.VM_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          PKG_NAME="${{ steps.get_package_info.outputs.pkg_name }}"
-          VERSION="${{ steps.get_package_info.outputs.version }}"
-          WHL_FILE="${PKG_NAME}-${VERSION}-py3-none-any.whl"
-          TAR_FILE="${PKG_NAME}-${VERSION}.tar.gz"
+          python - <<EOF
+          import paramiko
+          import os
 
-          sshpass -e ssh -o StrictHostKeyChecking=no ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} "
-            cd /root/pypi_packages && \
-            if [ -f ${WHL_FILE} ] || [ -f ${TAR_FILE} ]; then \
-              rm -f ${WHL_FILE} ${TAR_FILE}; \
-              echo 'Deleted existing package files'; \
-            else \
-              echo 'No existing package files found'; \
-            fi
-          "
+          hostname = os.environ["VM_HOST"]
+          username = os.environ["VM_USERNAME"]
+          password = os.environ["SSH_PASSWORD"]
+          package_name = "${{ steps.get_package_info.outputs.pkg_name }}"
+          package_version = "${{ steps.get_package_info.outputs.version }}"
+
+          whl_file = f"{package_name}-{package_version}-py3-none-any.whl"
+          tar_file = f"{package_name}-{package_version}.tar.gz"
+
+          ssh = paramiko.SSHClient()
+          ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+          ssh.connect(hostname, username=username, password=password)
+
+          cmd = f"""
+          cd /root/pypi_packages &&
+          if [ -f "{whl_file}" ] || [ -f "{tar_file}" ]; then
+              rm -f "{whl_file}" "{tar_file}";
+              echo "Deleted existing package files";
+          else
+              echo "No existing package files found";
+          fi
+          """
+
+          stdin, stdout, stderr = ssh.exec_command(cmd)
+          print(stdout.read().decode())
+          print(stderr.read().decode())
+
+          ssh.close()
+          EOF
 
       - name: Build package
-        run: uv pip install --system build && python -m build
+        run: uv build
 
       - name: Upload package
         env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: uv publish --repository http://kairosresearch.io:8010
+          UV_PUBLISH_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: uv publish --index kairosresearch

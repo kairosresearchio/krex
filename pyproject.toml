@@ -32,3 +32,9 @@ dev = [
   "ruff>=0.9.9",
   "pre-commit>=4.1.0",
 ]
+
+[[tool.uv.index]]
+explicit = true
+name = "kairosresearch"
+publish-url = "http://kairosresearch.io:8010/"
+url = "http://kairosresearch.io:8010/simple/"
