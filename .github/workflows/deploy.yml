@@ -48,6 +48,7 @@ jobs:
           VM_USERNAME: ${{ secrets.VM_USERNAME }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
+          source .venv/bin/activate
           python - <<EOF
           import paramiko
           import os
