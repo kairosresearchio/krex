@@ -36,5 +36,5 @@ dev = [
 [[tool.uv.index]]
 explicit = false
 name = "kairosresearch"
-publish-url = "http://kairosresearch.io/pypi/"
-url = "http://kairosresearch.io/pypi/simple/"
+publish-url = "https://kairosresearch.io/pypi/"
+url = "https://kairosresearch.io/pypi/simple/"
