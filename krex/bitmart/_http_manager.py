@@ -108,6 +108,7 @@ class HTTPManager:
             return response.json()
 
         except requests.exceptions.RequestException as e:
+            # todo: add error code 對照表 for each exchange, not a priority
             raise FailedRequestError(
                 request=f"{method.upper()} {url} | Body: {query}",
                 message=f"Request failed: {str(e)}",

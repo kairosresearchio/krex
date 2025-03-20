@@ -9,10 +9,10 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         side: str,
         type: str,
-        size: str,
-        price: str,
-        notional: str,
-        clientOrderId: str = None,
+        size: str = None,
+        price: str = None,
+        notional: str = None,
+        client_order_id: str = None,
     ):
         """
         :param product_symbol: str
@@ -27,12 +27,15 @@ class TradeHTTP(HTTPManager):
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             "side": side,
             "type": type,
-            "size": size,
-            "price": price,
-            "notional": notional,
         }
-        if clientOrderId is not None:
-            payload["clientOrderId"] = clientOrderId
+        if size is not None:
+            payload["size"] = size
+        if price is not None:
+            payload["price"] = price
+        if notional is not None:
+            payload["notional"] = notional
+        if client_order_id is not None:
+            payload["client_order_id"] = client_order_id
 
         return self._request(
             method="POST",
@@ -46,39 +49,41 @@ class TradeHTTP(HTTPManager):
         side: str,
         size: str,
         notional: bool = None,
+        client_order_id: str = None,
     ):
         return self.place_spot_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side=side,
             type="market",
             size=size,
             notional=notional,
+            client_order_id=client_order_id,
         )
 
     def place_spot_market_buy_order(
         self,
         product_symbol: str,
-        size: str,
-        notional: bool = None,
+        notional: bool,
+        client_order_id: str = None,
     ):
         return self.place_spot_market_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side="buy",
-            size=size,
             notional=notional,
+            client_order_id=client_order_id,
         )
 
     def place_spot_market_sell_order(
         self,
         product_symbol: str,
         size: str,
-        notional: bool = None,
+        client_order_id: str = None,
     ):
         return self.place_spot_market_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side="sell",
             size=size,
-            notional=notional,
+            client_order_id=client_order_id,
         )
 
     def place_spot_limit_order(
@@ -87,15 +92,15 @@ class TradeHTTP(HTTPManager):
         side: str,
         size: str,
         price: str,
-        notional: bool = None,
+        client_order_id: str = None,
     ):
         return self.place_spot_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side=side,
             type="limit",
             size=size,
             price=price,
-            notional=notional,
+            client_order_id=client_order_id,
         )
 
     def place_spot_limit_buy_order(
@@ -103,14 +108,14 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         size: str,
         price: str,
-        notional: bool = None,
+        client_order_id: str = None,
     ):
         return self.place_spot_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side="buy",
             size=size,
             price=price,
-            notional=notional,
+            client_order_id=client_order_id,
         )
 
     def place_spot_limit_sell_order(
@@ -118,14 +123,14 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         size: str,
         price: str,
-        notional: bool = None,
+        client_order_id: str = None,
     ):
         return self.place_spot_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side="sell",
             size=size,
             price=price,
-            notional=notional,
+            client_order_id=client_order_id,
         )
 
     def place_post_only_limit_order(
@@ -134,15 +139,15 @@ class TradeHTTP(HTTPManager):
         side: str,
         size: str,
         price: str,
-        notional: bool = None,
+        client_order_id: str = None,
     ):
         return self.place_spot_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side=side,
             type="limit_maker",
             size=size,
             price=price,
-            notional=notional,
+            client_order_id=client_order_id,
         )
 
     def place_post_only_limit_buy_order(
@@ -150,14 +155,14 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         size: str,
         price: str,
-        notional: bool = None,
+        client_order_id: str = None,
     ):
         return self.place_post_only_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side="buy",
             size=size,
             price=price,
-            notional=notional,
+            client_order_id=client_order_id,
         )
 
     def place_post_only_limit_sell_order(
@@ -165,17 +170,17 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         size: str,
         price: str,
-        notional: bool = None,
+        client_order_id: str = None,
     ):
         return self.place_post_only_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side="sell",
             size=size,
             price=price,
-            notional=notional,
+            clientOrderId=client_order_id,
         )
 
-    def cacel_spot_order(
+    def cancel_spot_order(
         self,
         product_symbol: str,
         order_id: str = None,
@@ -200,7 +205,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def cacel_spot_all_order(
+    def cancel_spot_all_order(
         self,
         product_symbol: str = None,
         side: str = None,

@@ -52,6 +52,7 @@ class MarketHTTP(HTTPManager):
     def get_spot_kline(
         self,
         product_symbol: str,
+        interval: str,
         before: int = None,
         after: int = None,
         limit: int = None,

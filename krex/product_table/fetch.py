@@ -227,6 +227,7 @@ async def bitmart() -> Dict[str, Dict[str, str]]:
                 price_precision=reverse_decimal_places(market["price_max_precision"]),
                 size_precision=market["quote_increment"],
                 min_size=market["base_min_size"],
+                min_notional=market["min_buy_amount"],
             )
         )
 
