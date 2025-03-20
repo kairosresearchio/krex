@@ -1,6 +1,3 @@
-import sys, os
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.append(ROOT)
 from krex.bitmart.client import Client
 
 BITMART_API_KEY = "613c8332848ff6b83aa915ae6270f2e842901036"
@@ -59,7 +56,3 @@ print("\n#######################\n")
 # get_contract_assets
 res = client.get_contract_assets()
 print("8. get_contract_assets:", res)
-
-
-
-
