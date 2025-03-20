@@ -105,16 +105,6 @@ class ProductTableManager:
             )
         return data.iloc[0][key]
 
-    def construct_product_code(self, base_currency, currency, product_type):
-        """
-        Construct product_code from base_currency, currency, product_type
-        base_currency: BTC, ETH,
-        currency: USDT, USD, ...
-        product_type: SPOT, UPERP, ...
-        """
-        product_type = product_type.upper()
-        return "{}-{}-{}".format(base_currency, currency, product_type)
-
     def get_exchange_symbol(self, product_symbol, exchange):
         return self.get("exchange_symbol", product_symbol, exchange)
 
@@ -124,9 +114,11 @@ class ProductTableManager:
     def get_product_type(self, product_symbol, exchange):
         return self.get("product_type", product_symbol, exchange)
 
-    def convert_product_type(self, product_code, from_product_type, to_product_type):
-        base, quote, product_type = product_code.split("-")
-        if to_product_type == "SPOT":
-            return "{}-{}-SPOT".format(base, quote)
-        elif to_product_type == "UPERP":
-            return "{}-{}-UPERP".format(base, quote)
+    def get_trading_details(self, product_symbol, exchange):
+        return {
+            "price_precision": self.get("price_precision", product_symbol, exchange),
+            "size_precision": self.get("size_precision", product_symbol, exchange),
+            "min_size": self.get("min_size", product_symbol, exchange),
+            "min_notional": self.get("min_notional", product_symbol, exchange),
+            "size_per_contract": self.get("size_per_contract", product_symbol, exchange),
+        }
