@@ -56,7 +56,3 @@ print("\n#######################\n")
 # get_contract_assets
 res = client.get_contract_assets()
 print("8. get_contract_assets:", res)
-
-
-
-
