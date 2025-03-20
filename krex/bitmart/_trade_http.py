@@ -200,7 +200,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def cacel_spot_all_order(
+    def cancel_spot_all_order(
         self,
         product_symbol: str = None,
         side: str = None,
