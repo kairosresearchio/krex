@@ -11,7 +11,7 @@ class TradeHTTP(HTTPManager):
         type: str,
         size: str,
         price: str,
-        notional: str,
+        notional: str = None,
         clientOrderId: str = None,
     ):
         """
@@ -27,10 +27,18 @@ class TradeHTTP(HTTPManager):
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             "side": side,
             "type": type,
-            "size": size,
-            "price": price,
-            "notional": notional,
         }
+
+        if type == "market":
+            if side == "buy":
+                payload["notional"] = notional
+            elif side == "sell":
+                payload["size"] = size
+        else:
+            # (limit, limit_maker, ioc) need size, price
+            payload["size"] = size
+            payload["price"] = price
+
         if clientOrderId is not None:
             payload["clientOrderId"] = clientOrderId
 
