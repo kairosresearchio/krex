@@ -5,8 +5,8 @@ import requests
 import hashlib
 from dataclasses import dataclass, field
 from .endpoints.account import FundingAccount, FuturesAccount
-from ..bitmart.endpoints.market import FuturesMarket, SpotMarket
-from ..bitmart.endpoints.trade import FuturesTrade, SpotTrade
+from .endpoints.market import FuturesMarket, SpotMarket
+from .endpoints.trade import FuturesTrade, SpotTrade
 from ..utils.errors import FailedRequestError
 from ..utils.helpers import generate_timestamp
 from ..product_table.manager import ProductTableManager

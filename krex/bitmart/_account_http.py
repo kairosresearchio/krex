@@ -68,6 +68,7 @@ class AssetHTTP(HTTPManager):
             query=payload,
         )
 
+    # todo: test failed
     def get_withdraw_charge(
         self,
         currency: str,
@@ -85,6 +86,7 @@ class AssetHTTP(HTTPManager):
             query=payload,
         )
 
+    # todo: not tested
     def post_withdraw_apply(
         self,
         currency: str,
@@ -107,9 +109,9 @@ class AssetHTTP(HTTPManager):
 
     def get_deposit_withdraw_history(
         self,
-        limit: int,
+        operation_type: str = "withdraw",
+        limit: int = 1000,
         currency: str = None,
-        operation_type: str = None,
         startTime: int = None,
         endTime: int = None,
     ):
@@ -121,12 +123,11 @@ class AssetHTTP(HTTPManager):
         :param endTime: int
         """
         payload = {
-            "limit": limit,
+            "N": limit,
+            "operation_type": operation_type,
         }
         if currency is not None:
             payload["currency"] = currency
-        if operation_type is not None:
-            payload["operation_type"] = operation_type
         if startTime is not None:
             payload["startTime"] = startTime
         if endTime is not None:
@@ -150,7 +151,7 @@ class AssetHTTP(HTTPManager):
         }
 
         return self._request(
-            method="POST",
+            method="GET",
             path=FundingAccount.GET_DEPOSIT_WITHDRAW_HISTORY_DETAIL,
             query=payload,
         )
