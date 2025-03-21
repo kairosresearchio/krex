@@ -1,3 +1,7 @@
+import os, sys
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(ROOT)
+
 from krex.bitmart.client import Client
 
 BITMART_API_KEY = "613c8332848ff6b83aa915ae6270f2e842901036"
@@ -23,3 +27,16 @@ res = client.cancel_spot_order(
     client_order_id="test",
 )
 print("2. cancel_spot_order:", res)
+
+res = client.place_contract_post_only_buy_order(
+    product_symbol="BTC-USDT-SWAP",
+    size=1,
+    price="80000",
+    client_order_id="test",
+)
+print("1. place_contract_post_only_buy_order:", res)
+
+res = client.get_contract_position(
+    product_symbol="BTC-USDT-SWAP",
+)
+print("3. get_contract_position:", res)

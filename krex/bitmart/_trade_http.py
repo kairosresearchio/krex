@@ -414,10 +414,10 @@ class TradeHTTP(HTTPManager):
     def place_contract_order(
         self,
         product_symbol: str,
-        side: str,
+        side: int,
         price: str,
-        size: str,
-        clientOrderId: str = None,
+        size: int,
+        client_order_id: str = None,
         type: str = None,
         leverage: str = None,
         openType: str = None,
@@ -433,7 +433,7 @@ class TradeHTTP(HTTPManager):
         :param side: str (1=buy_open_long, 2=buy_close_short, 3=sell_close_long, 4=sell_open_short)
         :param price: str
         :param size: str
-        :param clientOrderId: str
+        :param client_order_id: str
         :param type: str (limit(default), market)
         :param leverage: str
         :param openType: str (cross, isolated)
@@ -450,8 +450,8 @@ class TradeHTTP(HTTPManager):
             "price": price,
             "size": size,
         }
-        if clientOrderId is not None:
-            payload["clientOrderId"] = clientOrderId
+        if client_order_id is not None:
+            payload["client_order_id"] = client_order_id
         if type is not None:
             payload["type"] = type
         if leverage is not None:
@@ -483,13 +483,15 @@ class TradeHTTP(HTTPManager):
         side: int,
         price: str,
         size: str,
+        client_order_id: str = None,
     ):
         return self.place_contract_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side=side,
             type="market",
             price=price,
             size=size,
+            client_order_id=client_order_id,
         )
 
     def place_contract_limit_order(
@@ -497,15 +499,106 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         side: int,
         price: str,
-        size: str,
+        size: int,
+        client_order_id: str = None,
+        mode: int = None,
     ):
         return self.place_contract_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            product_symbol=product_symbol,
             side=side,
             type="limit",
             price=price,
             size=size,
+            client_order_id=client_order_id,
+            mode=mode,
         )
+    
+    def place_contract_post_only_order(
+        self,
+        product_symbol: str,
+        side: int,
+        price: str,
+        size: int,
+        client_order_id: str = None,
+    ):
+        return self.place_contract_limit_order(
+            product_symbol=product_symbol,
+            side=side,
+            price=price,
+            size=size,
+            client_order_id=client_order_id,
+            mode=4,
+        )
+    
+    def place_contract_post_only_buy_order(
+        self,
+        product_symbol: str,
+        price: str,
+        size: int,
+        client_order_id: str = None,
+    ):
+        positions = self.get_contract_position(product_symbol)['data']
+        has_long_position_flag = 0
+        has_short_position_flag = 0
+        for position in positions:
+            if position['position_type'] == 1:
+                has_long_position_flag = 1
+            elif position['position_type'] == 2:
+                has_short_position_flag = 1
+        
+        if has_short_position_flag: # 優先平空
+            return self.place_contract_post_only_order(
+                product_symbol=product_symbol,
+                side=2,
+                price=price,
+                size=size,
+                client_order_id=client_order_id,
+            )
+        elif has_long_position_flag:
+            return self.place_contract_post_only_order(
+                product_symbol=product_symbol,
+                side=1,
+                price=price,
+                size=size,
+                client_order_id=client_order_id,
+            )
+        else:
+            raise Exception("There is something wrong")
+    
+    def place_contract_post_only_sell_order(
+        self,
+        product_symbol: str,
+        price: str,
+        size: str,
+        client_order_id: str = None,
+    ):
+        positions = self.get_contract_position(product_symbol)['data']
+        has_long_position_flag = 0
+        has_short_position_flag = 0
+        for position in positions:
+            if position['position_type'] == 1:
+                has_long_position_flag = 1
+            elif position['position_type'] == 2:
+                has_short_position_flag = 1
+        
+        if has_long_position_flag: # 優先平多
+            return self.place_contract_post_only_order(
+                product_symbol=product_symbol,
+                side=3,
+                price=price,
+                size=size,
+                client_order_id=client_order_id,
+            )
+        elif has_short_position_flag:
+            return self.place_contract_post_only_order(
+                product_symbol=product_symbol,
+                side=4,
+                price=price,
+                size=size,
+                client_order_id=client_order_id,
+            )
+        else:
+            raise Exception("There is something wrong")
 
     def modify_limit_order(
         self,
