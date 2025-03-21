@@ -56,4 +56,3 @@ print("8. get_depth:", res)
 # get_contract_kline
 res = client.get_contract_kline(product_symbol="BTC-USDT-SWAP")
 print("9. get_contract_kline:", res)
-

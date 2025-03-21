@@ -9,4 +9,3 @@ def bitmart_convert_timeframe(timeframe: str) -> str:
         return 30
     elif timeframe == "1h":
         return 60
-    
