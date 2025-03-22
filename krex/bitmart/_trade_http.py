@@ -420,7 +420,7 @@ class TradeHTTP(HTTPManager):
         client_order_id: str = None,
         type: str = None,
         leverage: str = None,
-        openType: str = None,
+        open_type: str = None,
         mode: int = None,
         preset_take_profit_price_type: int = None,
         preset_stop_loss_price_type: int = None,
@@ -436,7 +436,7 @@ class TradeHTTP(HTTPManager):
         :param client_order_id: str
         :param type: str (limit(default), market)
         :param leverage: str
-        :param openType: str (cross, isolated)
+        :param open_type: str (cross, isolated)
         :param mode: int (1=GTC(default), 2=FOK, 3=IOC, 4=Maker Only)
         :param preset_take_profit_price_type: int Pre-set TP price type(1=last_price(default), 2=fair_price)
         :param preset_stop_loss_price_type: int Pre-set SL price type(1=last_price(default), 2=fair_price)
@@ -456,8 +456,8 @@ class TradeHTTP(HTTPManager):
             payload["type"] = type
         if leverage is not None:
             payload["leverage"] = leverage
-        if openType is not None:
-            payload["openType"] = openType
+        if open_type is not None:
+            payload["open_type"] = open_type
         if mode is not None:
             payload["mode"] = mode
         if preset_take_profit_price_type is not None:
@@ -669,20 +669,20 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         leverage: str = None,
-        openType: str = None,
+        open_type: str = None,
     ):
         """
         :param product_symbol: str
         :param leverage: str
-        :param openType: str (cross, isolated)
+        :param open_type: str (cross, isolated)
         """
         payload = {
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
         if leverage is not None:
             payload["leverage"] = leverage
-        if openType is not None:
-            payload["openType"] = openType
+        if open_type is not None:
+            payload["open_type"] = open_type
 
         return self._request(
             method="POST",
