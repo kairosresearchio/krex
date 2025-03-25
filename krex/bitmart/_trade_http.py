@@ -415,8 +415,8 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         side: int,
-        price: str,
         size: int,
+        price: str = None,
         client_order_id: str = None,
         type: str = None,
         leverage: str = None,
@@ -447,9 +447,10 @@ class TradeHTTP(HTTPManager):
         payload = {
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
             "side": side,
-            "price": price,
             "size": size,
         }
+        if price is not None:
+            payload["price"] = price
         if client_order_id is not None:
             payload["client_order_id"] = client_order_id
         if type is not None:
@@ -481,7 +482,7 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         side: int,
-        size: str,
+        size: int,
         client_order_id: str = None,
     ):
         return self.place_contract_order(
@@ -495,56 +496,79 @@ class TradeHTTP(HTTPManager):
     def place_contract_market_buy_order(
         self,
         product_symbol: str,
-        size: str,
+        size: int,
         client_order_id: str = None,
     ):
         positions = self.get_contract_position(product_symbol)['data']
-        has_long_position_flag = 0
-        has_short_position_flag = 0
-        for position in positions:
-            if position['position_type'] == 1:
-                has_long_position_flag = 1
-            elif position['position_type'] == 2:
-                has_short_position_flag = 1
+        short_size = sum(int(p['current_amount']) for p in positions if p['position_type'] == 2)
         
-        if has_short_position_flag: # 優先平空
-            return self.place_contract_market_order(
-                product_symbol=product_symbol,
-                side=2,
-                size=size,
-                client_order_id=client_order_id,
-            )
-        elif has_long_position_flag:
+        if short_size != 0:
+            size = size - short_size
+            if size <= 0:
+                return self.place_contract_market_order(
+                    product_symbol=product_symbol,
+                    side=2,
+                    size=size,
+                    client_order_id=client_order_id,
+                )
+            else:
+                return (
+                    self.place_contract_market_order(
+                        product_symbol=product_symbol,
+                        side=1,
+                        size=size,
+                        client_order_id=client_order_id,
+                    ),
+                    self.place_contract_market_order(
+                        product_symbol=product_symbol,
+                        side=2,
+                        size=short_size,
+                        client_order_id=client_order_id,
+                    )
+                )
+        else:
             return self.place_contract_market_order(
                 product_symbol=product_symbol,
                 side=1,
                 size=size,
                 client_order_id=client_order_id,
             )
+    
         
     def place_contract_market_sell_order(
         self,
         product_symbol: str,
-        size: str,
+        size: int,
         client_order_id: str = None,
     ):
-        positions = self.get_contract_position(product_symbol)['data']
-        has_long_position_flag = 0
-        has_short_position_flag = 0
-        for position in positions:
-            if position['position_type'] == 1:
-                has_long_position_flag = 1
-            elif position['position_type'] == 2:
-                has_short_position_flag = 1
-        
-        if has_long_position_flag: # 優先平多
-            return self.place_contract_market_order(
-                product_symbol=product_symbol,
-                side=3,
-                size=size,
-                client_order_id=client_order_id,
-            )
-        elif has_short_position_flag:
+        positions = self.get_contract_position(product_symbol)["data"]
+        long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
+
+        if long_size != 0:
+            size = size - long_size
+            if size <= 0:
+                return self.place_contract_market_order(
+                    product_symbol=product_symbol,
+                    side=3,
+                    size=size,
+                    client_order_id=client_order_id,
+                )
+            else:
+                return (
+                    self.place_contract_market_order(
+                        product_symbol=product_symbol,
+                        side=4,
+                        size=size,
+                        client_order_id=client_order_id,
+                    ),
+                    self.place_contract_market_order(
+                        product_symbol=product_symbol,
+                        side=3,
+                        size=long_size,
+                        client_order_id=client_order_id,
+                    )
+                )
+        else:
             return self.place_contract_market_order(
                 product_symbol=product_symbol,
                 side=4,
@@ -596,16 +620,43 @@ class TradeHTTP(HTTPManager):
         client_order_id=None,
     ):
         positions = self.get_contract_position(product_symbol)["data"]
-        has_short = any(p["position_type"] == 2 for p in positions)
+        short_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 2)
 
-        side = 2 if has_short else 1
-        return self.place_contract_post_only_order(
-            product_symbol=product_symbol,
-            side=side,
-            price=price,
-            size=size,
-            client_order_id=client_order_id,
-        )
+        if short_size != 0:
+            size = size - short_size
+            if size <= 0:
+                return self.place_contract_post_only_order(
+                    product_symbol=product_symbol,
+                    side=2,
+                    price=price,
+                    size=size,
+                    client_order_id=client_order_id,
+                )
+            else:
+                return (
+                    self.place_contract_post_only_order(
+                        product_symbol=product_symbol,
+                        side=1,
+                        price=price,
+                        size=size,
+                        client_order_id=client_order_id,
+                    ),
+                    self.place_contract_post_only_order(
+                        product_symbol=product_symbol,
+                        side=2,
+                        price=price,
+                        size=short_size,
+                        client_order_id=client_order_id,
+                    )
+                )
+        else:
+            return self.place_contract_post_only_order(
+                product_symbol=product_symbol,
+                side=1,
+                price=price,
+                size=size,
+                client_order_id=client_order_id,
+            )
 
     def place_contract_post_only_sell_order(
         self,
@@ -615,16 +666,43 @@ class TradeHTTP(HTTPManager):
         client_order_id=None,
     ):
         positions = self.get_contract_position(product_symbol)["data"]
-        has_long = any(p["position_type"] == 1 for p in positions)
+        long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
 
-        side = 3 if has_long else 4
-        return self.place_contract_post_only_order(
-            product_symbol=product_symbol,
-            side=side,
-            price=price,
-            size=size,
-            client_order_id=client_order_id,
-        )
+        if long_size != 0:
+            size = size - long_size
+            if size <= 0:
+                return self.place_contract_post_only_order(
+                    product_symbol=product_symbol,
+                    side=3,
+                    price=price,
+                    size=size,
+                    client_order_id=client_order_id,
+                )
+            else:
+                return (
+                    self.place_contract_post_only_order(
+                        product_symbol=product_symbol,
+                        side=4,
+                        price=price,
+                        size=size,
+                        client_order_id=client_order_id,
+                    ),
+                    self.place_contract_post_only_order(
+                        product_symbol=product_symbol,
+                        side=3,
+                        price=price,
+                        size=long_size,
+                        client_order_id=client_order_id,
+                    )
+                )
+        else:
+            return self.place_contract_post_only_order(
+                product_symbol=product_symbol,
+                side=4,
+                price=price,
+                size=size,
+                client_order_id=client_order_id,
+            )
 
     def modify_limit_order(
         self,
