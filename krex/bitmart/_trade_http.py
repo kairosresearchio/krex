@@ -481,7 +481,6 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         side: int,
-        price: str,
         size: str,
         client_order_id: str = None,
     ):
@@ -489,10 +488,69 @@ class TradeHTTP(HTTPManager):
             product_symbol=product_symbol,
             side=side,
             type="market",
-            price=price,
             size=size,
             client_order_id=client_order_id,
         )
+    
+    def place_contract_market_buy_order(
+        self,
+        product_symbol: str,
+        size: str,
+        client_order_id: str = None,
+    ):
+        positions = self.get_contract_position(product_symbol)['data']
+        has_long_position_flag = 0
+        has_short_position_flag = 0
+        for position in positions:
+            if position['position_type'] == 1:
+                has_long_position_flag = 1
+            elif position['position_type'] == 2:
+                has_short_position_flag = 1
+        
+        if has_short_position_flag: # 優先平空
+            return self.place_contract_market_order(
+                product_symbol=product_symbol,
+                side=2,
+                size=size,
+                client_order_id=client_order_id,
+            )
+        elif has_long_position_flag:
+            return self.place_contract_market_order(
+                product_symbol=product_symbol,
+                side=1,
+                size=size,
+                client_order_id=client_order_id,
+            )
+        
+    def place_contract_market_sell_order(
+        self,
+        product_symbol: str,
+        size: str,
+        client_order_id: str = None,
+    ):
+        positions = self.get_contract_position(product_symbol)['data']
+        has_long_position_flag = 0
+        has_short_position_flag = 0
+        for position in positions:
+            if position['position_type'] == 1:
+                has_long_position_flag = 1
+            elif position['position_type'] == 2:
+                has_short_position_flag = 1
+        
+        if has_long_position_flag: # 優先平多
+            return self.place_contract_market_order(
+                product_symbol=product_symbol,
+                side=3,
+                size=size,
+                client_order_id=client_order_id,
+            )
+        elif has_short_position_flag:
+            return self.place_contract_market_order(
+                product_symbol=product_symbol,
+                side=4,
+                size=size,
+                client_order_id=client_order_id,
+            )
 
     def place_contract_limit_order(
         self,

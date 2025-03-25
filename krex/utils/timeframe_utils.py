@@ -9,4 +9,15 @@ def bitmart_convert_timeframe(timeframe: str) -> str:
         return 30
     elif timeframe == "1h":
         return 60
-    
+    elif timeframe == "2h":
+        return 120
+    elif timeframe == "4h":
+        return 240
+    elif timeframe == "1d":
+        return 1440
+    elif timeframe == "1w":
+        return 10080
+    elif timeframe == "1mo":
+        return 43200
+    else:
+        raise ValueError("timeframe not supported")

@@ -36,8 +36,8 @@ print("4. get_deposit_address:", res)
 print("\n#######################\n")
 
 # get withdraw charge
-# res = client.get_withdraw_charge(currency="USDT-TRC20")
-# print("5. get_withdraw_charge:", res)
+res = client.get_withdraw_charge(currency="USDT-TRC20")
+print("5. get_withdraw_charge:", res)
 
 print("\n#######################\n")
 

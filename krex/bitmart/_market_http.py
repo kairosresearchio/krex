@@ -1,6 +1,8 @@
 from ..utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.market import SpotMarket, FuturesMarket
+from ..utils.timeframe_utils import bitmart_convert_timeframe
+import pandas as pd
 
 
 class MarketHTTP(HTTPManager):
@@ -61,11 +63,12 @@ class MarketHTTP(HTTPManager):
         :param product_symbol: str
         :param before: int
         :param after: int
-        :param limit: int
         """
         payload = {
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
         }
+        if interval is not None:
+            payload["step"] = bitmart_convert_timeframe(interval)
         if before is not None:
             payload["before"] = before
         if after is not None:
@@ -73,11 +76,16 @@ class MarketHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        data = self._request(
             method="GET",
             path=SpotMarket.GET_SPOT_KLINE,
             query=payload,
         )
+        df = pd.DataFrame(data['data'])
+        df.columns = ["datetime", "open", "high", "low", "close", "volume", "quote_volume"]
+        df['datetime'] = pd.to_datetime(df['datetime'], unit='s')
+        df.set_index("datetime", inplace=True)
+        return df
 
     def get_contracts_details(
         self,
@@ -116,8 +124,9 @@ class MarketHTTP(HTTPManager):
     def get_contract_kline(
         self,
         product_symbol: str,
-        startTime: int,
-        endTime: int,
+        interval: str,
+        start_time: int,
+        end_time: int,
     ):
         """
         :param product_symbol: str
@@ -126,15 +135,29 @@ class MarketHTTP(HTTPManager):
         """
         payload = {
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
-            "startTime": startTime,
-            "endTime": endTime,
+            "step": bitmart_convert_timeframe(interval),
+            "start_time": start_time,
+            "end_time": end_time,
         }
 
-        return self._request(
+        data = self._request(
             method="GET",
             path=FuturesMarket.GET_CONTRACTS_KLINE,
             query=payload,
         )
+        df = pd.DataFrame(data['data'])
+        columns_map = {
+            "timestamp": "datetime",
+            "open_price": "open",
+            "high_price": "high",
+            "low_price": "low",
+            "close_price": "close",
+            "volume": "volume",
+        }
+        df.rename(columns=columns_map, inplace=True)
+        df['datetime'] = pd.to_datetime(df['datetime'], unit='s')
+        df.set_index("datetime", inplace=True)
+        return df
 
     def get_current_funding_rate(
         self,
