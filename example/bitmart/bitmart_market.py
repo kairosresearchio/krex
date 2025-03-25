@@ -66,4 +66,3 @@ res = client.get_contract_kline(
 )
 
 print("9. get_contract_kline:", res)
-
