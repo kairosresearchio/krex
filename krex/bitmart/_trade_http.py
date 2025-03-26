@@ -47,7 +47,7 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         side: str,
-        size: str,
+        size: str = None,
         notional: bool = None,
         client_order_id: str = None,
     ):
