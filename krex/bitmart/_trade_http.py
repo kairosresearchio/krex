@@ -503,8 +503,8 @@ class TradeHTTP(HTTPManager):
         short_size = sum(int(p['current_amount']) for p in positions if p['position_type'] == 2)
         
         if short_size != 0:
-            size = size - short_size
-            if size <= 0:
+            excess_size = size - short_size
+            if excess_size <= 0:
                 return self.place_contract_market_order(
                     product_symbol=product_symbol,
                     side=2,
@@ -515,16 +515,16 @@ class TradeHTTP(HTTPManager):
                 return (
                     self.place_contract_market_order(
                         product_symbol=product_symbol,
-                        side=1,
-                        size=size,
+                        side=2,
+                        size=short_size,
                         client_order_id=client_order_id,
                     ),
                     self.place_contract_market_order(
                         product_symbol=product_symbol,
-                        side=2,
-                        size=short_size,
+                        side=1,
+                        size=excess_size,
                         client_order_id=client_order_id,
-                    )
+                    ),
                 )
         else:
             return self.place_contract_market_order(
@@ -545,8 +545,8 @@ class TradeHTTP(HTTPManager):
         long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
 
         if long_size != 0:
-            size = size - long_size
-            if size <= 0:
+            excess_size = size - long_size
+            if excess_size <= 0:
                 return self.place_contract_market_order(
                     product_symbol=product_symbol,
                     side=3,
@@ -557,16 +557,16 @@ class TradeHTTP(HTTPManager):
                 return (
                     self.place_contract_market_order(
                         product_symbol=product_symbol,
-                        side=4,
-                        size=size,
+                        side=3,
+                        size=long_size,
                         client_order_id=client_order_id,
                     ),
                     self.place_contract_market_order(
                         product_symbol=product_symbol,
-                        side=3,
-                        size=long_size,
+                        side=4,
+                        size=excess_size,
                         client_order_id=client_order_id,
-                    )
+                    ),
                 )
         else:
             return self.place_contract_market_order(
@@ -623,8 +623,8 @@ class TradeHTTP(HTTPManager):
         short_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 2)
 
         if short_size != 0:
-            size = size - short_size
-            if size <= 0:
+            excess_size = size - short_size
+            if excess_size <= 0:
                 return self.place_contract_post_only_order(
                     product_symbol=product_symbol,
                     side=2,
@@ -636,18 +636,18 @@ class TradeHTTP(HTTPManager):
                 return (
                     self.place_contract_post_only_order(
                         product_symbol=product_symbol,
-                        side=1,
-                        price=price,
-                        size=size,
-                        client_order_id=client_order_id,
-                    ),
-                    self.place_contract_post_only_order(
-                        product_symbol=product_symbol,
                         side=2,
                         price=price,
                         size=short_size,
                         client_order_id=client_order_id,
-                    )
+                    ),
+                    self.place_contract_post_only_order(
+                        product_symbol=product_symbol,
+                        side=1,
+                        price=price,
+                        size=excess_size,
+                        client_order_id=client_order_id,
+                    ),
                 )
         else:
             return self.place_contract_post_only_order(
@@ -669,8 +669,8 @@ class TradeHTTP(HTTPManager):
         long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
 
         if long_size != 0:
-            size = size - long_size
-            if size <= 0:
+            excess_size = size - long_size
+            if excess_size <= 0:
                 return self.place_contract_post_only_order(
                     product_symbol=product_symbol,
                     side=3,
@@ -682,18 +682,18 @@ class TradeHTTP(HTTPManager):
                 return (
                     self.place_contract_post_only_order(
                         product_symbol=product_symbol,
-                        side=4,
-                        price=price,
-                        size=size,
-                        client_order_id=client_order_id,
-                    ),
-                    self.place_contract_post_only_order(
-                        product_symbol=product_symbol,
                         side=3,
                         price=price,
                         size=long_size,
                         client_order_id=client_order_id,
-                    )
+                    ),
+                    self.place_contract_post_only_order(
+                        product_symbol=product_symbol,
+                        side=4,
+                        price=price,
+                        size=excess_size,
+                        client_order_id=client_order_id,
+                    ),
                 )
         else:
             return self.place_contract_post_only_order(
