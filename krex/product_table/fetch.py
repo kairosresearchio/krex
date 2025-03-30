@@ -15,6 +15,8 @@ class MarketInfo:
     price_precision: str
     size_precision: str
     min_size: str
+    base_currency: str = ""
+    quote_currency: str = ""
     min_notional: str = "0"
 
     # contract
@@ -87,7 +89,9 @@ async def bybit() -> Dict[str, Dict[str, str]]:
                 exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
                 product_symbol=format_product_symbol(strip_number(market["symbol"])),
-                product_type="linear",
+                product_type="SWAP",
+                base_currency=strip_number(market["baseCoin"]),
+                quote_currency=market["quoteCoin"],
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["qtyStep"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -102,7 +106,9 @@ async def bybit() -> Dict[str, Dict[str, str]]:
                 exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
                 product_symbol=format_product_symbol(market["symbol"]),
-                product_type="inverse",
+                product_type="SWAP",
+                base_currency=strip_number(market["baseCoin"]),
+                quote_currency=market["quoteCoin"],
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["qtyStep"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -118,7 +124,9 @@ async def bybit() -> Dict[str, Dict[str, str]]:
                 exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
                 product_symbol=f"{market['symbol'][:-4]}-{market['symbol'][-4:]}-SPOT",
-                product_type="spot",
+                product_type="SPOT",
+                base_currency=strip_number(market["baseCoin"]),
+                quote_currency=market["quoteCoin"],
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["basePrecision"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -144,6 +152,8 @@ async def okx() -> Dict[str, Dict[str, str]]:
                 exchange_symbol=market["instId"],
                 product_symbol=strip_number(market["instId"]),
                 product_type=market["instType"],
+                base_currency=strip_number(market["baseCcy"]),
+                quote_currency=market["quoteCcy"],
                 price_precision=market["tickSz"],
                 size_precision=market["lotSz"],
                 min_size=market["minSz"],
@@ -161,6 +171,8 @@ async def okx() -> Dict[str, Dict[str, str]]:
                 exchange_symbol=market["instId"],
                 product_symbol=market["instId"] + "-SPOT",
                 product_type=market["instType"],
+                base_currency=strip_number(market["baseCcy"]),
+                quote_currency=market["quoteCcy"],
                 price_precision=market["tickSz"],
                 size_precision=market["lotSz"],
                 min_size=market["minSz"],
@@ -197,7 +209,9 @@ async def bitmart() -> Dict[str, Dict[str, str]]:
                 exchange=Common.BITMART,
                 exchange_symbol=market["symbol"],
                 product_symbol=product_symbol,
-                product_type="swap",
+                product_type="SWAP",
+                base_currency=strip_number(market["base_currency"]),
+                quote_currency=market["quote_currency"],
                 price_precision=market["price_precision"],
                 size_precision=market["vol_precision"],
                 min_size=market["min_volume"],
@@ -223,7 +237,9 @@ async def bitmart() -> Dict[str, Dict[str, str]]:
                 exchange=Common.BITMART,
                 exchange_symbol=market["symbol"],
                 product_symbol=product_symbol,
-                product_type="spot",
+                product_type="SPOT",
+                base_currency=strip_number(market["base_currency"]),
+                quote_currency=market["quote_currency"],
                 price_precision=reverse_decimal_places(market["price_max_precision"]),
                 size_precision=market["quote_increment"],
                 min_size=market["base_min_size"],

@@ -113,6 +113,12 @@ class ProductTableManager:
 
     def get_product_type(self, product_symbol, exchange):
         return self.get("product_type", product_symbol, exchange)
+    
+    def get_base_currency(self, product_symbol, exchange):
+        return self.get("base_currency", product_symbol, exchange)
+    
+    def get_quote_currency(self, product_symbol, exchange):
+        return self.get("quote_currency", product_symbol, exchange)
 
     def get_trading_details(self, product_symbol, exchange):
         return {
