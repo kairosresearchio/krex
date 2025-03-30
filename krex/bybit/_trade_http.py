@@ -94,8 +94,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side=side,
             orderType="Market",
             qty=qty,
@@ -111,8 +110,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_market_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side="Buy",
             qty=qty,
             reduceOnly=reduceOnly,
@@ -127,8 +125,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_market_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side="Sell",
             qty=qty,
             reduceOnly=reduceOnly,
@@ -146,8 +143,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side=side,
             orderType="Limit",
             qty=qty,
@@ -167,8 +163,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side="Buy",
             qty=qty,
             price=price,
@@ -187,8 +182,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side="Sell",
             qty=qty,
             price=price,
@@ -207,8 +201,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_limit_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side=side,
             qty=qty,
             price=price,
@@ -226,8 +219,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_post_only_limit_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side="Buy",
             qty=qty,
             price=price,
@@ -244,8 +236,7 @@ class TradeHTTP(HTTPManager):
         isLeverage: int = None,
     ):
         return self.place_post_only_limit_order(
-            category=self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            symbol=self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            product_symbol=product_symbol,
             side="Sell",
             qty=qty,
             price=price,
