@@ -1,4 +1,5 @@
 from ..utils.common import Common
+from ..utils.timeframe_utils import bybit_convert_timeframe
 from ._http_manager import HTTPManager
 from .endpoints.market import Market
 
@@ -54,7 +55,7 @@ class MarketHTTP(HTTPManager):
         payload = {
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
-            "interval": interval,
+            "interval": bybit_convert_timeframe(interval),
         }
         if startTime is not None:
             payload["start"] = startTime
