@@ -25,7 +25,8 @@ def bybit_convert_timeframe(timeframe: str) -> int:
         return "W"
     elif timeframe == "1M":
         return "M"
-        
+
+
 def bitmart_convert_timeframe(timeframe: str) -> str:
     if timeframe == "1m":
         return 1

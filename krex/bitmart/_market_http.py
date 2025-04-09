@@ -81,9 +81,9 @@ class MarketHTTP(HTTPManager):
             path=SpotMarket.GET_SPOT_KLINE,
             query=payload,
         )
-        df = pd.DataFrame(data['data'])
+        df = pd.DataFrame(data["data"])
         df.columns = ["datetime", "open", "high", "low", "close", "volume", "quote_volume"]
-        df['datetime'] = pd.to_datetime(df['datetime'], unit='s')
+        df["datetime"] = pd.to_datetime(df["datetime"], unit="s")
         df.set_index("datetime", inplace=True)
         return df
 
@@ -145,7 +145,7 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_CONTRACTS_KLINE,
             query=payload,
         )
-        df = pd.DataFrame(data['data'])
+        df = pd.DataFrame(data["data"])
         columns_map = {
             "timestamp": "datetime",
             "open_price": "open",
@@ -155,7 +155,7 @@ class MarketHTTP(HTTPManager):
             "volume": "volume",
         }
         df.rename(columns=columns_map, inplace=True)
-        df['datetime'] = pd.to_datetime(df['datetime'], unit='s')
+        df["datetime"] = pd.to_datetime(df["datetime"], unit="s")
         df.set_index("datetime", inplace=True)
         return df
 

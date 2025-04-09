@@ -43,10 +43,7 @@ print("5. get_ticker_of_a_pair:", res)
 print("\n#######################\n")
 
 # get_spot_kline
-res = client.get_spot_kline(
-    "BTC-USDT-SPOT",
-    "5m"
-)
+res = client.get_spot_kline("BTC-USDT-SPOT", "5m")
 print("6. get_spot_kline:", res)
 
 # get_contracts_details

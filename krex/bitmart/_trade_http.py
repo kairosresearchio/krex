@@ -492,16 +492,16 @@ class TradeHTTP(HTTPManager):
             size=size,
             client_order_id=client_order_id,
         )
-    
+
     def place_contract_market_buy_order(
         self,
         product_symbol: str,
         size: int,
         client_order_id: str = None,
     ):
-        positions = self.get_contract_position(product_symbol)['data']
-        short_size = sum(int(p['current_amount']) for p in positions if p['position_type'] == 2)
-        
+        positions = self.get_contract_position(product_symbol)["data"]
+        short_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 2)
+
         if short_size != 0:
             excess_size = size - short_size
             if excess_size <= 0:
@@ -533,8 +533,7 @@ class TradeHTTP(HTTPManager):
                 size=size,
                 client_order_id=client_order_id,
             )
-    
-        
+
     def place_contract_market_sell_order(
         self,
         product_symbol: str,

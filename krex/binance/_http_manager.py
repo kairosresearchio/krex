@@ -1,7 +1,6 @@
 import hmac
 import hashlib
 import time
-import json
 import requests
 import logging
 from dataclasses import dataclass, field
@@ -30,7 +29,6 @@ class HTTPManager:
         },
         "https://api.binance.com": {},
     }
-            
 
     def __post_init__(self):
         if self.logger is None:
@@ -39,7 +37,7 @@ class HTTPManager:
             self._logger = self.logger
 
         self.ptm = ProductTableManager.get_instance()
-    
+
     def _get_base_url(self, path):
         for base_url, enums in self.api_map.items():
             if type(path) in enums:
