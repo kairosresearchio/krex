@@ -1,4 +1,4 @@
-from krex.bybit.client import Client
+from krex.http.bybit.client import Client
 
 
 BYBIT_API_KEY = "api_key"

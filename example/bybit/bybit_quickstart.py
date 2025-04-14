@@ -1,4 +1,4 @@
-from krex.bybit.client import Client
+from krex.http.bybit.client import Client
 
 BYBIT_API_KEY = "VLOpq0qMKPNWhMbKVH"
 BYBIT_API_SECRET = "Q3OKhzHiVSOYE2tF8ns2My4mQU7B8d5MnbOt"

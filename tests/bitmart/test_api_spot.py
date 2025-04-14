@@ -1,5 +1,5 @@
 import time
-from krex.bitmart.client import Client
+from krex.http.bitmart.client import Client
 
 BITMART_API_KEY = "api_key"
 BITMART_API_SECRET = "api_secret"

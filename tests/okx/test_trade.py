@@ -1,5 +1,5 @@
 import unittest
-from krex.okx.client import Client
+from krex.http.okx.client import Client
 
 OKX_API_KEY = "api_key"
 OKX_API_SECRET = "api_secret"

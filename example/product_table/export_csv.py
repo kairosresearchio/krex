@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import pandas as pd
-from krex.product_table.manager import ProductTableManager
+from krex.http.product_table.manager import ProductTableManager
 
 
 def test_fetch_product_tables():
