@@ -12,9 +12,10 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 dependencies = [
+  "httpx>=0.28.1",
   "pandas>=2.2.3",
-  "pycryptodome>=3.21.0",
   "requests>=2.32.3",
+  "websockets>=15.0.1",
 ]
 description = "A lightweight Python package providing minimal trading functions for selected exchanges, organized by exchange-specific modules."
 license = {text = "MIT"}
@@ -31,6 +32,9 @@ Repository = "https://github.com/kairos-research-ltd/krex"
 dev = [
   "ruff>=0.9.9",
   "pre-commit>=4.1.0",
+  "asyncio>=3.4.3",
+  "python-dotenv>=1.1.0",
+  "pytest-asyncio>=0.26.0",
 ]
 
 [[tool.uv.index]]
