@@ -512,7 +512,8 @@ class TradeHTTP(HTTPManager):
         size: int,
         client_order_id: str = None,
     ):
-        positions = self.get_contract_position(product_symbol)["data"]
+        positions = await self.get_contract_position(product_symbol)
+        positions = positions["data"]
         short_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 2)
 
         if short_size != 0:
@@ -553,8 +554,13 @@ class TradeHTTP(HTTPManager):
         size: int,
         client_order_id: str = None,
     ):
-        positions = self.get_contract_position(product_symbol)["data"]
-        long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
+        positions = await self.get_contract_position(product_symbol)
+        long_size = 0
+        
+        # 要檢測是否有持倉
+        # 在測spot 時有出現 [30005] Header X-BM-SIGN is wrong （如example.ipynb所示）
+        if positions.empty is False:
+            long_size = sum(int(p["current_amount"]) for row, col in positions.iterrows() if p["position_type"] == 1)
 
         if long_size != 0:
             excess_size = size - long_size
