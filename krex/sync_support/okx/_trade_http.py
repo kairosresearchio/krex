@@ -1,0 +1,937 @@
+from ._http_manager import HTTPManager
+from .endpoints.trade import Trade
+from ...utils.common import Common
+
+
+class TradeHTTP(HTTPManager):
+    def place_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        side: str,
+        ordType: str,
+        sz: str,
+        ccy: str = None,
+        clOrdId: str = None,
+        tag: str = None,
+        posSide: str = None,
+        px: str = None,
+        pxUsd: str = None,
+        pxVol: str = None,
+        reduceOnly: bool = False,
+        tgtCcy: str = None,
+        banAmend: bool = False,
+        quickMgnType: str = None,
+        stpId: str = None,
+        stpMode: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param tdMode: str
+        :param side: str
+        :param ordType: str
+        :param sz: str
+        :param ccy: str
+        :param clOrdId: str
+        :param tag: str
+        :param posSide: str
+        :param px: str
+        :param pxUsd: str
+        :param pxVol: str
+        :param reduceOnly: bool
+        :param tgtCcy: str
+        :param banAmend: bool
+        :param quickMgnType: str
+        :param stpId: str
+        :param stpMode: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "tdMode": tdMode,
+            "side": side,
+            "ordType": ordType,
+            "sz": sz,
+        }
+        if ccy is not None:
+            payload["ccy"] = ccy
+        if clOrdId is not None:
+            payload["clOrdId"] = clOrdId
+        if tag is not None:
+            payload["tag"] = tag
+        if posSide is not None:
+            payload["posSide"] = posSide
+        if px is not None:
+            payload["px"] = px
+        if pxUsd is not None:
+            payload["pxUsd"] = pxUsd
+        if pxVol is not None:
+            payload["pxVol"] = pxVol
+        if reduceOnly is not None:
+            payload["reduceOnly"] = reduceOnly
+        if tgtCcy is not None:
+            payload["tgtCcy"] = tgtCcy
+        if banAmend is not None:
+            payload["banAmend"] = banAmend
+        if quickMgnType is not None:
+            payload["quickMgnType"] = quickMgnType
+        if stpId is not None:
+            payload["stpId"] = stpId
+        if stpMode is not None:
+            payload["stpMode"] = stpMode
+
+        return self._request(
+            method="POST",
+            path=Trade.PLACE_ORDER,
+            query=payload,
+        )
+
+    def place_market_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        side: str,
+        sz: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side=side,
+            ordType="market",
+            sz=sz,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_market_buy_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        sz: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_market_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side="buy",
+            sz=sz,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_market_sell_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        sz: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_market_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side="sell",
+            sz=sz,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_limit_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        side: str,
+        sz: str,
+        px: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side=side,
+            ordType="limit",
+            sz=sz,
+            px=px,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_limit_buy_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        sz: str,
+        px: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_limit_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side="buy",
+            sz=sz,
+            px=px,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_limit_sell_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        sz: str,
+        px: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_limit_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side="sell",
+            sz=sz,
+            px=px,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_post_only_limit_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        side: str,
+        sz: str,
+        px: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_limit_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side=side,
+            ordType="post_only",
+            sz=sz,
+            px=px,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_post_only_limit_buy_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        sz: str,
+        px: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_post_only_limit_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side="buy",
+            sz=sz,
+            px=px,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_post_only_limit_sell_order(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        sz: str,
+        px: str,
+        reduceOnly: bool = None,
+        ccy: str = None,
+    ):
+        return self.place_post_only_limit_order(
+            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            tdMode=tdMode,
+            side="sell",
+            sz=sz,
+            px=px,
+            reduceOnly=reduceOnly,
+            ccy=ccy,
+        )
+
+    def place_multiple_orders(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        side: str,
+        ordType: str,
+        sz: str,
+        ccy: str = None,
+        clOrdId: str = None,
+        tag: str = None,
+        posSide: str = None,
+        px: str = None,
+        pxUsd: str = None,
+        pxVol: str = None,
+        reduceOnly: bool = False,
+        tgtCcy: str = None,
+        banAmend: bool = False,
+        quickMgnType: str = None,
+        stpId: str = None,
+        stpMode: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param tdMode: str
+        :param side: str
+        :param ordType: str
+        :param sz: str
+        :param ccy: str
+        :param clOrdId: str
+        :param tag: str
+        :param posSide: str
+        :param px: str
+        :param pxUsd: str
+        :param pxVol: str
+        :param reduceOnly: bool
+        :param tgtCcy: str
+        :param banAmend: bool
+        :param quickMgnType: str
+        :param stpId: str
+        :param stpMode: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "tdMode": tdMode,
+            "side": side,
+            "ordType": ordType,
+            "sz": sz,
+        }
+        if ccy is not None:
+            payload["ccy"] = ccy
+        if clOrdId is not None:
+            payload["clOrdId"] = clOrdId
+        if tag is not None:
+            payload["tag"] = tag
+        if posSide is not None:
+            payload["posSide"] = posSide
+        if px is not None:
+            payload["px"] = px
+        if pxUsd is not None:
+            payload["pxUsd"] = pxUsd
+        if pxVol is not None:
+            payload["pxVol"] = pxVol
+        if reduceOnly is not None:
+            payload["reduceOnly"] = reduceOnly
+        if tgtCcy is not None:
+            payload["tgtCcy"] = tgtCcy
+        if banAmend is not None:
+            payload["banAmend"] = banAmend
+        if quickMgnType is not None:
+            payload["quickMgnType"] = quickMgnType
+        if stpId is not None:
+            payload["stpId"] = stpId
+        if stpMode is not None:
+            payload["stpMode"] = stpMode
+
+        return self._request(
+            method="POST",
+            path=Trade.BATCH_ORDERS,
+            query=payload,
+        )
+
+    def cancel_order(
+        self,
+        product_symbol: str,
+        ordId: str = None,
+        clOrdId: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param ordId: str
+        :param clOrdId: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+        }
+        if ordId is not None:
+            payload["ordId"] = ordId
+        if clOrdId is not None:
+            payload["clOrdId"] = clOrdId
+
+        return self._request(
+            method="POST",
+            path=Trade.CANCEL_ORDER,
+            query=payload,
+        )
+
+    def cancel_multiple_orders(
+        self,
+        product_symbol: str,
+        ordId: str = None,
+        clOrdId: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param ordId: str
+        :param clOrdId: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+        }
+        if ordId is not None:
+            payload["ordId"] = ordId
+        if clOrdId is not None:
+            payload["clOrdId"] = clOrdId
+
+        return self._request(
+            method="POST",
+            path=Trade.CANCEL_BATCH_ORDERS,
+            query=payload,
+        )
+
+    def amend_order(
+        self,
+        product_symbol: str,
+        ordId: str = None,
+        clOrdId: str = None,
+        newSz: str = None,
+        newPx: str = None,
+        newPxUsd: str = None,
+        newPxVol: str = None,
+        cxlOnFail: str = None,
+        reqId: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param ordId: str
+        :param clOrdId: str
+        :param newSz: str
+        :param newPx: str
+        :param newPxUsd: str
+        :param newPxVol: str
+        :param cxlOnFail: str
+        :param reqId: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+        }
+        if ordId is not None:
+            payload["ordId"] = ordId
+        if clOrdId is not None:
+            payload["clOrdId"] = clOrdId
+        if newSz is not None:
+            payload["newSz"] = newSz
+        if newPx is not None:
+            payload["newPx"] = newPx
+        if newPxUsd is not None:
+            payload["newPxUsd"] = newPxUsd
+        if newPxVol is not None:
+            payload["newPxVol"] = newPxVol
+        if cxlOnFail is not None:
+            payload["cxlOnFail"] = cxlOnFail
+        if reqId is not None:
+            payload["reqId"] = reqId
+
+        return self._request(
+            method="POST",
+            path=Trade.AMEND_ORDER,
+            query=payload,
+        )
+
+    def amend_multiple_orders(
+        self,
+        product_symbol: str,
+        ordId: str = None,
+        clOrdId: str = None,
+        newSz: str = None,
+        newPx: str = None,
+        newPxUsd: str = None,
+        newPxVol: str = None,
+        cxlOnFail: str = None,
+        reqId: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param ordId: str
+        :param clOrdId: str
+        :param newSz: str
+        :param newPx: str
+        :param newPxUsd: str
+        :param newPxVol: str
+        :param cxlOnFail: str
+        :param reqId: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+        }
+        if ordId is not None:
+            payload["ordId"] = ordId
+        if clOrdId is not None:
+            payload["clOrdId"] = clOrdId
+        if newSz is not None:
+            payload["newSz"] = newSz
+        if newPx is not None:
+            payload["newPx"] = newPx
+        if newPxUsd is not None:
+            payload["newPxUsd"] = newPxUsd
+        if newPxVol is not None:
+            payload["newPxVol"] = newPxVol
+        if cxlOnFail is not None:
+            payload["cxlOnFail"] = cxlOnFail
+        if reqId is not None:
+            payload["reqId"] = reqId
+
+        return self._request(
+            method="POST",
+            path=Trade.AMEND_BATCH_ORDER,
+            query=payload,
+        )
+
+    def close_positions(
+        self,
+        product_symbol: str,
+        mgnMode: str,
+        posSide: str = None,
+        ccy: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param mgnMode: str
+        :param posSide: str
+        :param ccy: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "mgnMode": mgnMode,
+        }
+        if posSide is not None:
+            payload["posSide"] = posSide
+        if ccy is not None:
+            payload["ccy"] = ccy
+
+        return self._request(
+            method="POST",
+            path=Trade.CLOSE_POSITION,
+            query=payload,
+        )
+
+    def get_order(
+        self,
+        product_symbol: str,
+        ordId: str = None,
+        clOrdId: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param ordId: str
+        :param clOrdId: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+        }
+        if ordId is not None:
+            payload["ordId"] = ordId
+        if clOrdId is not None:
+            payload["clOrdId"] = clOrdId
+
+        return self._request(
+            method="GET",
+            path=Trade.ORDER_INFO,
+            query=payload,
+        )
+
+    def get_order_list(
+        self,
+        instType: str = None,
+        uly: str = None,
+        instFamily: str = None,
+        instId: str = None,
+        ordType: str = None,
+        state: str = None,
+        limit: str = None,
+    ):
+        """
+        :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
+        :param uly: str
+        :param instFamily: str
+        :param instId: str
+        :param ordType: str
+        :param state: str
+        :param limit: str
+        """
+        payload = {
+            "instType": instType,
+        }
+        if uly is not None:
+            payload["uly"] = uly
+        if instFamily is not None:
+            payload["instFamily"] = instFamily
+        if instId is not None:
+            payload["instId"] = instId
+        if ordType is not None:
+            payload["ordType"] = ordType
+        if state is not None:
+            payload["state"] = state
+        if limit is not None:
+            payload["limit"] = limit
+
+        return self._request(
+            method="GET",
+            path=Trade.ORDERS_PENDING,
+            query=payload,
+        )
+
+    def get_orders_history(
+        self,
+        instType: str,
+        uly: str = None,
+        instFamily: str = None,
+        instId: str = None,
+        ordType: str = None,
+        state: str = None,
+        category: str = None,
+        begin: str = None,
+        end: str = None,
+        limit: str = None,
+    ):
+        """
+        :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
+        :param uly: str
+        :param instFamily: str
+        :param instId: str
+        :param ordType: str
+        :param state: str
+        :param category: str
+        :param begin: str
+        :param end: str
+        :param limit: str
+        """
+        payload = {
+            "instType": instType,
+        }
+        if uly is not None:
+            payload["uly"] = uly
+        if instFamily is not None:
+            payload["instFamily"] = instFamily
+        if instId is not None:
+            payload["instId"] = instId
+        if ordType is not None:
+            payload["ordType"] = ordType
+        if state is not None:
+            payload["state"] = state
+        if category is not None:
+            payload["category"] = category
+        if begin is not None:
+            payload["begin"] = begin
+        if end is not None:
+            payload["end"] = end
+        if limit is not None:
+            payload["limit"] = limit
+
+        return self._request(
+            method="GET",
+            path=Trade.ORDERS_HISTORY,
+            query=payload,
+        )
+
+    def get_orders_history_archive(
+        self,
+        instType: str,
+        uly: str = None,
+        instFamily: str = None,
+        product_symbol: str = None,
+        ordType: str = None,
+        state: str = None,
+        category: str = None,
+        begin: str = None,
+        end: str = None,
+        limit: str = None,
+    ):
+        """
+        :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
+        :param uly: str
+        :param instFamily: str
+        :param product_symbol: str
+        :param ordType: str
+        :param state: str
+        :param category: str
+        :param begin: str
+        :param end: str
+        :param limit: str
+        """
+        payload = {
+            "instType": instType,
+        }
+        if uly is not None:
+            payload["uly"] = uly
+        if instFamily is not None:
+            payload["instFamily"] = instFamily
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+        if ordType is not None:
+            payload["ordType"] = ordType
+        if state is not None:
+            payload["state"] = state
+        if category is not None:
+            payload["category"] = category
+        if begin is not None:
+            payload["begin"] = begin
+        if end is not None:
+            payload["end"] = end
+        if limit is not None:
+            payload["limit"] = limit
+
+        return self._request(
+            method="GET",
+            path=Trade.ORDERS_HISTORY_ARCHIVE,
+            query=payload,
+        )
+
+    def get_fills(
+        self,
+        instType: str = None,
+        uly: str = None,
+        instFamily: str = None,
+        product_symbol: str = None,
+        ordId: str = None,
+        subType: str = None,
+        begin: str = None,
+        end: str = None,
+        limit: str = None,
+    ):
+        """
+        :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
+        :param uly: str
+        :param instFamily: str
+        :param product_symbol: str
+        :param ordId: str
+        :param subType: str
+        :param begin: str
+        :param end: str
+        :param limit: str
+        """
+        payload = {}
+        if instType is not None:
+            payload["instType"] = instType
+        if uly is not None:
+            payload["uly"] = uly
+        if instFamily is not None:
+            payload["instFamily"] = instFamily
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+        if ordId is not None:
+            payload["ordId"] = ordId
+        if subType is not None:
+            payload["subType"] = subType
+        if begin is not None:
+            payload["begin"] = begin
+        if end is not None:
+            payload["end"] = end
+        if limit is not None:
+            payload["limit"] = limit
+
+        return self._request(
+            method="GET",
+            path=Trade.ORDER_FILLS,
+            query=payload,
+        )
+
+    def get_fills_history(
+        self,
+        instType: str,
+        uly: str = None,
+        instFamily: str = None,
+        product_symbol: str = None,
+        ordId: str = None,
+        subType: str = None,
+        begin: str = None,
+        end: str = None,
+        limit: str = None,
+    ):
+        """
+        :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
+        :param uly: str
+        :param instFamily: str
+        :param product_symbol: str
+        :param ordId: str
+        :param subType: str
+        :param begin: str
+        :param end: str
+        :param limit: str
+        """
+        payload = {
+            "instType": instType,
+        }
+        if uly is not None:
+            payload["uly"] = uly
+        if instFamily is not None:
+            payload["instFamily"] = instFamily
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+        if ordId is not None:
+            payload["ordId"] = ordId
+        if subType is not None:
+            payload["subType"] = subType
+        if begin is not None:
+            payload["begin"] = begin
+        if end is not None:
+            payload["end"] = end
+        if limit is not None:
+            payload["limit"] = limit
+
+        return self._request(
+            method="GET",
+            path=Trade.ORDERS_FILLS_HISTORY,
+            query=payload,
+        )
+
+    def get_oneclick_repay_list(
+        self,
+        debtType: str = None,
+    ):
+        """
+        :param debtType: str (cross, isolated)
+        """
+        payload = {}
+        if debtType is not None:
+            payload["debtType"] = debtType
+
+        return self._request(
+            method="GET",
+            path=Trade.ONE_CLICK_REPAY_SUPPORT,
+            query=payload,
+        )
+
+    def oneclick_repay(
+        self,
+        debtCcy: list,
+        repayCcy: str,
+    ):
+        """
+        :param debtCcy: list ["ETH","BTC"], Maximum 5 currencies can be selected in one order. If there are multiple currencies, separate them with commas.
+        :param repayCcy: str
+        """
+        payload = {
+            "debtCcy": debtCcy if isinstance(debtCcy, list) else [debtCcy],
+            "repayCcy": repayCcy,
+        }
+
+        return self._request(
+            method="POST",
+            path=Trade.ONE_CLICK_REPAY,
+            query=payload,
+        )
+
+    def oneclick_repay_history(
+        self,
+        after: str = None,
+        before: str = None,
+        limit: str = None,
+    ):
+        """
+        :param after: str
+        :param before: str
+        :param limit: str
+        """
+        payload = {}
+        if after is not None:
+            payload["after"] = after
+        if before is not None:
+            payload["before"] = before
+        if limit is not None:
+            payload["limit"] = limit
+
+        return self._request(
+            method="GET",
+            path=Trade.ONE_CLICK_REPAY_HISTORY,
+            query=payload,
+        )
+
+    def mass_cancel(
+        self,
+        instFamily: str,
+    ):
+        """
+        :param instFamily: str
+        """
+        payload = {
+            "instType": "OPTION",
+            "instFamily": instFamily,
+        }
+
+        return self._request(
+            method="POST",
+            path=Trade.MASS_CANCEL,
+            query=payload,
+        )
+
+    def mass_all_cancel(
+        self,
+        timeOut: str,
+    ):
+        """
+        :param timeOut: str
+        """
+        payload = {
+            "timeOut": timeOut,
+        }
+
+        return self._request(
+            method="POST",
+            path=Trade.CANCEL_ALL_AFTER,
+            query=payload,
+        )
+
+    def get_account_rate_limit(self):
+        return self._request(
+            method="GET",
+            path=Trade.ACCOUNT_RATE_LIMIT,
+            query=None,
+        )
+
+    def order_precheck(
+        self,
+        product_symbol: str,
+        tdMode: str,
+        side: str,
+        ordType: str,
+        sz: str,
+        posSide: str = None,
+        px: str = None,
+        reduceOnly: str = None,
+        tgtCcy: str = None,
+        attachAlgoOrds: str = None,
+    ):
+        """
+        :param product_symbol: str
+        :param tdMode: str
+        :param side: str
+        :param ordType: str
+        :param sz: str
+        :param posSide: str
+        :param px: str
+        :param reduceOnly: str
+        :param tgtCcy: str
+        :param attachAlgoOrds: str
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "tdMode": tdMode,
+            "side": side,
+            "ordType": ordType,
+            "sz": sz,
+        }
+        if posSide is not None:
+            payload["posSide"] = posSide
+        if px is not None:
+            payload["px"] = px
+        if reduceOnly is not None:
+            payload["reduceOnly"] = reduceOnly
+        if tgtCcy is not None:
+            payload["tgtCcy"] = tgtCcy
+        if attachAlgoOrds is not None:
+            payload["attachAlgoOrds"] = attachAlgoOrds
+
+        return self._request(
+            method="POST",
+            path=Trade.ORDER_PRECHECK,
+            query=payload,
+        )
