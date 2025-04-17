@@ -85,7 +85,8 @@ class HTTPManager:
         timestamp = generate_timestamp()
 
         if self.api_key and self.api_secret and self.memo:
-            sign = sign_message(timestamp, self.memo, json.dumps(query), self.api_secret)
+            body = json.dumps(query, separators=(",", ":"), ensure_ascii=False)
+            sign = sign_message(timestamp, self.memo, body, self.api_secret)
             headers = get_header(self.api_key, sign, timestamp, self.memo)
         else:
             headers = get_header_no_sign()

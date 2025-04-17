@@ -12,13 +12,13 @@ async def main():
         api_secret=BITMART_API_SECRET,
         memo=MEMO,
     ) as client:
-        res = await client.place_post_only_limit_buy_order(
+        res = await client.place_spot_post_only_limit_order(
             product_symbol="BTC-USDT-SPOT",
             size="0.0001",
             price="80000",
             client_order_id="test",
         )
-        print("1. place_post_only_limit_buy_order:", res)
+        print("1. place_spot_post_only_limit_order:", res)
 
         res = await client.cancel_spot_order(
             product_symbol="BTC-USDT-SPOT",
