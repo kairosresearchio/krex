@@ -6,23 +6,6 @@ from ...utils.common_dataframe import to_dataframe
 
 
 class TradeHTTP(HTTPManager):
-    def _to_dataframe(self, data, schema: list[str] = None) -> pl.DataFrame:
-        if not data:
-            return pl.DataFrame()
-
-        if isinstance(data, list):
-            if schema:
-                return pl.DataFrame(data, schema=schema, orient="row")
-            elif all(isinstance(item, dict) for item in data):
-                return pl.DataFrame(data)
-            else:
-                return pl.DataFrame(data, orient="row")
-
-        if isinstance(data, dict):
-            return pl.DataFrame([data])
-
-        return pl.DataFrame()
-
     async def place_spot_order(
         self,
         product_symbol: str,
