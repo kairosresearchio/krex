@@ -70,7 +70,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.GET_SPOT_WALLET_BALANCE,
             query=None,
         )
-        return pl.DataFrame(res["data"]["wallet"]) if "data" in res else pl.DataFrame()
+        return self._to_dataframe(res["data"].get("wallet", [])) if "data" in res else pl.DataFrame()
 
     async def get_deposit_address(
         self,
