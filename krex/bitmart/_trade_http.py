@@ -2,26 +2,10 @@ import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.trade import SpotTrade, FuturesTrade
 from ..utils.common import Common
+from ..utils.common_dataframe import to_dataframe
 
 
 class TradeHTTP(HTTPManager):
-    def _to_dataframe(self, data, schema: list[str] = None) -> pl.DataFrame:
-        if not data:
-            return pl.DataFrame()
-
-        if isinstance(data, list):
-            if schema:
-                return pl.DataFrame(data, schema=schema, orient="row")
-            elif all(isinstance(item, dict) for item in data):
-                return pl.DataFrame(data)
-            else:
-                return pl.DataFrame(data, orient="row")
-
-        if isinstance(data, dict):
-            return pl.DataFrame([data])
-
-        return pl.DataFrame()
-
     def place_spot_order(
         self,
         product_symbol: str,
@@ -303,7 +287,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", {}))
+        return to_dataframe(res.get("data", {}))
 
     def get_spot_order_by_order_client_id(
         self,
@@ -326,7 +310,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", {}))
+        return to_dataframe(res.get("data", {}))
 
     def get_spot_open_orders(
         self,
@@ -361,7 +345,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def get_spot_account_orders(
         self,
@@ -396,7 +380,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def get_spot_account_trade_list(
         self,
@@ -431,7 +415,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def get_spot_order_trade_list(
         self,
@@ -450,7 +434,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def place_contract_order(
         self,
@@ -887,7 +871,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def get_contract_order_history(
         self,
@@ -914,7 +898,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def get_contract_open_order(
         self,
@@ -945,7 +929,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def get_contract_position(
         self,
@@ -1017,7 +1001,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def get_contract_transaction_history(
         self,
@@ -1052,7 +1036,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     def get_contract_transfer_list(
         self,
@@ -1086,4 +1070,4 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return self._to_dataframe(res.get("data", {}).get("records", []))
+        return to_dataframe(res.get("data", {}).get("records", []))

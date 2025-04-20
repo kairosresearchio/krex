@@ -3,6 +3,7 @@ from ._http_manager import HTTPManager
 from .endpoints.market import SpotMarket, FuturesMarket
 from ...utils.common import Common
 from ...utils.timeframe_utils import bitmart_convert_timeframe
+from ...utils.common_dataframe import to_dataframe
 
 
 class MarketHTTP(HTTPManager):
@@ -29,7 +30,7 @@ class MarketHTTP(HTTPManager):
             path=SpotMarket.GET_SPOT_CURRENCIES,
             query=None,
         )
-        return self._to_dataframe(res.get("data", {}).get("currencies", []))
+        return to_dataframe(res.get("data", {}).get("currencies", []))
 
     async def get_trading_pairs(self) -> pl.DataFrame:
         res = await self._request(
@@ -37,7 +38,7 @@ class MarketHTTP(HTTPManager):
             path=SpotMarket.GET_TRADING_PAIRS,
             query=None,
         )
-        return self._to_dataframe(res.get("data", []))
+        return to_dataframe(res.get("data", []))
 
     async def get_trading_pairs_details(self) -> pl.DataFrame:
         res = await self._request(
@@ -45,7 +46,7 @@ class MarketHTTP(HTTPManager):
             path=SpotMarket.GET_TRADING_PAIRS_DETAILS,
             query=None,
         )
-        return self._to_dataframe(res.get("data", {}).get("symbols", []))
+        return to_dataframe(res.get("data", {}).get("symbols", []))
 
     async def get_ticker_of_all_pairs(self) -> pl.DataFrame:
         res = await self._request(
@@ -68,7 +69,7 @@ class MarketHTTP(HTTPManager):
             "ask_size",
             "timestamp",
         ]
-        return self._to_dataframe(res.get("data", []), schema=schema)
+        return to_dataframe(res.get("data", []), schema=schema)
 
     async def get_ticker_of_a_pair(
         self,
@@ -86,7 +87,7 @@ class MarketHTTP(HTTPManager):
             path=SpotMarket.GET_TICKER_OF_A_PAIR,
             query=payload,
         )
-        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     async def get_spot_kline(
         self,
@@ -143,7 +144,7 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_CONTRACTS_DETAILS,
             query=payload,
         )
-        return self._to_dataframe(res.get("data", {}).get("symbols", []))
+        return to_dataframe(res.get("data", {}).get("symbols", []))
 
     async def get_depth(
         self,
@@ -190,7 +191,7 @@ class MarketHTTP(HTTPManager):
                 }
             )
 
-        return self._to_dataframe(rows)
+        return to_dataframe(rows)
 
     async def get_contract_kline(
         self,
@@ -219,7 +220,7 @@ class MarketHTTP(HTTPManager):
         raw = data.get("data", [])
         if not raw:
             return pl.DataFrame()
-        df = self._to_dataframe(raw).rename(
+        df = to_dataframe(raw).rename(
             {
                 "timestamp": "timestamp",
                 "open_price": "open",
@@ -247,7 +248,7 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_CURRENT_FUNDING_RATE,
             query=payload,
         )
-        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     async def get_funding_rate_history(
         self,
@@ -269,4 +270,4 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_FUNDING_RATE_HISTORY,
             query=payload,
         )
-        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()

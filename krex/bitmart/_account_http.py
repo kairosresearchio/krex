@@ -1,26 +1,10 @@
 import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.account import FundingAccount, FuturesAccount
+from ..utils.common_dataframe import to_dataframe
 
 
 class AccountHTTP(HTTPManager):
-    def _to_dataframe(self, data, schema: list[str] = None) -> pl.DataFrame:
-        if not data:
-            return pl.DataFrame()
-
-        if isinstance(data, list):
-            if schema:
-                return pl.DataFrame(data, schema=schema, orient="row")
-            elif all(isinstance(item, dict) for item in data):
-                return pl.DataFrame(data)
-            else:
-                return pl.DataFrame(data, orient="row")
-
-        if isinstance(data, dict):
-            return pl.DataFrame([data])
-
-        return pl.DataFrame()
-
     def get_account_balance(
         self,
         currency: str = None,
@@ -41,7 +25,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.GET_ACCOUNT_BALANCE,
             query=payload,
         )
-        return self._to_dataframe(res["data"].get("wallet", [])) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"].get("wallet", [])) if "data" in res else pl.DataFrame()
 
     def get_account_currencies(
         self,
@@ -62,7 +46,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.GET_ACCOUNT_CURRENCIES,
             query=payload,
         )
-        return self._to_dataframe(res["data"].get("currencies", [])) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"].get("currencies", [])) if "data" in res else pl.DataFrame()
 
     def get_spot_wallet(self) -> pl.DataFrame:
         res = self._request(
@@ -70,7 +54,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.GET_SPOT_WALLET_BALANCE,
             query=None,
         )
-        return self._to_dataframe(res["data"].get("wallet", [])) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"].get("wallet", [])) if "data" in res else pl.DataFrame()
 
     def get_deposit_address(
         self,
@@ -88,7 +72,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.DEPOSIT_ADDRESS,
             query=payload,
         )
-        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     # todo: test failed
     def get_withdraw_charge(
@@ -107,7 +91,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.WITHDRAW_QUOTA,
             query=payload,
         )
-        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     # todo: not tested
     def post_withdraw_apply(
@@ -129,7 +113,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.WITHDRAW,
             query=payload,
         )
-        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_deposit_withdraw_history(
         self,
@@ -162,7 +146,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.GET_DEPOSIT_WITHDRAW_HISTORY,
             query=payload,
         )
-        return self._to_dataframe(res["data"].get("records", [])) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"].get("records", [])) if "data" in res else pl.DataFrame()
 
     def get_deposit_withdraw_history_detail(
         self,
@@ -180,9 +164,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.GET_DEPOSIT_WITHDRAW_HISTORY_DETAIL,
             query=payload,
         )
-        return (
-            self._to_dataframe(res["data"]["record"]) if "data" in res and "record" in res["data"] else pl.DataFrame()
-        )
+        return to_dataframe(res["data"]["record"]) if "data" in res and "record" in res["data"] else pl.DataFrame()
 
     def get_contract_assets(self) -> pl.DataFrame:
         res = self._request(
@@ -190,4 +172,4 @@ class AccountHTTP(HTTPManager):
             path=FuturesAccount.GET_CONTRACT_ASSETS,
             query=None,
         )
-        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
