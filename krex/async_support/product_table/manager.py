@@ -1,5 +1,5 @@
 import asyncio
-import pandas as pd
+import polars as pl
 from contextlib import asynccontextmanager
 from .fetch import bitmart
 
@@ -58,7 +58,7 @@ class ProductTableManager:
     async def _fetch_product_tables(self):
         """Fetch product tables from all valid exchanges and combine them into a single DataFrame."""
         product_tables = await asyncio.gather(*[func() for func in VALID_EXCHANGES])
-        return pd.concat(product_tables, ignore_index=True)
+        return pl.concat(product_tables, how="vertical")
 
     @asynccontextmanager
     async def _create_exchange_clients(self):
@@ -83,27 +83,24 @@ class ProductTableManager:
         """
         data = self.product_table
         if product_symbol is not None:
-            data = data[data["product_symbol"] == product_symbol]
+            data = data.filter(pl.col("product_symbol") == product_symbol)
         if exchange is not None:
-            data = data[data["exchange"] == exchange]
+            data = data.filter(pl.col("exchange") == exchange)
         if product_type is not None:
-            data = data[data["product_type"] == product_type]
+            data = data.filter(pl.col("product_type") == product_type)
         if exchange_symbol is not None:
-            data = data[data["exchange_symbol"] == exchange_symbol]
+            data = data.filter(pl.col("exchange_symbol") == exchange_symbol)
 
-        if len(data) > 1:
+        if data.height > 1:
             raise ProductTableError(
-                "Exist multiple {} for product_code: {}, exchange: {}, product_type: {}".format(
-                    key, product_symbol, exchange, product_type
-                )
+                f"Exist multiple {key} for product_code: {product_symbol}, exchange: {exchange}, product_type: {product_type}"
             )
-        if len(data) == 0:
+        if data.height == 0:
             raise ProductTableError(
-                "Not exist {} for product_code: {}, exchange: {}, product_type: {}, exchange_symbol: {}".format(
-                    key, product_symbol, exchange, product_type, exchange_symbol
-                )
+                f"Not exist {key} for product_code: {product_symbol}, exchange: {exchange}, product_type: {product_type}, exchange_symbol: {exchange_symbol}"
             )
-        return data.iloc[0][key]
+
+        return data.select(key).item()
 
     def get_exchange_symbol(self, product_symbol, exchange):
         return self.get("exchange_symbol", product_symbol, exchange)

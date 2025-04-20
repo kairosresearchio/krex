@@ -1,9 +1,9 @@
 import re
-import pandas as pd
+import polars as pl
 from typing import Dict
 from dataclasses import dataclass, asdict
-from ...utils.decimal_utils import reverse_decimal_places
-from ...utils.common import Common
+from ..utils.decimal_utils import reverse_decimal_places
+from ..utils.common import Common
 
 
 @dataclass
@@ -183,7 +183,7 @@ def format_product_symbol(symbol: str) -> str:
 #     return pd.DataFrame(markets)
 
 
-async def bitmart() -> pd.DataFrame:
+async def bitmart() -> pl.DataFrame:
     from ..bitmart._market_http import MarketHTTP
 
     market_http = MarketHTTP()
@@ -192,7 +192,7 @@ async def bitmart() -> pd.DataFrame:
     quote_currencies = {"USDT", "USDC", "USD"}
 
     df_contracts = market_http.get_contracts_details()
-    for _, market in df_contracts.iterrows():
+    for market in df_contracts.iter_rows(named=True):
         matched_quote = next(
             (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
             None,
@@ -220,7 +220,7 @@ async def bitmart() -> pd.DataFrame:
         )
 
     df_spot = market_http.get_trading_pairs_details()
-    for _, market in df_spot.iterrows():
+    for market in df_spot.iter_rows(named=True):
         matched_quote = next(
             (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
             None,
@@ -248,4 +248,4 @@ async def bitmart() -> pd.DataFrame:
         )
 
     markets = [market.to_dict() for market in markets]
-    return pd.DataFrame(markets)
+    return pl.DataFrame(markets)

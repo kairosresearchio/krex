@@ -1,10 +1,27 @@
-import pandas as pd
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.trade import SpotTrade, FuturesTrade
 from ...utils.common import Common
 
 
 class TradeHTTP(HTTPManager):
+    def _to_dataframe(self, data, schema: list[str] = None) -> pl.DataFrame:
+        if not data:
+            return pl.DataFrame()
+
+        if isinstance(data, list):
+            if schema:
+                return pl.DataFrame(data, schema=schema, orient="row")
+            elif all(isinstance(item, dict) for item in data):
+                return pl.DataFrame(data)
+            else:
+                return pl.DataFrame(data, orient="row")
+
+        if isinstance(data, dict):
+            return pl.DataFrame([data])
+
+        return pl.DataFrame()
+
     async def place_spot_order(
         self,
         product_symbol: str,
@@ -49,7 +66,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         side: str,
         size: str = None,
-        notional: bool = None,
+        notional: str = None,
         client_order_id: str = None,
     ):
         return await self.place_spot_order(
@@ -64,7 +81,7 @@ class TradeHTTP(HTTPManager):
     async def place_spot_market_buy_order(
         self,
         product_symbol: str,
-        notional: bool,
+        notional: str,
         client_order_id: str = None,
     ):
         return await self.place_spot_market_order(
@@ -134,7 +151,7 @@ class TradeHTTP(HTTPManager):
             client_order_id=client_order_id,
         )
 
-    async def place_post_only_limit_order(
+    async def place_spot_post_only_limit_order(
         self,
         product_symbol: str,
         side: str,
@@ -151,7 +168,7 @@ class TradeHTTP(HTTPManager):
             client_order_id=client_order_id,
         )
 
-    async def place_post_only_limit_buy_order(
+    async def place_spot_post_only_limit_buy_order(
         self,
         product_symbol: str,
         size: str,
@@ -232,12 +249,17 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         side: str,
         type: str,
+        size: str = None,
+        price: str = None,
+        notional: str = None,
         clientOrderId: str = None,
     ):
         """
         :param product_symbol: str
         :param side: str (buy, sell)
         :param type: str (limit, market, limit_maker, ioc)
+        :param size: str
+        :param price: str
         :param clientOrderId: str
         """
         payload = {
@@ -247,6 +269,12 @@ class TradeHTTP(HTTPManager):
         }
         if clientOrderId is not None:
             payload["clientOrderId"] = clientOrderId
+        if size is not None:
+            payload["size"] = size
+        if price is not None:
+            payload["price"] = price
+        if notional is not None:
+            payload["notional"] = notional
 
         return await self._request(
             method="POST",
@@ -258,7 +286,7 @@ class TradeHTTP(HTTPManager):
         self,
         orderId: str,
         queryState: str = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param orderId: str
         :param queryState: str (open, history)
@@ -275,13 +303,13 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame([res.get("data", {})])
+        return self._to_dataframe(res.get("data", {}))
 
     async def get_spot_order_by_order_client_id(
         self,
         clientOrderId: str,
         queryState: str = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param clientOrderId: str
         :param queryState: str (open, history)
@@ -298,7 +326,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame([res.get("data", {})])
+        return self._to_dataframe(res.get("data", {}))
 
     async def get_spot_open_orders(
         self,
@@ -307,7 +335,7 @@ class TradeHTTP(HTTPManager):
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
@@ -333,7 +361,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", []))
 
     async def get_spot_account_orders(
         self,
@@ -342,7 +370,7 @@ class TradeHTTP(HTTPManager):
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
@@ -368,7 +396,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", []))
 
     async def get_spot_account_trade_list(
         self,
@@ -377,7 +405,7 @@ class TradeHTTP(HTTPManager):
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
@@ -403,18 +431,18 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", []))
 
     async def get_spot_order_trade_list(
         self,
-        orderId: str = None,
-    ) -> pd.DataFrame:
+        orderId: str,
+    ) -> pl.DataFrame:
         """
         :param orderId: str
         """
-        payload = {}
-        if orderId is not None:
-            payload["orderId"] = orderId
+        payload = {
+            "orderId": orderId,
+        }
 
         res = await self._request(
             method="POST",
@@ -422,7 +450,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", []))
 
     async def place_contract_order(
         self,
@@ -512,8 +540,8 @@ class TradeHTTP(HTTPManager):
         size: int,
         client_order_id: str = None,
     ):
-        positions = self.get_contract_position(product_symbol)["data"]
-        short_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 2)
+        positions = await self.get_contract_position(product_symbol)
+        short_size = positions.filter(pl.col("position_type") == 2)["current_amount"].cast(pl.Int64).sum()
 
         if short_size != 0:
             excess_size = size - short_size
@@ -553,8 +581,8 @@ class TradeHTTP(HTTPManager):
         size: int,
         client_order_id: str = None,
     ):
-        positions = self.get_contract_position(product_symbol)["data"]
-        long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
+        positions = await self.get_contract_position(product_symbol)
+        long_size = positions.filter(pl.col("position_type") == 1)["current_amount"].cast(pl.Int64).sum()
 
         if long_size != 0:
             excess_size = size - long_size
@@ -626,13 +654,13 @@ class TradeHTTP(HTTPManager):
 
     async def place_contract_post_only_buy_order(
         self,
-        product_symbol,
-        price,
-        size,
-        client_order_id=None,
+        product_symbol: str,
+        price: str,
+        size: int,
+        client_order_id: str = None,
     ):
-        positions = self.get_contract_position(product_symbol)["data"]
-        short_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 2)
+        positions = await self.get_contract_position(product_symbol)
+        short_size = positions.filter(pl.col("position_type") == 2)["current_amount"].cast(pl.Int64).sum()
 
         if short_size != 0:
             excess_size = size - short_size
@@ -672,13 +700,14 @@ class TradeHTTP(HTTPManager):
 
     async def place_contract_post_only_sell_order(
         self,
-        product_symbol,
-        price,
-        size,
-        client_order_id=None,
+        product_symbol: str,
+        price: str,
+        size: int,
+        client_order_id: str = None,
     ):
-        positions = self.get_contract_position(product_symbol)["data"]
-        long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
+        positions = await self.get_contract_position(product_symbol)
+        # long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
+        long_size = positions.filter(pl.col("position_type") == 1)["current_amount"].cast(pl.Int64).sum()
 
         if long_size != 0:
             excess_size = size - long_size
@@ -842,7 +871,7 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         order_id: str,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param order_id: str
@@ -858,14 +887,14 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame([res.get("data", {})])
+        return self._to_dataframe(res.get("data", []))
 
     async def get_contract_order_history(
         self,
         product_symbol: str,
         start_time: str = None,
         end_time: str = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param start_time: str
@@ -885,7 +914,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", []))
 
     async def get_contract_open_order(
         self,
@@ -893,7 +922,7 @@ class TradeHTTP(HTTPManager):
         type: str = None,
         order_state: str = None,
         limit: int = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param type: str (limit, market, trailing)
@@ -916,12 +945,12 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", []))
 
     async def get_contract_position(
         self,
         product_symbol: str = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         """
@@ -935,14 +964,40 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        schema = [
+            "symbol",
+            "leverage",
+            "timestamp",
+            "current_fee",
+            "open_timestamp",
+            "current_value",
+            "mark_value",
+            "mark_price",
+            "position_value",
+            "position_cross",
+            "maintenance_margin",
+            "margin_type",
+            "position_mode",
+            "close_vol",
+            "close_avg_price",
+            "open_avg_price",
+            "entry_price",
+            "current_amount",
+            "unrealized_value",
+            "realized_value",
+            "position_type",
+            "account",
+        ]
+
+        data = res.get("data", [])
+        return pl.DataFrame(data, schema=schema, orient="row") if data else pl.DataFrame(schema=schema)
 
     async def get_contract_trade(
         self,
         product_symbol: str,
         start_time: str = None,
         end_time: str = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param start_time: str
@@ -962,7 +1017,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", []))
 
     async def get_contract_transaction_history(
         self,
@@ -971,7 +1026,7 @@ class TradeHTTP(HTTPManager):
         start_time: int = None,
         end_time: int = None,
         page_size: int = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param flow_type: int (0 = All (async default), 1 = Transfer, 2 = Realized PNL, 3 = Funding Fee, 4 = Commission Fee, 5 = Liquidation)
@@ -997,7 +1052,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", []))
 
     async def get_contract_transfer_list(
         self,
@@ -1006,7 +1061,7 @@ class TradeHTTP(HTTPManager):
         currency: str = None,
         start_time: int = None,
         end_time: int = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param page: int
         :param limit: int
@@ -1031,4 +1086,4 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return pd.DataFrame(res.get("data", []))
+        return self._to_dataframe(res.get("data", {}).get("records", []))

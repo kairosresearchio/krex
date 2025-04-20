@@ -1,4 +1,4 @@
-import pandas as pd
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.market import SpotMarket, FuturesMarket
 from ...utils.common import Common
@@ -6,45 +6,74 @@ from ...utils.timeframe_utils import bitmart_convert_timeframe
 
 
 class MarketHTTP(HTTPManager):
-    async def get_spot_currencies(self) -> pd.DataFrame:
+    def _to_dataframe(self, data, schema: list[str] = None) -> pl.DataFrame:
+        if not data:
+            return pl.DataFrame()
+
+        if isinstance(data, list):
+            if schema:
+                return pl.DataFrame(data, schema=schema, orient="row")
+            elif all(isinstance(item, dict) for item in data):
+                return pl.DataFrame(data)
+            else:
+                return pl.DataFrame(data, orient="row")
+
+        if isinstance(data, dict):
+            return pl.DataFrame([data])
+
+        return pl.DataFrame()
+
+    async def get_spot_currencies(self) -> pl.DataFrame:
         res = await self._request(
             method="GET",
             path=SpotMarket.GET_SPOT_CURRENCIES,
             query=None,
         )
-        return pd.DataFrame(res.get("data", {}).get("currencies", []))
+        return self._to_dataframe(res.get("data", {}).get("currencies", []))
 
-    async def get_trading_pairs(self) -> pd.DataFrame:
+    async def get_trading_pairs(self) -> pl.DataFrame:
         res = await self._request(
             method="GET",
             path=SpotMarket.GET_TRADING_PAIRS,
             query=None,
         )
-        return pd.DataFrame(res["data"]) if "data" in res else pd.DataFrame()
+        return self._to_dataframe(res.get("data", []))
 
-    async def get_trading_pairs_details(self) -> pd.DataFrame:
+    async def get_trading_pairs_details(self) -> pl.DataFrame:
         res = await self._request(
             method="GET",
             path=SpotMarket.GET_TRADING_PAIRS_DETAILS,
             query=None,
         )
+        return self._to_dataframe(res.get("data", {}).get("symbols", []))
 
-        if "data" not in res or "symbols" not in res["data"]:
-            return pd.DataFrame()
-        return pd.DataFrame(res["data"]["symbols"])
-
-    async def get_ticker_of_all_pairs(self) -> pd.DataFrame:
+    async def get_ticker_of_all_pairs(self) -> pl.DataFrame:
         res = await self._request(
             method="GET",
             path=SpotMarket.GET_TICKER_OF_ALL_PAIRS,
             query=None,
         )
-        return pd.DataFrame(res["data"]) if "data" in res else pd.DataFrame()
+        schema = [
+            "symbol",
+            "last_price",
+            "volume",
+            "quote_volume",
+            "open_price",
+            "high_price",
+            "low_price",
+            "price_change_percent",
+            "bid_price",
+            "bid_size",
+            "ask_price",
+            "ask_size",
+            "timestamp",
+        ]
+        return self._to_dataframe(res.get("data", []), schema=schema)
 
     async def get_ticker_of_a_pair(
         self,
         product_symbol: str,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         """
@@ -57,7 +86,7 @@ class MarketHTTP(HTTPManager):
             path=SpotMarket.GET_TICKER_OF_A_PAIR,
             query=payload,
         )
-        return pd.DataFrame([res["data"]]) if "data" in res else pd.DataFrame()
+        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     async def get_spot_kline(
         self,
@@ -66,7 +95,7 @@ class MarketHTTP(HTTPManager):
         before: int = None,
         after: int = None,
         limit: int = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param before: int
@@ -89,19 +118,19 @@ class MarketHTTP(HTTPManager):
             path=SpotMarket.GET_SPOT_KLINE,
             query=payload,
         )
-        if "data" not in res or not res["data"]:
-            return pd.DataFrame()
+        data = res.get("data", [])
+        if not data:
+            return pl.DataFrame()
 
-        df = pd.DataFrame(res["data"])
-        df.columns = ["datetime", "open", "high", "low", "close", "volume", "quote_volume"]
-        df["datetime"] = pd.to_datetime(df["datetime"].astype(int), unit="s")
-        df.set_index("datetime", inplace=True)
+        df = pl.DataFrame(
+            data, schema=["timestamp", "open", "high", "low", "close", "volume", "quote_volume"], orient="row"
+        )
         return df
 
     async def get_contracts_details(
         self,
         product_symbol: str = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         """
@@ -114,15 +143,12 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_CONTRACTS_DETAILS,
             query=payload,
         )
-
-        if "data" not in res or "symbols" not in res["data"]:
-            return pd.DataFrame()
-        return pd.DataFrame(res["data"]["symbols"])
+        return self._to_dataframe(res.get("data", {}).get("symbols", []))
 
     async def get_depth(
         self,
         product_symbol: str,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         """
@@ -135,10 +161,7 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_DEPTH,
             query=payload,
         )
-        if "data" not in res:
-            return pd.DataFrame()
-
-        data = res["data"]
+        data = res.get("data", {})
         rows = []
 
         cum = 0
@@ -167,7 +190,7 @@ class MarketHTTP(HTTPManager):
                 }
             )
 
-        return pd.DataFrame(rows)
+        return self._to_dataframe(rows)
 
     async def get_contract_kline(
         self,
@@ -175,7 +198,7 @@ class MarketHTTP(HTTPManager):
         interval: str,
         start_time: int,
         end_time: int,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param startTime: int
@@ -193,24 +216,25 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_CONTRACTS_KLINE,
             query=payload,
         )
-        df = pd.DataFrame(data["data"])
-        columns_map = {
-            "timestamp": "datetime",
-            "open_price": "open",
-            "high_price": "high",
-            "low_price": "low",
-            "close_price": "close",
-            "volume": "volume",
-        }
-        df.rename(columns=columns_map, inplace=True)
-        df["datetime"] = pd.to_datetime(df["datetime"], unit="s")
-        df.set_index("datetime", inplace=True)
+        raw = data.get("data", [])
+        if not raw:
+            return pl.DataFrame()
+        df = self._to_dataframe(raw).rename(
+            {
+                "timestamp": "timestamp",
+                "open_price": "open",
+                "high_price": "high",
+                "low_price": "low",
+                "close_price": "close",
+                "volume": "volume",
+            }
+        )
         return df
 
     async def get_current_funding_rate(
         self,
         product_symbol: str,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         """
@@ -223,13 +247,13 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_CURRENT_FUNDING_RATE,
             query=payload,
         )
-        return pd.DataFrame([res["data"]]) if "data" in res else pd.DataFrame()
+        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     async def get_funding_rate_history(
         self,
         product_symbol: str,
         limit: int = None,
-    ) -> pd.DataFrame:
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param limit: int
@@ -245,4 +269,4 @@ class MarketHTTP(HTTPManager):
             path=FuturesMarket.GET_FUNDING_RATE_HISTORY,
             query=payload,
         )
-        return pd.DataFrame(res["data"]) if "data" in res else pd.DataFrame()
+        return self._to_dataframe(res["data"]) if "data" in res else pl.DataFrame()

@@ -3,7 +3,6 @@ from ._market_http import MarketHTTP
 from ._account_http import AccountHTTP
 
 
-# @dataclass
 class Client(
     TradeHTTP,
     MarketHTTP,

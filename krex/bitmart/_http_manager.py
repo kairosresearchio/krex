@@ -9,8 +9,8 @@ from .endpoints.market import FuturesMarket, SpotMarket
 from .endpoints.trade import FuturesTrade, SpotTrade
 from .error_map import get_bitmart_error_message
 from ..product_table.manager import ProductTableManager
-from ...utils.errors import FailedRequestError
-from ...utils.helpers import generate_timestamp
+from ..utils.errors import FailedRequestError
+from ..utils.helpers import generate_timestamp
 
 
 def sign_message(timestamp, memo, body, secret_key):
