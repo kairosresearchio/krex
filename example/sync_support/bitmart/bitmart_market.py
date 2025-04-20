@@ -1,4 +1,4 @@
-from krex.sync_support.bitmart.client import Client
+from krex.bitmart.client import Client
 from datetime import datetime, timedelta
 
 BITMART_API_KEY = "613c8332848ff6b83aa915ae6270f2e842901036"

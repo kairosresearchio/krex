@@ -123,11 +123,8 @@ class MarketHTTP(HTTPManager):
             return pl.DataFrame()
 
         df = pl.DataFrame(
-            data, schema=["datetime", "open", "high", "low", "close", "volume", "quote_volume"], orient="row"
+            data, schema=["timestamp", "open", "high", "low", "close", "volume", "quote_volume"], orient="row"
         )
-
-        df = df.with_columns(pl.col("datetime").cast(pl.Int64).cast(pl.Datetime(time_unit="ms"))).sort("datetime")
-
         return df
 
     async def get_contracts_details(
@@ -224,7 +221,7 @@ class MarketHTTP(HTTPManager):
             return pl.DataFrame()
         df = self._to_dataframe(raw).rename(
             {
-                "timestamp": "datetime",
+                "timestamp": "timestamp",
                 "open_price": "open",
                 "high_price": "high",
                 "low_price": "low",
@@ -232,7 +229,6 @@ class MarketHTTP(HTTPManager):
                 "volume": "volume",
             }
         )
-        df = df.with_columns([pl.col("datetime").cast(pl.Datetime(time_unit="ms"))]).sort("datetime")
         return df
 
     async def get_current_funding_rate(

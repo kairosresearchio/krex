@@ -8,14 +8,19 @@ class TradeHTTP(HTTPManager):
     def _to_dataframe(self, data, schema: list[str] = None) -> pl.DataFrame:
         if not data:
             return pl.DataFrame()
-        if schema:
-            return pl.DataFrame(data, schema=schema)
+
         if isinstance(data, list):
-            return pl.DataFrame(data)
-        elif isinstance(data, dict):
+            if schema:
+                return pl.DataFrame(data, schema=schema, orient="row")
+            elif all(isinstance(item, dict) for item in data):
+                return pl.DataFrame(data)
+            else:
+                return pl.DataFrame(data, orient="row")
+
+        if isinstance(data, dict):
             return pl.DataFrame([data])
-        else:
-            return pl.DataFrame()
+
+        return pl.DataFrame()
 
     async def place_spot_order(
         self,
