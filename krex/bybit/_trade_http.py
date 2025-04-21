@@ -382,30 +382,35 @@ class TradeHTTP(HTTPManager):
         category: str = "linear",
         product_symbol: str = None,
         startTime: int = None,
-        limit: int = 20,
+        cursor: str = None,
+        limit: int = None,
     ) -> pl.DataFrame:
         """
         :param category: str (linear, option, spot, inverse)
         :param symbol: str
         :param startTime: int
+        :param cursor: str
         :param limit: int
         """
         payload = {
             "category": category,
-            "limit": limit,
         }
         if product_symbol is not None:
             payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
             payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
         if startTime is not None:
             payload["startTime"] = startTime
-
+        if cursor is not None:
+            payload["cursor"] = cursor
+        if limit is not None:
+            payload["limit"] = limit
+        
         res = self._request(
             method="GET",
             path=Trade.GET_ORDER_HISTORY,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_execution_list(
         self,

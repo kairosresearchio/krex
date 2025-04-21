@@ -709,44 +709,6 @@ class AccountHTTP(HTTPManager):
         )
         return res
 
-    def get_quick_borrow_repay_history(
-        self,
-        product_symbol: str = None,
-        ccy: str = None,
-        side: str = None,
-        begin: str = None,
-        end: str = None,
-        limit: str = None,
-    ) -> pl.DataFrame:
-        """
-        :param product_symbol: str
-        :param ccy: str
-        :param side: str (borrow, repay)
-        :param begin: str
-        :param end: str
-        :param amt: str
-        """
-        payload = {}
-        if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
-        if ccy is not None:
-            payload["ccy"] = ccy
-        if side is not None:
-            payload["side"] = side
-        if begin is not None:
-            payload["begin"] = begin
-        if end is not None:
-            payload["end"] = end
-        if limit is not None:
-            payload["limit"] = limit
-
-        res = self._request(
-            method="GET",
-            path=Account.QUICK_BORROW_REPAY_HISTORY,
-            query=payload,
-        )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
-
     def get_interest_limits(
         self,
         ccy: str = None,
@@ -761,82 +723,6 @@ class AccountHTTP(HTTPManager):
         res = self._request(
             method="GET",
             path=Account.INTEREST_LIMITS,
-            query=payload,
-        )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
-
-    def spot_manual_borrow_repay(
-        self,
-        ccy: str,
-        side: str,
-        amt: str,
-    ) -> pl.DataFrame:
-        """
-        :param ccy: str
-        :param side: str (borrow, repay)
-        :param amt: str
-        """
-        payload = {
-            "ccy": ccy,
-            "side": side,
-            "amt": amt,
-        }
-
-        res = self._request(
-            method="POST",
-            path=Account.MANUAL_REBORROW_REPAY,
-            query=payload,
-        )
-        return res
-
-    def set_auto_repay(
-        self,
-        autoRepay: str,
-    ) -> pl.DataFrame:
-        """
-        :param autoRepay: str (true, false)
-        """
-        payload = {
-            "autoRepay": autoRepay,
-        }
-
-        res = self._request(
-            method="POST",
-            path=Account.SET_AUTO_REPAY,
-            query=payload,
-        )
-        return res
-
-    def spot_borrow_repay_history(
-        self,
-        ccy: str = None,
-        type: str = None,
-        after: str = None,
-        before: str = None,
-        limit: str = None,
-    ) -> pl.DataFrame:
-        """
-        :param ccy: str
-        :param type: str (borrow, repay)
-        :param after: str
-        :param before: str
-        :param limit: str
-        """
-        payload = {}
-        if ccy is not None:
-            payload["ccy"] = ccy
-        if type is not None:
-            payload["type"] = type
-        if after is not None:
-            payload["after"] = after
-        if before is not None:
-            payload["before"] = before
-        if limit is not None:
-            payload["limit"] = limit
-
-        res = self._request(
-            method="GET",
-            path=Account.GET_BORROW_REPAY_HISTORY,
             query=payload,
         )
         return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
