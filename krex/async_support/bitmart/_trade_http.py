@@ -270,7 +270,7 @@ class TradeHTTP(HTTPManager):
         self,
         orderId: str,
         queryState: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param orderId: str
         :param queryState: str (open, history)
@@ -293,7 +293,7 @@ class TradeHTTP(HTTPManager):
         self,
         clientOrderId: str,
         queryState: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param clientOrderId: str
         :param queryState: str (open, history)
@@ -319,7 +319,7 @@ class TradeHTTP(HTTPManager):
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
@@ -354,7 +354,7 @@ class TradeHTTP(HTTPManager):
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
@@ -389,7 +389,7 @@ class TradeHTTP(HTTPManager):
         startTime: int = None,
         endTime: int = None,
         limit: int = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param orderMode: str (spot, iso_margin)
@@ -420,7 +420,7 @@ class TradeHTTP(HTTPManager):
     async def get_spot_order_trade_list(
         self,
         orderId: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param orderId: str
         """
@@ -1045,7 +1045,7 @@ class TradeHTTP(HTTPManager):
         currency: str = None,
         start_time: int = None,
         end_time: int = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param page: int
         :param limit: int

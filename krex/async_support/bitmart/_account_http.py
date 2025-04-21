@@ -98,7 +98,7 @@ class AccountHTTP(HTTPManager):
         self,
         currency: str,
         amount: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param currency: str
         :param amount: str
