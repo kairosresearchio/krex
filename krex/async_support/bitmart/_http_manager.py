@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 from .endpoints.account import FundingAccount, FuturesAccount
 from .endpoints.market import FuturesMarket, SpotMarket
 from .endpoints.trade import FuturesTrade, SpotTrade
-from .error_map import get_bitmart_error_message
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
 from ...utils.helpers import generate_timestamp
@@ -110,7 +109,7 @@ class HTTPManager:
 
             if data.get("code", 0) != 1000:
                 code = data.get("code", "Unknown")
-                error_msg = get_bitmart_error_message(code)
+                error_msg = data.get("message", "Unknown error")
                 raise FailedRequestError(
                     request=f"{method.upper()} {url} | Body: {query}",
                     message=f"BitMart API Error: [{code}] {error_msg}",

@@ -113,7 +113,7 @@ class AccountHTTP(HTTPManager):
             path=FundingAccount.WITHDRAW,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     async def get_deposit_withdraw_history(
         self,

@@ -287,7 +287,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", {}))
+        return res
 
     async def get_spot_order_by_order_client_id(
         self,
@@ -310,7 +310,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", {}))
+        return res
 
     async def get_spot_open_orders(
         self,
@@ -345,7 +345,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def get_spot_account_orders(
         self,
@@ -380,7 +380,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def get_spot_account_trade_list(
         self,
@@ -415,7 +415,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def get_spot_order_trade_list(
         self,
@@ -434,7 +434,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def place_contract_order(
         self,
@@ -1070,4 +1070,4 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", {}).get("records", []))
+        return res

@@ -16,31 +16,26 @@ client = Client(
 res = client.get_spot_currencies()
 print("1. get_spot_currencies:", res)
 
-print("\n#######################\n")
 
 # get account currencies
 res = client.get_trading_pairs()
 print("2. get_trading_pairs:", res)
 
-print("\n#######################\n")
 
 # get spot wallet
 res = client.get_trading_pairs_details()
 print("3. get_trading_pairs_details:", res)
 
-print("\n#######################\n")
 
 # get deposit address
 res = client.get_ticker_of_all_pairs()
 print("4. get_ticker_of_all_pairs:", res)
 
-print("\n#######################\n")
 
 # get_ticker_of_a_pair
 res = client.get_ticker_of_a_pair(product_symbol="BTC-USDT-SPOT")
 print("5. get_ticker_of_a_pair:", res)
 
-print("\n#######################\n")
 
 # get_spot_kline
 res = client.get_spot_kline("BTC-USDT-SPOT", "5m")

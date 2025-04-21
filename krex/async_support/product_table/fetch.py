@@ -192,8 +192,8 @@ async def bitmart() -> pl.DataFrame:
     markets = []
     quote_currencies = {"USDT", "USDC", "USD"}
 
-    df_contracts = await market_http.get_contracts_details()
-    for market in df_contracts.iter_rows(named=True):
+    df_swap = await market_http.get_contracts_details()
+    for market in df_swap.iter_rows(named=True):
         matched_quote = next(
             (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
             None,
