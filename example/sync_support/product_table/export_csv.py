@@ -1,15 +1,15 @@
-import pandas as pd
-from krex.sync_support.product_table.manager import ProductTableManager
+import polars as pl
+from krex.product_table.manager import ProductTableManager
 
 
 def test_fetch_product_tables():
     manager = ProductTableManager.get_instance()
 
-    if isinstance(manager.product_table, pd.DataFrame) and not manager.product_table.empty:
+    if isinstance(manager.product_table, pl.DataFrame) and manager.product_table.height > 0:
         print(manager.product_table.head())
 
         csv_filename = "product_table.csv"
-        manager.product_table.to_csv(csv_filename, index=False, encoding="utf-8-sig")
+        manager.product_table.write_csv(csv_filename)
         print(f"📁 Data successfully exported to {csv_filename}")
     else:
         print("❌ _fetch_product_tables test failed. The returned DataFrame is either empty or of an incorrect type.")
