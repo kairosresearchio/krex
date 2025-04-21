@@ -1,6 +1,8 @@
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.position import Position
-from ...utils.common import Common
+from ..utils.common import Common
+from ..utils.common_dataframe import to_dataframe
 
 
 class PositionHTTP(HTTPManager):
@@ -10,7 +12,7 @@ class PositionHTTP(HTTPManager):
         product_symbol: str = None,
         settleCoin: str = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str (linear, inverse, option)
         :param symbol: str
@@ -26,17 +28,18 @@ class PositionHTTP(HTTPManager):
         if settleCoin is not None:
             payload["settleCoin"] = settleCoin
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Position.GET_POSITIONS,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def set_leverage(
         self,
         product_symbol: str,
         leverage: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str (linear, inverse)
         :param symbol: str
@@ -50,18 +53,19 @@ class PositionHTTP(HTTPManager):
             "sellLeverage": leverage,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Position.SET_LEVERAGE,
             query=payload,
         )
+        return res
 
     def switch_position_mode(
         self,
         mode: str,
         symbol: str = None,
         coin: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param mode: str. 0: Merged Single. 3: Both Sides
         :param symbol: str
@@ -76,18 +80,19 @@ class PositionHTTP(HTTPManager):
         if coin is not None:
             payload["coin"] = coin
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Position.SWITCH_POSITION_MODE,
             query=payload,
         )
+        return res
 
     def set_trading_stop(
         self,
         category: str,
         symbol: str,
         tpslMode: str,
-        positionIdx: str,
+        # positionIdx: str,
         takeProfit: str = None,
         stopLoss: str = None,
         tpSize: str = None,
@@ -96,7 +101,7 @@ class PositionHTTP(HTTPManager):
         slLimitPrice: str = None,
         tpOrderType: str = None,
         slOrderType: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param symbol: str
         :param tpslMode: str. `Full`: entire position TP/SL, `Partial`: partial position TP/SL
@@ -132,18 +137,19 @@ class PositionHTTP(HTTPManager):
         if slOrderType is not None:
             payload["slOrderType"] = slOrderType
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Position.SET_TRADING_STOP,
             query=payload,
         )
+        return res
 
     def set_auto_add_margin(
         self,
         product_symbol: str,
         autoAddMargin: int,
-        positionIdx: int = None,
-    ):
+        # positionIdx: int = None,
+    ) -> pl.DataFrame:
         """ "
         :param symbol: str
         :param autoAddMargin: int (0:closing, 1:opening)
@@ -155,20 +161,19 @@ class PositionHTTP(HTTPManager):
             "autoAddMargin": autoAddMargin,
             "positionIdx": 0,
         }
-        if positionIdx is not None:
-            payload["positionIdx"] = positionIdx
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Position.SET_AUTO_ADD_MARGIN,
             query=payload,
         )
+        return res
 
     def add_or_reduce_margin(
         self,
         product_symbol: str,
         margin: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str
         :param symbol: str
@@ -180,11 +185,12 @@ class PositionHTTP(HTTPManager):
             "margin": margin,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Position.ADD_MARGIN,
             query=payload,
         )
+        return res
 
     def get_closed_pnl(
         self,
@@ -192,7 +198,7 @@ class PositionHTTP(HTTPManager):
         product_symbol: str = None,
         startTime: int = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str
         :param symbol: str
@@ -209,8 +215,9 @@ class PositionHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Position.GET_CLOSED_PNL,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()

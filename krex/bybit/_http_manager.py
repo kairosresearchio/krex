@@ -5,8 +5,8 @@ import json
 import requests
 from dataclasses import dataclass, field
 from ..product_table.manager import ProductTableManager
-from ...utils.errors import FailedRequestError
-from ...utils.helpers import generate_timestamp
+from ..utils.errors import FailedRequestError
+from ..utils.helpers import generate_timestamp
 
 HTTP_URL = "https://{SUBDOMAIN}.{DOMAIN}.{TLD}"
 SUBDOMAIN_TESTNET = "api-testnet"
@@ -68,8 +68,7 @@ class HTTPManager:
         if method.upper() == "GET":
             if query:
                 sorted_query = "&".join(f"{k}={v}" for k, v in sorted(query.items()) if v)
-                if sorted_query:
-                    path += "?" + sorted_query
+                path += "?" + sorted_query if sorted_query else ""
                 payload = sorted_query
             else:
                 payload = ""
@@ -86,22 +85,45 @@ class HTTPManager:
 
         try:
             if method.upper() == "GET":
-                response = self.session.get(url, headers=headers)
+                response = self.session.get(url, headers=headers, timeout=self.timeout)
             elif method.upper() == "POST":
-                response = self.session.post(url, json=query if query else {}, headers=headers)
+                response = self.session.post(url, json=query if query else {}, headers=headers, timeout=self.timeout)
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
-            response.raise_for_status()
-            response_json = response.json()
+            try:
+                data = response.json()
+            except Exception:
+                data = {}
+
+            if data.get("code", "0") != "0":
+                code = data.get("retCode", "Unknown")
+                error_message = data.get("retMsg", "Unknown error")
+                raise FailedRequestError(
+                    request=f"{method.upper()} {url} | Body: {query}",
+                    message=f"OKX API Error: [{code}] {error_message}",
+                    status_code=response.status_code,
+                    time=timestamp,
+                    resp_headers=response.headers,
+                )
+
+            # If http status is not 2xx (like 403, 404)
+            if not response.status_code // 100 == 2:
+                raise FailedRequestError(
+                    request=f"{method.upper()} {url} | Body: {query}",
+                    message=f"HTTP Error {response.status_code}: {response.text}",
+                    status_code=response.status_code,
+                    time=timestamp,
+                    resp_headers=response.headers,
+                )
+
+            return data
 
         except requests.exceptions.RequestException as e:
             raise FailedRequestError(
                 request=f"{method.upper()} {url} | Body: {payload}",
                 message=f"Request failed: {str(e)}",
-                status_code=response.status_code if response else "Unknown",
+                status_code=getattr(e.response, "status_code", "Unknown"),
                 time=timestamp,
-                resp_headers=response.headers if response else None,
+                resp_headers=getattr(e.response, "headers", None),
             )
-
-        return response_json

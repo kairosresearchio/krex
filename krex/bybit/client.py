@@ -3,7 +3,6 @@ from ._trade_http import TradeHTTP
 from ._account_http import AccountHTTP
 from ._asset_http import AssetHTTP
 from ._position_http import PositionHTTP
-from ._spot_margin_trade_http import SpotMarginTradeHTTP
 from ._market_http import MarketHTTP
 
 
@@ -13,7 +12,6 @@ class Client(
     AccountHTTP,
     AssetHTTP,
     PositionHTTP,
-    SpotMarginTradeHTTP,
     MarketHTTP,
 ):
     def __init__(self, **args):

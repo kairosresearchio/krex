@@ -1,7 +1,9 @@
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.market import Market
-from ...utils.common import Common
-from ...utils.timeframe_utils import bybit_convert_timeframe
+from ..utils.common import Common
+from ..utils.timeframe_utils import bybit_convert_timeframe
+from ..utils.common_dataframe import to_dataframe
 
 
 class MarketHTTP(HTTPManager):
@@ -12,7 +14,7 @@ class MarketHTTP(HTTPManager):
         status: str = None,
         baseCoin: str = None,
         limit: int = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str (spot, linear, inverse, option)
         :param symbol: str
@@ -32,11 +34,12 @@ class MarketHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Market.GET_INSTRUMENTS_INFO,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def get_kline(
         self,
@@ -44,7 +47,7 @@ class MarketHTTP(HTTPManager):
         interval: str,
         startTime: int = None,
         limit: int = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param symbol: str
         :param interval: str
@@ -62,17 +65,34 @@ class MarketHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Market.GET_KLINE,
             query=payload,
+        )
+        return (
+            pl.DataFrame(
+                res["result"]["list"],
+                schema=[
+                    "start_time",
+                    "open",
+                    "high",
+                    "low",
+                    "close",
+                    "volume",
+                    "turnover",
+                ],
+                orient="row",
+            )
+            if "list" in res.get("result", {})
+            else pl.DataFrame()
         )
 
     def get_orderbook(
         self,
         product_symbol: str,
         limit: int = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str (linear, inverse)
         :param symbol: str
@@ -85,20 +105,21 @@ class MarketHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Market.GET_ORDERBOOK,
             query=payload,
         )
+        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
 
     def get_tickers(
         self,
         category: str = "linear",
         product_symbol: str = None,
         baseCoin: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
-        :param category: str (linear, inverse)
+        :param category: str (spot, linear, inverse, option)
         :param symbol: str
         :param baseCoin: str
         """
@@ -111,18 +132,19 @@ class MarketHTTP(HTTPManager):
         if baseCoin is not None:
             payload["baseCoin"] = baseCoin
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Market.GET_TICKERS,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def get_funding_rate_history(
         self,
         product_symbol: str,
         startTime: int = None,
         limit: int = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str (linear, inverse)
         :param symbol: str
@@ -138,8 +160,9 @@ class MarketHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Market.GET_FUNDING_RATE_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()

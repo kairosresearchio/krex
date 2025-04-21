@@ -1,6 +1,9 @@
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
-from ...utils.common import Common
+from .endpoints.trade import SpotMarginTrade
+from ..utils.common import Common
+from ..utils.common_dataframe import to_dataframe
 
 
 class TradeHTTP(HTTPManager):
@@ -332,7 +335,7 @@ class TradeHTTP(HTTPManager):
         category: str,
         symbol: str = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str (linear, option, spot, inverse)
         :param symbol: str
@@ -345,11 +348,12 @@ class TradeHTTP(HTTPManager):
         if symbol is not None:
             payload["symbol"] = symbol
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.GET_OPEN_ORDERS,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def cancel_all_orders(
         self,
@@ -379,7 +383,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str = None,
         startTime: int = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str (linear, option, spot, inverse)
         :param symbol: str
@@ -396,11 +400,12 @@ class TradeHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.GET_ORDER_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def get_execution_list(
         self,
@@ -408,7 +413,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str = None,
         startTime: int = None,
         limit: int = 50,
-    ):
+    ) -> pl.DataFrame:
         """
         :param category: str (linear, option, spot, inverse)
         :param symbol: str
@@ -425,11 +430,12 @@ class TradeHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.GET_EXECUTION_LIST,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def place_batch_order(
         self,
@@ -521,7 +527,7 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         side: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param symbol: str
         :param side: str
@@ -532,11 +538,12 @@ class TradeHTTP(HTTPManager):
             "side": side,
         }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.GET_BORROW_QUOTA,
             query=payload,
         )
+        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
 
     def set_dcp(
         self,
@@ -558,3 +565,113 @@ class TradeHTTP(HTTPManager):
             path=Trade.SET_DCP,
             query=payload,
         )
+
+    # spot margin trade http
+    def get_vip_margin_data(
+        self,
+        vipLevel: str = None,
+        currency: str = None,
+    ) -> pl.DataFrame:
+        """
+        :param vipLevel: str
+        :param currency: str
+        """
+        payload = {}
+        if vipLevel is not None:
+            payload["vipLevel"] = vipLevel
+        if currency is not None:
+            payload["currency"] = currency
+
+        res = self._request(
+            method="GET",
+            path=SpotMarginTrade.VIP_MARGIN_DATA,
+            query=payload,
+        )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+
+    def get_collateral(
+        self,
+        currency: str = None,
+    ) -> pl.DataFrame:
+        """
+        :param currency: str
+        """
+        payload = {}
+        if currency is not None:
+            payload["currency"] = currency
+
+        res = self._request(
+            method="GET",
+            path=SpotMarginTrade.GET_COLLATERAL,
+            query=payload,
+        )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+
+    def get_historical_interest_rate(
+        self,
+        currency: str,
+        vipLevel: str = None,
+        startTime: int = None,
+        endTime: int = None,
+    ) -> pl.DataFrame:
+        """
+        :param currency: str
+        :param vipLevel: str
+        :param startTime: int
+        :param endTime: int
+        """
+        payload = {
+            "currency": currency,
+        }
+        if vipLevel is not None:
+            payload["vipLevel"] = vipLevel
+        if startTime is not None:
+            payload["startTime"] = startTime
+        if endTime is not None:
+            payload["endTime"] = endTime
+
+        res = self._request(
+            method="GET",
+            path=SpotMarginTrade.HISTORICAL_INTEREST,
+            query=payload,
+        )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+
+    def spot_margin_trade_toggle_margin_trade(
+        self,
+        spotMarginMode: str,
+    ):
+        """
+        :param spotMarginMode: str (1: open, 0: close)
+        """
+        payload = {
+            "spotMarginMode": spotMarginMode,
+        }
+
+        return self._request(
+            method="POST",
+            path=SpotMarginTrade.TOGGLE_MARGIN_TRADE,
+            query=payload,
+        )
+
+    def spot_margin_trade_set_leverage(self, leverage: str):
+        """
+        :param leverage: str (2-10)
+        """
+        payload = {
+            "leverage": leverage,
+        }
+
+        return self._request(
+            method="POST",
+            path=SpotMarginTrade.SET_LEVERAGE,
+            query=payload,
+        )
+
+    def get_status_and_leverage(self) -> pl.DataFrame:
+        res = self._request(
+            method="GET",
+            path=SpotMarginTrade.STATUS_AND_LEVERAGE,
+            query=None,
+        )
+        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()

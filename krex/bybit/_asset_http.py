@@ -1,14 +1,16 @@
+import polars as pl
 import uuid
 import time
 from ._http_manager import HTTPManager
 from .endpoints.asset import Asset
+from ..utils.common_dataframe import to_dataframe
 
 
 class AssetHTTP(HTTPManager):
     def get_coin_info(
         self,
         coin: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         """
@@ -16,23 +18,26 @@ class AssetHTTP(HTTPManager):
         if coin is not None:
             payload["coin"] = coin
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_COIN_INFO,
             query=payload,
         )
+        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
 
     def get_sub_uid(self):
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_SUB_UID,
             query=None,
         )
+        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
 
     def get_spot_asset_info(
         self,
+        # accountType: str,
         coin: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         default accountType: SPOT
         :param coin: str
@@ -43,18 +48,19 @@ class AssetHTTP(HTTPManager):
         if coin is not None:
             payload["coin"] = coin
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_SPOT_ASSET_INFO,
             query=payload,
         )
+        return to_dataframe(res["result"]["spot"]) if "spot" in res.get("result", {}) else pl.DataFrame()
 
     def get_coins_balance(
         self,
         accountType: str,
         coin: str = None,
         memberId: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param accountType: str
         :param coin: str
@@ -68,11 +74,12 @@ class AssetHTTP(HTTPManager):
         if memberId is not None:
             payload["memberId"] = memberId
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_ALL_COINS_BALANCE,
             query=payload,
         )
+        return to_dataframe(res["result"]["balance"]) if "balance" in res.get("result", {}) else pl.DataFrame()
 
     def get_coin_balance(
         self,
@@ -80,7 +87,7 @@ class AssetHTTP(HTTPManager):
         coin: str,
         memberId: str = None,
         toAccountType: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param accountType: str
         :param coin: str
@@ -96,16 +103,17 @@ class AssetHTTP(HTTPManager):
         if toAccountType is not None:
             payload["toAccountType"] = toAccountType
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_SINGLE_COIN_BALANCE,
             query=payload,
         )
+        return to_dataframe(res["result"]["balance"]) if "balance" in res.get("result", {}) else pl.DataFrame()
 
     def get_withdrawable_amount(
         self,
         coin: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         """
@@ -113,18 +121,19 @@ class AssetHTTP(HTTPManager):
             "coin": coin,
         }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_WITHDRAWABLE_AMOUNT,
             query=payload,
         )
+        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
 
     def get_internal_transfer_records(
         self,
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         :param startTime: int
@@ -138,17 +147,18 @@ class AssetHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_INTERNAL_TRANSFER_RECORDS,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def get_transferable_coin(
         self,
         fromAccountType: str,
         toAccountType: str,
-    ):
+    ) -> pl.DataFrame:
         """ "
         :param fromAccountType: str
         :param toAccountType: str
@@ -158,11 +168,12 @@ class AssetHTTP(HTTPManager):
             "toAccountType": toAccountType,
         }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_TRANSFERABLE_COIN,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def create_internal_transfer(
         self,
@@ -170,7 +181,7 @@ class AssetHTTP(HTTPManager):
         amount: str,
         fromAccountType: str,
         toAccountType: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         :param amount: str
@@ -186,11 +197,12 @@ class AssetHTTP(HTTPManager):
             "toAccountType": toAccountType,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.CREATE_INTERNAL_TRANSFER,
             query=payload,
         )
+        return res
 
     def create_universal_transfer(
         self,
@@ -200,7 +212,7 @@ class AssetHTTP(HTTPManager):
         toMemberId: int,
         fromAccountType: str,
         toAccountType: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :coin: str
         :amount: str
@@ -220,11 +232,12 @@ class AssetHTTP(HTTPManager):
             "toAccountType": toAccountType,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.CREATE_UNIVERSAL_TRANSFER,
             query=payload,
         )
+        return res
 
     def get_universal_transfer_records(
         self,
@@ -232,7 +245,7 @@ class AssetHTTP(HTTPManager):
         status: str = None,
         startTime: int = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         :param status: str
@@ -249,16 +262,17 @@ class AssetHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_UNIVERSAL_TRANSFER_RECORDS,
             query=payload,
         )
+        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
 
     def set_deposit_account(
         self,
         accountType: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param accountType: str
         :param coin: str
@@ -267,18 +281,19 @@ class AssetHTTP(HTTPManager):
             "accountType": accountType,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.SET_DEPOSIT_ACCOUNT,
             query=payload,
         )
+        return res
 
     def get_deposit_records(
         self,
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         :param startTime: str
@@ -292,11 +307,12 @@ class AssetHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_DEPOSIT_RECORDS,
             query=payload,
         )
+        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
 
     def get_sub_deposit_records(
         self,
@@ -304,7 +320,7 @@ class AssetHTTP(HTTPManager):
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param subMemberId: str
         :param coin: str
@@ -320,18 +336,19 @@ class AssetHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_SUB_ACCOUNT_DEPOSIT_RECORDS,
             query=payload,
         )
+        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
 
     def get_internal_deposit_records(
         self,
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         :param startTime: str
@@ -345,16 +362,17 @@ class AssetHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_INTERNAL_DEPOSIT_RECORDS,
             query=payload,
         )
+        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
 
     def get_master_deposit_address(
         self,
         coin: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         """
@@ -362,18 +380,19 @@ class AssetHTTP(HTTPManager):
             "coin": coin,
         }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_MASTER_DEPOSIT_ADDRESS,
             query=payload,
         )
+        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
 
     def get_sub_deposit_address(
         self,
         coin: str,
         chainType: str,
         subMemberId: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         :param chainType: str
@@ -385,11 +404,12 @@ class AssetHTTP(HTTPManager):
             "subMemberId": subMemberId,
         }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_SUB_DEPOSIT_ADDRESS,
             query=payload,
         )
+        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
 
     def get_withdrawal_records(
         self,
@@ -397,7 +417,7 @@ class AssetHTTP(HTTPManager):
         withdrawType: int = None,
         startTime: int = None,
         limit: int = 20,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         :param withdrawType: int
@@ -414,11 +434,12 @@ class AssetHTTP(HTTPManager):
         if startTime is not None:
             payload["startTime"] = startTime
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_WITHDRAWAL_RECORDS,
             query=payload,
         )
+        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
 
     def withdraw(
         self,
@@ -427,7 +448,7 @@ class AssetHTTP(HTTPManager):
         address: str,
         amount: str,
         tag: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param coin: str
         :param chain: str
@@ -449,16 +470,17 @@ class AssetHTTP(HTTPManager):
         if tag is not None:
             payload["tag"] = tag
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.WITHDRAW,
             query=payload,
         )
+        return res
 
     def cancel_withdrawal(
         self,
         id: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param id: str
         """
@@ -466,8 +488,9 @@ class AssetHTTP(HTTPManager):
             "id": id,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.CANCEL_WITHDRAWAL,
             query=payload,
         )
+        return res
