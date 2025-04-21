@@ -74,7 +74,6 @@ class AccountHTTP(HTTPManager):
         )
         return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
-    # todo: test failed
     async def get_withdraw_charge(
         self,
         currency: str,
@@ -93,20 +92,30 @@ class AccountHTTP(HTTPManager):
         )
         return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
-    # todo: not tested
     async def post_withdraw_apply(
         self,
         currency: str,
         amount: str,
+        address: str,
+        address_memo: str = None,
+        destination: str = None,
     ):
         """
         :param currency: str
         :param amount: str
+        :param address: str
+        :param address_memo: str
+        :param destination: str
         """
         payload = {
             "currency": currency,
             "amount": amount,
+            "address": address,
         }
+        if address_memo is not None:
+            payload["address_memo"] = address_memo
+        if destination is not None:
+            payload["destination"] = destination
 
         res = await self._request(
             method="POST",

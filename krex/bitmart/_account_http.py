@@ -74,7 +74,6 @@ class AccountHTTP(HTTPManager):
         )
         return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
-    # todo: test failed
     def get_withdraw_charge(
         self,
         currency: str,
@@ -93,7 +92,6 @@ class AccountHTTP(HTTPManager):
         )
         return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
-    # todo: not tested
     def post_withdraw_apply(
         self,
         currency: str,
