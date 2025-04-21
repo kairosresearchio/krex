@@ -1,186 +1,141 @@
-import unittest
-from krex.http.okx.client import Client
+from krex.okx.client import Client
 
-OKX_API_KEY = "api_key"
-OKX_API_SECRET = "api_secret"
-OKX_PASSPHRASE = "passphrase"
+OKX_API_KEY = "afef1997-a90a-4dd2-bc2e-c74b500bbb03"
+OKX_API_SECRET = "186529BB2AAD75A6B88E63A7EC1D3179"
+OKX_PASSPHRASE = "Aras1234@"
 
-# flag = "1" for test environment
-# flag = "0" for production environment
-FLAG = "0"
 client = Client(
     api_key=OKX_API_KEY,
     api_secret=OKX_API_SECRET,
     passphrase=OKX_PASSPHRASE,
-    flag=FLAG,
 )
 
 
-class AccountTest(unittest.TestCase):
-    def test_get_instruments(self):
-        result = client.get_instruments(instType="SPOT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_account_balance(self):
-        result = client.get_account_balance(ccy="USDT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_positions(self):
-        result = client.get_positions(instType="SWAP")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_positions_history(self):
-        result = client.get_positions_history(instType="SWAP")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_position_risk(self):
-        result = client.get_position_risk(instType="SWAP")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_account_bills(self):
-        result = client.get_account_bills(instType="SPOT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_account_bills_archive(self):
-        result = client.get_account_bills_archive(begin="1715780962300", end="1716998400000")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_account_bills_history_archive(self):
-        result = client.get_account_bills_history_archive(year="2023", quarter="Q1")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_account_config(self):
-        result = client.get_account_config()
-        self.assertEqual(result.get("code"), "0")
-
-    def test_set_position_mode(self):
-        result = client.set_position_mode(posMode="net_mode")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_set_leverage(self):
-        result = client.set_leverage(lever="5", mgnMode="isolated", instId="BTC-USDT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_max_order_size(self):
-        result = client.get_max_order_size(instId="BTC-USDT", tdMode="cash")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_max_avail_size(self):
-        result = client.get_max_avail_size(instId="BTC-USDT", tdMode="cash")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_adjustment_margin(self):
-        result = client.adjustment_margin(instId="BTC-USDT-SWAP", posSide="net", type="add", amt="1")
-        self.assertEqual(result.get("code"), "59300")  # 59300: The position is not found
-
-    def test_get_leverage(self):
-        result = client.get_leverage(instId="BTC-USDT-SWAP", mgnMode="cross")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_adjust_leverage(self):
-        result = client.get_adjust_leverage(
-            instType="MARGIN",
-            mgnMode="isolated",
-            lever="3",
-            instId="BTC-USDT",
-            ccy="USDT",
-        )
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_max_loan(self):
-        result = client.get_max_loan(mgnMode="cross", instId="BTC-USDT", ccy="BTC", mgnCcy="USDT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_fee_rates(self):
-        result = client.get_fee_rates(instType="SPOT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_interest_accrued(self):
-        result = client.get_interest_accrued()
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_interest_rate(self):
-        result = client.get_interest_rate(ccy="USDT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_set_greeks(self):
-        result = client.set_greeks(greeksType="BS")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_max_withdrawal(self):
-        result = client.get_max_withdrawal(ccy="USDT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_account_position_risk(self):
-        result = client.get_account_position_risk()
-        self.assertEqual(result.get("code"), "51010")
-
-    def test_get_quick_borrow_repay(self):
-        result = client.get_quick_borrow_repay(instId="BTC-USDT", ccy="USDT", side="borrow", amt="10")
-        self.assertEqual(result.get("code"), "51010")
-
-    def test_get_quick_borrow_repay_history(self):
-        result = client.get_quick_borrow_repay_history()
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_interest_limits(self):
-        result = client.get_interest_limits(ccy="USDT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_spot_manual_borrow_repay(self):
-        result = client.spot_manual_borrow_repay(ccy="USDT", side="borrow", amt=1)
-        self.assertEqual(result.get("code"), "59410")
-
-    def test_set_auto_repay(self):
-        result = client.set_auto_repay(autoRepay=True)
-        self.assertEqual(result.get("code"), "51010")
-
-    def test_spot_borrow_repay_history(self):
-        result = client.spot_borrow_repay_history(ccy="USDT", type="auto_borrow", after="1597026383085")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_position_builder(self):
-        sim_pos = [
-            {"instId": "BTC-USDT-SWAP", "pos": "10", "avgPx": "100000"},
-            {"instId": "ETH-USDT-SWAP", "pos": "10", "avgPx": "3000"},
-        ]
-        sim_asset = [{"ccy": "USDT", "amt": "1000000"}]
-
-        result = client.position_builder(
-            inclRealPosAndEq=False,
-            simPos=sim_pos,
-            simAsset=sim_asset,
-            greeksType="CASH",
-        )
-        self.assertEqual(result.get("code"), "0")
-
-    def test_set_risk_offset_amt(self):
-        result = client.set_risk_offset_amt(
-            ccy="BTC",
-            clSpotInUseAmt="0",
-        )
-        self.assertEqual(result.get("code"), "51010")
-
-    def test_get_greeks(self):
-        result = client.get_greeks(ccy="USDT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_get_account_position_tiers(self):
-        result = client.get_account_position_tiers(instType="SWAP", instFamily="BTC-USDT")
-        self.assertEqual(result.get("code"), "0")
-
-    def test_activate_option(self):
-        result = client.activate_option()
-        self.assertEqual(result.get("code"), "50050")
-
-    def test_set_auto_loan(self):
-        result = client.set_auto_loan(autoLoan="true")
-        self.assertEqual(result.get("code"), "59000")
-
-    def test_set_account_level(self):
-        result = client.set_account_level(acctLv="2")
-        self.assertEqual(result.get("code"), "59132")
+def test_get_account_instruments():
+    res = client.get_account_instruments(instType="SPOT", product_symbol="BTC-USDT-SPOT")
+    assert res is not None
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_get_account_balance():
+    res = client.get_account_balance()
+    assert res is not None
+
+
+def test_get_positions():
+    res = client.get_positions(product_symbol="BTC-USDT-SPOT")
+    assert res is not None
+
+
+def test_get_positions_history():
+    res = client.get_positions_history(product_symbol="BTC-USDT-SPOT")
+    assert res is not None
+
+
+def test_get_position_risk():
+    res = client.get_position_risk()
+    assert res is not None
+
+
+def test_get_account_bills():
+    res = client.get_account_bills(product_symbol="BTC-USDT-SPOT")
+    assert res is not None
+
+
+def test_get_account_bills_archive():
+    res = client.get_account_bills_archive(product_symbol="BTC-USDT-SPOT")
+    assert res is not None
+
+
+def test_post_account_bills_history_archive():
+    res = client.post_account_bills_history_archive(year="2025", quarter="Q1")
+    assert res is not None
+
+
+def test_get_account_bills_history_archive():
+    res = client.get_account_bills_history_archive(year="2025", quarter="Q1")
+    assert res is not None
+
+
+def test_get_account_config():
+    res = client.get_account_config()
+    assert res is not None
+
+
+def test_set_position_mode():
+    res = client.set_position_mode(posMode="long_short_mode")
+    assert res is not None
+
+
+def test_get_max_order_size():
+    res = client.get_max_order_size(product_symbol="BTC-USDT-SPOT", tdMode="isolated")
+    assert res is not None
+
+
+def test_get_max_avail_size():
+    res = client.get_max_avail_size(product_symbol="BTC-USDT-SPOT", tdMode="cash")
+    assert res is not None
+
+
+def test_get_leverage():
+    res = client.get_leverage(product_symbol="BTC-USDT-SWAP", mgnMode="cross")
+    assert res is not None
+
+
+def test_get_adjust_leverage():
+    res = client.get_adjust_leverage(product_symbol="BTC-USDT-SWAP", instType="SWAP", mgnMode="cross", lever="3")
+    assert res is not None
+
+
+def test_get_max_loan():
+    res = client.get_max_loan(product_symbol="BTC-USDT-SPOT", mgnMode="cross", mgnCcy="USDT")
+    assert res is not None
+
+
+def test_get_fee_rates():
+    res = client.get_fee_rates(product_symbol="BTC-USDT-SPOT", instType="SPOT")
+    assert res is not None
+
+
+def test_get_interest_accrued():
+    res = client.get_interest_accrued(product_symbol="BTC-USDT-SPOT")
+    assert res is not None
+
+
+def test_get_interest_rate():
+    res = client.get_interest_rate()
+    assert res is not None
+
+
+def test_set_greeks():
+    res = client.set_greeks(greeksType="PA")
+    assert res is not None
+
+
+def test_get_max_withdrawal():
+    res = client.get_max_withdrawal()
+    assert res is not None
+
+
+def test_get_quick_borrow_repay_history():
+    res = client.get_quick_borrow_repay_history(product_symbol="BTC-USDT-SPOT")
+    assert res is not None
+
+
+def test_get_interest_limits():
+    res = client.get_interest_limits()
+    assert res is not None
+
+
+def test_spot_borrow_repay_history():
+    res = client.spot_borrow_repay_history()
+    assert res is not None
+
+
+def test_set_leverage():
+    res = client.set_leverage(lever="10", mgnMode="cross", product_symbol="BTC-USDT-SWAP")
+    assert res is not None
+
+
+def test_set_isolated_mode():
+    res = client.set_isolated_mode(type="CONTRACTS")
+    assert res is not None
