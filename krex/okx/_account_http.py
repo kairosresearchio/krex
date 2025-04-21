@@ -1,16 +1,18 @@
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.account import Account
-from ...utils.common import Common
+from ..utils.common import Common
+from ..utils.common_dataframe import to_dataframe
 
 
 class AccountHTTP(HTTPManager):
-    def get_instruments(
+    def get_account_instruments(
         self,
         instType: str,
         product_symbol: str = None,
         instFamily: str = None,
         uly: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param product_symbol: str Only applicable to FUTURES/SWAP/OPTION.If instType is OPTION, either uly or instFamily is required.
@@ -27,16 +29,17 @@ class AccountHTTP(HTTPManager):
         if uly is not None:
             payload["uly"] = uly
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.GET_INSTRUMENTS,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_account_balance(
         self,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         """
@@ -47,17 +50,18 @@ class AccountHTTP(HTTPManager):
                 "ccy": coinName,
             }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.ACCOUNT_INFO,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_positions(
         self,
         instType: str = None,
         product_symbol: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (MARGIN, SWAP, FUTURES, OPTION) instId will be checked against instType when both parameters are passed.
         :param product_symbol: str
@@ -68,11 +72,12 @@ class AccountHTTP(HTTPManager):
         if product_symbol is not None:
             payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.POSITION_INFO,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_positions_history(
         self,
@@ -83,7 +88,7 @@ class AccountHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (MARGIN, SWAP, FUTURES, OPTION)
         :param product_symbol: str
@@ -109,16 +114,17 @@ class AccountHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.POSITIONS_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_position_risk(
         self,
         instType: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (MARGIN, SWAP, FUTURES, OPTION)
         """
@@ -126,16 +132,17 @@ class AccountHTTP(HTTPManager):
         if instType is not None:
             payload["instType"] = instType
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.POSITION_RISK,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_account_bills(
         self,
         instType: str = None,
-        instId: str = None,
+        product_symbol: str = None,
         ccy: str = None,
         mgnMode: str = None,
         ctType: str = None,
@@ -144,10 +151,10 @@ class AccountHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
-        :param instId: str
+        :param product_symbol: str
         :param ccy: str
         :param mgnMode: str (cross, isolated)
         :param ctType: str
@@ -160,8 +167,8 @@ class AccountHTTP(HTTPManager):
         payload = {}
         if instType is not None:
             payload["instType"] = instType
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ccy is not None:
             payload["ccy"] = ccy
         if mgnMode is not None:
@@ -179,16 +186,17 @@ class AccountHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.BILLS_DETAIL,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_account_bills_archive(
         self,
         instType: str = None,
-        instId: str = None,
+        product_symbol: str = None,
         ccy: str = None,
         mgnMode: str = None,
         ctType: str = None,
@@ -197,10 +205,10 @@ class AccountHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
-        :param instId: str
+        :param product_symbol: str
         :param ccy: str
         :param mgnMode: str (cross, isolated)
         :param ctType: str
@@ -213,8 +221,8 @@ class AccountHTTP(HTTPManager):
         payload = {}
         if instType is not None:
             payload["instType"] = instType
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ccy is not None:
             payload["ccy"] = ccy
         if mgnMode is not None:
@@ -232,17 +240,18 @@ class AccountHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.BILLS_ARCHIVE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_account_bills_history_archive(
         self,
         year: str,
         quarter: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param year: str
         :param quarter: str
@@ -252,17 +261,18 @@ class AccountHTTP(HTTPManager):
             "quarter": quarter,
         }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.BILLS_HISTORY_ARCHIVE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def post_account_bills_history_archive(
         self,
         year: str,
         quarter: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param year: str
         :param quarter: str
@@ -272,18 +282,20 @@ class AccountHTTP(HTTPManager):
             "quarter": quarter,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.BILLS_HISTORY_ARCHIVE,
             query=payload,
         )
+        return res
 
     def get_account_config(self):
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.ACCOUNT_CONFIG,
             query=None,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def set_position_mode(self, posMode: str):
         """
@@ -293,24 +305,25 @@ class AccountHTTP(HTTPManager):
             "posMode": posMode,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.POSITION_MODE,
             query=payload,
         )
+        return res
 
     def set_leverage(
         self,
         lever: str,
         mgnMode: str,
-        instId: str = None,
+        product_symbol: str = None,
         ccy: str = None,
         posSide: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param lever: str
         :param mgnMode: str (cross, isolated), Can only be cross if ccy is passed.
-        :param instId: str Under cross mode, either instId or ccy is required; if both are passed, instId will be used by default.
+        :param product_symbol: str Under cross mode, either instId or ccy is required; if both are passed, instId will be used by default.
         :param ccy: str Only applicable to cross MARGIN of Spot mode/Multi-currency margin/Portfolio margin
         :param posSide: str Only required when margin mode is isolated in long/short mode for FUTURES/SWAP.
         """
@@ -318,36 +331,37 @@ class AccountHTTP(HTTPManager):
             "lever": lever,
             "mgnMode": mgnMode,
         }
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ccy is not None:
             payload["ccy"] = ccy
         if posSide is not None:
             payload["posSide"] = posSide
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.SET_LEVERAGE,
             query=payload,
         )
+        return res
 
     def get_max_order_size(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         ccy: str = None,
         px: str = None,
         leverage: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
-        :param instId: str
+        :param product_symbol: str
         :param tdMode: str (cross, isolated, cash, spot_isolated)
         :param ccy: str Currency used for margin Applicable to isolated MARGIN and cross MARGIN orders in Spot and futures mode.
         :param px: str
         :param leverage: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             "tdMode": tdMode,
         }
         if ccy is not None:
@@ -357,29 +371,30 @@ class AccountHTTP(HTTPManager):
         if leverage is not None:
             payload["leverage"] = leverage
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.MAX_TRADE_SIZE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_max_avail_size(
         self,
-        instId: str,
+        product_symbol: str,
         tdMode: str,
         ccy: str = None,
         reduceOnly: str = None,
         px: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
-        :param instId: str
+        :param product_symbol: str
         :param tdMode: str (cross, isolated, cash, spot_isolated)
         :param ccy: str Applicable to isolated MARGIN and cross MARGIN in Spot and futures mode.
         :param reduceOnly: str Whether to reduce position only Only applicable to MARGIN
         :param px: str Only applicable to reduceOnly MARGIN.
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             "tdMode": tdMode,
         }
         if ccy is not None:
@@ -389,26 +404,30 @@ class AccountHTTP(HTTPManager):
         if px is not None:
             payload["px"] = px
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.MAX_AVAIL_SIZE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def adjustment_margin(
         self,
+        product_symbol: str,
         posSide: str,
         type: str,
         amt: str,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
+        :param product_symbol: str
         :param posSide: str
         :param type: str the default is net, long, short, net
         :param amt: str add or reduce margin amount
         :param ccy: str Applicable to isolated MARGIN orders
         """
         payload = {
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             "posSide": posSide,
             "type": type,
             "amt": amt,
@@ -416,18 +435,19 @@ class AccountHTTP(HTTPManager):
         if ccy is not None:
             payload["ccy"] = ccy
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.ADJUSTMENT_MARGIN,
             query=payload,
         )
+        return res
 
     def get_leverage(
         self,
         mgnMode: str,
         product_symbol: str = None,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param mgnMode: str (cross, isolated)
         :param product_symbol: str
@@ -441,26 +461,27 @@ class AccountHTTP(HTTPManager):
         if ccy is not None:
             payload["ccy"] = ccy
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.GET_LEVERAGE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_adjust_leverage(
         self,
         instType: str,
         mgnMode: str,
-        lever: str = None,
-        instId: str = None,
+        lever: str,
+        product_symbol: str = None,
         ccy: str = None,
         posSide: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (MARGIN, SWAP, FUTURES)
         :param mgnMode: str (cross, isolated)
         :param lever: str
-        :param instId: str
+        :param product_symbol: str
         :param ccy: str
         :param posSide: str (long, short)
         """
@@ -469,92 +490,96 @@ class AccountHTTP(HTTPManager):
             "mgnMode": mgnMode,
             "lever": lever,
         }
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ccy is not None:
             payload["ccy"] = ccy
         if posSide is not None:
             payload["posSide"] = posSide
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.GET_ADJUST_LEVERAGE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_max_loan(
         self,
         mgnMode: str,
-        instId: str = None,
+        product_symbol: str = None,
         ccy: str = None,
         mgnCcy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param mgnMode: str (cross, isolated)
-        :param instId: str
+        :param product_symbol: str
         :param ccy: str
         :param mgnCcy: str
         """
         payload = {
             "mgnMode": mgnMode,
         }
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ccy is not None:
             payload["ccy"] = ccy
         if mgnCcy is not None:
             payload["mgnCcy"] = mgnCcy
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.MAX_LOAN,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_fee_rates(
         self,
         instType: str,
-        ruleType: str,
-        instId: str = None,
+        ruleType: str = None,
+        product_symbol: str = None,
         uly: str = None,
         instFamily: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
-        :param ruleType: str Trading rule types normal: normal trading pre_market: pre-market trading ruleType can not be passed through together with instId/instFamily/uly
-        :param instId: str
+        :param ruleType: str Trading rule types normal: normal trading pre_market: pre-market trading ruleType can not be passed through together with product_symbol/instFamily/uly
+        :param product_symbol: str
         :param uly: str
         :param instFamily: str
         """
         payload = {
             "instType": instType,
-            "ruleType": ruleType,
         }
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if uly is not None:
             payload["uly"] = uly
         if instFamily is not None:
             payload["instFamily"] = instFamily
+        if ruleType is not None:
+            payload["ruleType"] = ruleType
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.FEE_RATES,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_interest_accrued(
         self,
         ccy: str = None,
-        instId: str = None,
+        product_symbol: str = None,
         mgnMode: str = None,
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
-        :param instId: str
+        :param product_symbol: str
         :param mgnMode: str (cross, isolated)
         :param after: str
         :param before: str
@@ -563,8 +588,8 @@ class AccountHTTP(HTTPManager):
         payload = {}
         if ccy is not None:
             payload["ccy"] = ccy
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if mgnMode is not None:
             payload["mgnMode"] = mgnMode
         if after is not None:
@@ -574,16 +599,17 @@ class AccountHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.INTEREST_ACCRUED,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_interest_rate(
         self,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         """
@@ -591,16 +617,17 @@ class AccountHTTP(HTTPManager):
         if ccy is not None:
             payload["ccy"] = ccy
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.INTEREST_RATE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def set_greeks(
         self,
         greeksType: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param greeksType: str PA: Greeks in coins, BS: Black-Scholes Greeks in dollars
         """
@@ -608,16 +635,17 @@ class AccountHTTP(HTTPManager):
             "greeksType": greeksType,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.SET_GREEKS,
             query=payload,
         )
+        return res
 
     def set_isolated_mode(
         self,
         type: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param type: str (MARGIN, CONTRACTS)
         """
@@ -626,16 +654,17 @@ class AccountHTTP(HTTPManager):
             "type": type,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.SET_ISOLATED_MODE,
             query=payload,
         )
+        return res
 
     def get_max_withdrawal(
         self,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         """
@@ -646,56 +675,51 @@ class AccountHTTP(HTTPManager):
                 "ccy": ccyName,
             }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.MAX_WITHDRAWAL,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
-    def get_account_position_risk(self):
-        return self._request(
-            method="GET",
-            path=Account.ACCOUNT_RISK,
-            query=None,
-        )
-
-    def get_quick_borrow_repay(
+    def quick_borrow_repay(
         self,
-        instId: str,
+        product_symbol: str,
         ccy: str,
         side: str,
         amt: str,
-    ):
+    ) -> pl.DataFrame:
         """
-        :param instId: str
+        :param product_symbol: str
         :param ccy: str
         :param side: str (borrow, repay)
         :param amt: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
             "ccy": ccy,
             "side": side,
             "amt": amt,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.QUICK_BORROW_REPAY,
             query=payload,
         )
+        return res
 
     def get_quick_borrow_repay_history(
         self,
-        instId: str = None,
+        product_symbol: str = None,
         ccy: str = None,
         side: str = None,
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
-        :param instId: str
+        :param product_symbol: str
         :param ccy: str
         :param side: str (borrow, repay)
         :param begin: str
@@ -703,8 +727,8 @@ class AccountHTTP(HTTPManager):
         :param amt: str
         """
         payload = {}
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ccy is not None:
             payload["ccy"] = ccy
         if side is not None:
@@ -716,16 +740,17 @@ class AccountHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.QUICK_BORROW_REPAY_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_interest_limits(
         self,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         """
@@ -733,18 +758,19 @@ class AccountHTTP(HTTPManager):
         if ccy is not None:
             payload["ccy"] = ccy
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.INTEREST_LIMITS,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def spot_manual_borrow_repay(
         self,
         ccy: str,
         side: str,
         amt: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         :param side: str (borrow, repay)
@@ -756,16 +782,17 @@ class AccountHTTP(HTTPManager):
             "amt": amt,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.MANUAL_REBORROW_REPAY,
             query=payload,
         )
+        return res
 
     def set_auto_repay(
         self,
         autoRepay: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param autoRepay: str (true, false)
         """
@@ -773,11 +800,12 @@ class AccountHTTP(HTTPManager):
             "autoRepay": autoRepay,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.SET_AUTO_REPAY,
             query=payload,
         )
+        return res
 
     def spot_borrow_repay_history(
         self,
@@ -786,7 +814,7 @@ class AccountHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         :param type: str (borrow, repay)
@@ -806,17 +834,18 @@ class AccountHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Account.GET_BORROW_REPAY_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def set_risk_offset_amt(
         self,
         ccy: str,
         clSpotInUseAmt: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         :param clSpotInUseAmt: str
@@ -826,13 +855,17 @@ class AccountHTTP(HTTPManager):
             "clSpotInUseAmt": clSpotInUseAmt,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.SET_RISK_OFFSET_AMT,
             query=payload,
         )
+        return res
 
-    def set_auto_loan(self, autoLoan: bool = True):
+    def set_auto_loan(
+        self,
+        autoLoan: bool,
+    ) -> pl.DataFrame:
         """
         :param autoLoan: bool
         """
@@ -840,8 +873,9 @@ class AccountHTTP(HTTPManager):
             "autoLoan": autoLoan,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Account.SET_AUTO_LOAN,
             query=kwargs,
         )
+        return res

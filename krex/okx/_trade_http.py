@@ -1,6 +1,8 @@
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
-from ...utils.common import Common
+from ..utils.common import Common
+from ..utils.common_dataframe import to_dataframe
 
 
 class TradeHTTP(HTTPManager):
@@ -518,7 +520,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         ordId: str = None,
         clOrdId: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param product_symbol: str
         :param ordId: str
@@ -532,40 +534,41 @@ class TradeHTTP(HTTPManager):
         if clOrdId is not None:
             payload["clOrdId"] = clOrdId
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.ORDER_INFO,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_order_list(
         self,
         instType: str = None,
         uly: str = None,
         instFamily: str = None,
-        instId: str = None,
+        product_symbol: str = None,
         ordType: str = None,
         state: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
         :param instFamily: str
-        :param instId: str
+        :param product_symbol: str
         :param ordType: str
         :param state: str
         :param limit: str
         """
-        payload = {
-            "instType": instType,
-        }
+        payload = {}
+        if instType is not None:
+            payload["instType"] = instType
         if uly is not None:
             payload["uly"] = uly
         if instFamily is not None:
             payload["instFamily"] = instFamily
-        if instId is not None:
-            payload["instId"] = instId
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
         if ordType is not None:
             payload["ordType"] = ordType
         if state is not None:
@@ -573,66 +576,14 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.ORDERS_PENDING,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_orders_history(
-        self,
-        instType: str,
-        uly: str = None,
-        instFamily: str = None,
-        instId: str = None,
-        ordType: str = None,
-        state: str = None,
-        category: str = None,
-        begin: str = None,
-        end: str = None,
-        limit: str = None,
-    ):
-        """
-        :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
-        :param uly: str
-        :param instFamily: str
-        :param instId: str
-        :param ordType: str
-        :param state: str
-        :param category: str
-        :param begin: str
-        :param end: str
-        :param limit: str
-        """
-        payload = {
-            "instType": instType,
-        }
-        if uly is not None:
-            payload["uly"] = uly
-        if instFamily is not None:
-            payload["instFamily"] = instFamily
-        if instId is not None:
-            payload["instId"] = instId
-        if ordType is not None:
-            payload["ordType"] = ordType
-        if state is not None:
-            payload["state"] = state
-        if category is not None:
-            payload["category"] = category
-        if begin is not None:
-            payload["begin"] = begin
-        if end is not None:
-            payload["end"] = end
-        if limit is not None:
-            payload["limit"] = limit
-
-        return self._request(
-            method="GET",
-            path=Trade.ORDERS_HISTORY,
-            query=payload,
-        )
-
-    def get_orders_history_archive(
         self,
         instType: str,
         uly: str = None,
@@ -644,7 +595,7 @@ class TradeHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -679,11 +630,66 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
+            method="GET",
+            path=Trade.ORDERS_HISTORY,
+            query=payload,
+        )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+
+    def get_orders_history_archive(
+        self,
+        instType: str,
+        uly: str = None,
+        instFamily: str = None,
+        product_symbol: str = None,
+        ordType: str = None,
+        state: str = None,
+        category: str = None,
+        begin: str = None,
+        end: str = None,
+        limit: str = None,
+    ) -> pl.DataFrame:
+        """
+        :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
+        :param uly: str
+        :param instFamily: str
+        :param product_symbol: str
+        :param ordType: str
+        :param state: str
+        :param category: str
+        :param begin: str
+        :param end: str
+        :param limit: str
+        """
+        payload = {
+            "instType": instType,
+        }
+        if uly is not None:
+            payload["uly"] = uly
+        if instFamily is not None:
+            payload["instFamily"] = instFamily
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+        if ordType is not None:
+            payload["ordType"] = ordType
+        if state is not None:
+            payload["state"] = state
+        if category is not None:
+            payload["category"] = category
+        if begin is not None:
+            payload["begin"] = begin
+        if end is not None:
+            payload["end"] = end
+        if limit is not None:
+            payload["limit"] = limit
+
+        res = self._request(
             method="GET",
             path=Trade.ORDERS_HISTORY_ARCHIVE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_fills(
         self,
@@ -696,7 +702,7 @@ class TradeHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -728,11 +734,12 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.ORDER_FILLS,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_fills_history(
         self,
@@ -745,7 +752,7 @@ class TradeHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -777,16 +784,17 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.ORDERS_FILLS_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_oneclick_repay_list(
         self,
         debtType: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param debtType: str (cross, isolated)
         """
@@ -794,11 +802,12 @@ class TradeHTTP(HTTPManager):
         if debtType is not None:
             payload["debtType"] = debtType
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.ONE_CLICK_REPAY_SUPPORT,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def oneclick_repay(
         self,
@@ -820,12 +829,12 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def oneclick_repay_history(
+    def get_oneclick_repay_history(
         self,
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param after: str
         :param before: str
@@ -839,11 +848,12 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Trade.ONE_CLICK_REPAY_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def mass_cancel(
         self,
@@ -880,58 +890,10 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def get_account_rate_limit(self):
-        return self._request(
+    def get_account_rate_limit(self) -> pl.DataFrame:
+        res = self._request(
             method="GET",
             path=Trade.ACCOUNT_RATE_LIMIT,
             query=None,
         )
-
-    def order_precheck(
-        self,
-        product_symbol: str,
-        tdMode: str,
-        side: str,
-        ordType: str,
-        sz: str,
-        posSide: str = None,
-        px: str = None,
-        reduceOnly: str = None,
-        tgtCcy: str = None,
-        attachAlgoOrds: str = None,
-    ):
-        """
-        :param product_symbol: str
-        :param tdMode: str
-        :param side: str
-        :param ordType: str
-        :param sz: str
-        :param posSide: str
-        :param px: str
-        :param reduceOnly: str
-        :param tgtCcy: str
-        :param attachAlgoOrds: str
-        """
-        payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
-            "tdMode": tdMode,
-            "side": side,
-            "ordType": ordType,
-            "sz": sz,
-        }
-        if posSide is not None:
-            payload["posSide"] = posSide
-        if px is not None:
-            payload["px"] = px
-        if reduceOnly is not None:
-            payload["reduceOnly"] = reduceOnly
-        if tgtCcy is not None:
-            payload["tgtCcy"] = tgtCcy
-        if attachAlgoOrds is not None:
-            payload["attachAlgoOrds"] = attachAlgoOrds
-
-        return self._request(
-            method="POST",
-            path=Trade.ORDER_PRECHECK,
-            query=payload,
-        )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()

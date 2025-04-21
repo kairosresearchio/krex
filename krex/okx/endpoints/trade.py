@@ -21,4 +21,3 @@ class Trade(str, Enum):
     MASS_CANCEL = "/api/v5/trade/mass-cancel"
     CANCEL_ALL_AFTER = "/api/v5/trade/cancel-all-after"
     ACCOUNT_RATE_LIMIT = "/api/v5/trade/account-rate-limit"
-    ORDER_PRECHECK = "/api/v5/trade/order-precheck"

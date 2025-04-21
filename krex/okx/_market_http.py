@@ -1,25 +1,28 @@
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.market import Market
+from ..utils.common import Common
+from ..utils.common_dataframe import to_dataframe
 
 
 class MarketHTTP(HTTPManager):
-    def get_candlesticks(
+    def get_candles_ticks(
         self,
-        instId: str,
+        product_symbol: str,
         bar: str = None,
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
-        :param instId: str
+        :param product_symbol: str
         :param bar: str
         :param after: str
         :param before: str
         :param limit: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
         if bar is not None:
             payload["bar"] = bar
@@ -30,39 +33,41 @@ class MarketHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Market.GET_KLINE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_orderbook(
         self,
-        instId: str,
+        product_symbol: str,
         sz: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
-        :param instId: str
+        :param product_symbol: str
         :param sz: str
         """
         payload = {
-            "instId": instId,
+            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
         }
         if sz is not None:
             payload["sz"] = sz
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Market.GET_ORDERBOOK,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_tickers(
         self,
         instType: str,
         uly: str = None,
         instFamily: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param instType: str (SPOT, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -76,8 +81,9 @@ class MarketHTTP(HTTPManager):
         if instFamily is not None:
             payload["instFamily"] = instFamily
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Market.GET_TICKERS,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()

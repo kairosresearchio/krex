@@ -25,7 +25,6 @@ class Account(str, Enum):
     SET_GREEKS = "/api/v5/account/set-greeks"
     SET_ISOLATED_MODE = "/api/v5/account/set-isolated-mode"
     MAX_WITHDRAWAL = "/api/v5/account/max-withdrawal"
-    ACCOUNT_RISK = "/api/v5/account/risk-state"
     QUICK_BORROW_REPAY = "/api/v5/account/quick-margin-borrow-repay"
     QUICK_BORROW_REPAY_HISTORY = "/api/v5/account/quick-margin-borrow-repay-history"
     INTEREST_LIMITS = "/api/v5/account/interest-limits"

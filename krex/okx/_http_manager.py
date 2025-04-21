@@ -5,8 +5,8 @@ import hmac
 import base64
 from dataclasses import dataclass, field
 from ..product_table.manager import ProductTableManager
-from ...utils.errors import FailedRequestError
-from ...utils.helpers import generate_timestamp
+from ..utils.errors import FailedRequestError
+from ..utils.helpers import generate_timestamp
 
 
 def _sign(message, secretKey):
@@ -57,7 +57,7 @@ class HTTPManager:
     api_key: str = field(default=None)
     api_secret: str = field(default=None)
     passphrase: str = field(default=None)
-    flag: str = field(default="1")
+    flag: str = field(default="0")
     base_api: str = field(default="https://www.okx.com")
     max_retries: int = field(default=3)
     retry_delay: int = field(default=3)
@@ -81,10 +81,11 @@ class HTTPManager:
             path += parse_params_to_str(query)
 
         timestamp = generate_timestamp(iso_format=True)
-        body = json.dumps(query) if method.upper() == "POST" else ""
+        body = query if method.upper() == "POST" else ""
+        body_str = json.dumps(body) if isinstance(body, dict) else ""
 
         if self.api_key and self.api_secret and self.passphrase:
-            sign = _sign(pre_hash(timestamp, method.upper(), path, body), self.api_secret)
+            sign = _sign(pre_hash(timestamp, method.upper(), path, body_str), self.api_secret)
             header = get_header(self.api_key, sign, timestamp, self.passphrase, self.flag)
         else:
             header = get_header_no_sign(self.flag)
@@ -99,9 +100,33 @@ class HTTPManager:
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
-            response.raise_for_status()
-            response_json = response.json()
+            try:
+                data = response.json()
+            except Exception:
+                data = {}
 
+            if data.get("code", 0) != "0":
+                code = data.get("code", "Unknown")
+                error_message = data.get("msg", "Unknown error")
+                raise FailedRequestError(
+                    request=f"{method.upper()} {url} | Body: {query}",
+                    message=f"OKX API Error: [{code}] {error_message}",
+                    status_code=response.status_code,
+                    time=timestamp,
+                    resp_headers=response.headers,
+                )
+
+            # If http status is not 2xx (like 403, 404)
+            if not response.status_code // 100 == 2:
+                raise FailedRequestError(
+                    request=f"{method.upper()} {url} | Body: {query}",
+                    message=f"HTTP Error {response.status_code}: {response.text}",
+                    status_code=response.status_code,
+                    time=timestamp,
+                    resp_headers=response.headers,
+                )
+
+            return data
         except requests.exceptions.RequestException as e:
             raise FailedRequestError(
                 request=f"{method.upper()} {url} | Body: {body}",
@@ -110,5 +135,3 @@ class HTTPManager:
                 time=timestamp,
                 resp_headers=response.headers if response else None,
             )
-
-        return response_json

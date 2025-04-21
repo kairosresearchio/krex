@@ -1,12 +1,14 @@
+import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.asset import Asset
+from ..utils.common_dataframe import to_dataframe
 
 
 class AssetHTTP(HTTPManager):
     def get_currencies(
         self,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         """
@@ -17,16 +19,17 @@ class AssetHTTP(HTTPManager):
                 "ccy": ccyName,
             }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.CURRENCY_INFO,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_balances(
         self,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         """
@@ -37,16 +40,17 @@ class AssetHTTP(HTTPManager):
                 "ccy": ccyName,
             }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_BALANCES,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_asset_valuation(
         self,
         ccy: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         """
@@ -57,11 +61,12 @@ class AssetHTTP(HTTPManager):
                 "ccy": ccyName,
             }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.ASSET_VALUATION,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def funds_transfer(
         self,
@@ -72,7 +77,7 @@ class AssetHTTP(HTTPManager):
         type: str = None,
         subAcct: str = None,
         loanTrans: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         :param amt: str
@@ -95,18 +100,19 @@ class AssetHTTP(HTTPManager):
         if loanTrans is not None:
             payload["loanTrans"] = loanTrans
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.FUNDS_TRANSFER,
             query=payload,
         )
+        return res
 
-    def transfer_state(
+    def get_transfer_state(
         self,
         transId: str = None,
         clientId: str = None,
         type: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param transId: str
         :param clientId: str
@@ -120,11 +126,12 @@ class AssetHTTP(HTTPManager):
         if type is not None:
             payload["type"] = type
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.TRANSFER_STATE,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_bills(
         self,
@@ -133,7 +140,7 @@ class AssetHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param type: str
         :param clientId: str
@@ -153,16 +160,17 @@ class AssetHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.BILLS_INFO,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_deposit_address(
         self,
         ccy: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         """
@@ -170,11 +178,12 @@ class AssetHTTP(HTTPManager):
             "ccy": ccy,
         }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.DEPOSIT_ADDRESS,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_deposit_history(
         self,
@@ -187,7 +196,7 @@ class AssetHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         :param depId: str
@@ -219,11 +228,12 @@ class AssetHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.DEPOSIT_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def withdrawal(
         self,
@@ -234,7 +244,7 @@ class AssetHTTP(HTTPManager):
         chain: str = None,
         areaCode: str = None,
         rcvrInfo: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         :param amt: str
@@ -257,16 +267,17 @@ class AssetHTTP(HTTPManager):
         if rcvrInfo is not None:
             payload["rcvrInfo"] = rcvrInfo
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.WITHDRAWAL_COIN,
             query=payload,
         )
+        return res
 
     def cancel_withdrawal(
         self,
         wdId: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param wdId: str
         """
@@ -274,11 +285,12 @@ class AssetHTTP(HTTPManager):
             "wdId": wdId,
         }
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.CANCEL_WITHDRAWAL,
             query=payload,
         )
+        return res
 
     def get_withdrawal_history(
         self,
@@ -291,7 +303,7 @@ class AssetHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param ccy: str
         :param wdId: str
@@ -323,11 +335,12 @@ class AssetHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.WITHDRAWAL_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_deposit_withdraw_status(
         self,
@@ -336,7 +349,7 @@ class AssetHTTP(HTTPManager):
         ccy: str = None,
         to: str = None,
         chain: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param wdId: str
         :param txId: str
@@ -356,23 +369,25 @@ class AssetHTTP(HTTPManager):
         if chain is not None:
             payload["chain"] = chain
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_DEPOSIT_WITHDRAW_STATUS,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_exchange_list(self):
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.EXCHANGE_LIST,
             query=None,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def post_monthly_statement(
         self,
         month: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param month: str (Jan)
         """
@@ -380,16 +395,17 @@ class AssetHTTP(HTTPManager):
         if month is not None:
             payload["month"] = month
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.MONTHLY_STATEMENT,
             query=payload,
         )
+        return res
 
     def get_monthly_statement(
         self,
         month: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param month: str (Jan)
         """
@@ -397,24 +413,26 @@ class AssetHTTP(HTTPManager):
             "month": month,
         }
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.MONTHLY_STATEMENT,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_convert_currencies(self):
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_CURRENCIES,
             query=None,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
     def get_convert_currencies_pair(
         self,
         fromCcy: str,
         toCcy: str,
-    ):
+    ) -> pl.DataFrame:
         """
         :param fromCcy: str
         :param toCcy: str
@@ -423,13 +441,14 @@ class AssetHTTP(HTTPManager):
             "fromCcy": fromCcy,
             "toCcy": toCcy,
         }
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.GET_CURRENCY_PAIR,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
-    def get_estimate_quote(
+    def post_estimate_quote(
         self,
         baseCcy: str,
         quoteCcy: str,
@@ -438,7 +457,7 @@ class AssetHTTP(HTTPManager):
         rfqSzCcy: str,
         clQReqId: str = None,
         tag: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param baseCcy: str
         :param quoteCcy: str
@@ -460,13 +479,14 @@ class AssetHTTP(HTTPManager):
         if tag is not None:
             payload["tag"] = tag
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.ESTIMATE_QUOTE,
             query=payload,
         )
+        return res
 
-    def get_convert_trade(
+    def post_convert_trade(
         self,
         quoteId: str,
         baseCcy: str,
@@ -476,7 +496,7 @@ class AssetHTTP(HTTPManager):
         szCcy: str,
         clTReqId: str = None,
         tag: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param quoteId: str
         :param baseCcy: str
@@ -500,11 +520,12 @@ class AssetHTTP(HTTPManager):
         if tag is not None:
             payload["tag"] = tag
 
-        return self._request(
+        res = self._request(
             method="POST",
             path=Asset.CONVERT_TRADE,
             query=payload,
         )
+        return res
 
     def get_convert_history(
         self,
@@ -512,7 +533,7 @@ class AssetHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ):
+    ) -> pl.DataFrame:
         """
         :param clTReqId: str
         :param after: str
@@ -529,8 +550,9 @@ class AssetHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        return self._request(
+        res = self._request(
             method="GET",
             path=Asset.CONVERT_HISTORY,
             query=payload,
         )
+        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
