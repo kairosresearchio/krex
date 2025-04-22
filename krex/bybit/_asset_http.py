@@ -23,7 +23,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_COIN_INFO,
             query=payload,
         )
-        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_sub_uid(self):
         res = self._request(
@@ -31,7 +31,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_SUB_UID,
             query=None,
         )
-        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
+        return res
 
     def get_spot_asset_info(
         self,
@@ -53,7 +53,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_SPOT_ASSET_INFO,
             query=payload,
         )
-        return to_dataframe(res["result"]["spot"]) if "spot" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_coins_balance(
         self,
@@ -79,7 +79,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_ALL_COINS_BALANCE,
             query=payload,
         )
-        return to_dataframe(res["result"]["balance"]) if "balance" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_coin_balance(
         self,
@@ -108,7 +108,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_SINGLE_COIN_BALANCE,
             query=payload,
         )
-        return to_dataframe(res["result"]["balance"]) if "balance" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_withdrawable_amount(
         self,
@@ -126,7 +126,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_WITHDRAWABLE_AMOUNT,
             query=payload,
         )
-        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
+        return res
 
     def get_internal_transfer_records(
         self,
@@ -152,7 +152,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_INTERNAL_TRANSFER_RECORDS,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_transferable_coin(
         self,
@@ -173,7 +173,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_TRANSFERABLE_COIN,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def create_internal_transfer(
         self,
@@ -267,7 +267,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_UNIVERSAL_TRANSFER_RECORDS,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def set_deposit_account(
         self,
@@ -312,7 +312,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_DEPOSIT_RECORDS,
             query=payload,
         )
-        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_sub_deposit_records(
         self,
@@ -341,7 +341,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_SUB_ACCOUNT_DEPOSIT_RECORDS,
             query=payload,
         )
-        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_internal_deposit_records(
         self,
@@ -367,7 +367,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_INTERNAL_DEPOSIT_RECORDS,
             query=payload,
         )
-        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_master_deposit_address(
         self,
@@ -385,7 +385,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_MASTER_DEPOSIT_ADDRESS,
             query=payload,
         )
-        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
+        return res
 
     def get_sub_deposit_address(
         self,
@@ -409,7 +409,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_SUB_DEPOSIT_ADDRESS,
             query=payload,
         )
-        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
+        return res
 
     def get_withdrawal_records(
         self,
@@ -439,7 +439,7 @@ class AssetHTTP(HTTPManager):
             path=Asset.GET_WITHDRAWAL_RECORDS,
             query=payload,
         )
-        return to_dataframe(res["result"]["rows"]) if "rows" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def withdraw(
         self,

@@ -39,7 +39,7 @@ class MarketHTTP(HTTPManager):
             path=Market.GET_INSTRUMENTS_INFO,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_kline(
         self,
@@ -110,7 +110,7 @@ class MarketHTTP(HTTPManager):
             path=Market.GET_ORDERBOOK,
             query=payload,
         )
-        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
+        return res
 
     def get_tickers(
         self,
@@ -137,7 +137,7 @@ class MarketHTTP(HTTPManager):
             path=Market.GET_TICKERS,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_funding_rate_history(
         self,
@@ -165,4 +165,4 @@ class MarketHTTP(HTTPManager):
             path=Market.GET_FUNDING_RATE_HISTORY,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
