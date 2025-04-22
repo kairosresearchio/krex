@@ -115,9 +115,6 @@ print(result)
 result = client.get_max_withdrawal()
 print(result)
 
-result = client.get_quick_borrow_repay_history(product_symbol="BTC-USDT-SPOT")
-print(result)
-
 result = client.get_interest_limits()
 print(result)
 
@@ -144,30 +141,10 @@ print(result)
 # print(result)
 
 # # need test
-# result = client.quick_borrow_repay(
-#     product_symbol="BTC-USDT-SPOT",
-#     ccy="USDT",
-#     side="borrow",
-#     amt="0.01",
-# )
-# print(result)
-
-# # need test
 # result = client.spot_manual_borrow_repay(
 #     ccy="USDT",
 #     side="borrow",
 #     amt="0.01",
-# )
-# print(result)
-
-# # need test
-# result = client.set_auto_repay(autoRepay="true")
-# print(result)
-
-# # need test
-# result = client.set_risk_offset_amt(
-#     ccy="USDT",
-#     clSpotInUseAmt="0.01",
 # )
 # print(result)
 

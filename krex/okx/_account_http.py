@@ -682,33 +682,6 @@ class AccountHTTP(HTTPManager):
         )
         return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
 
-    def quick_borrow_repay(
-        self,
-        product_symbol: str,
-        ccy: str,
-        side: str,
-        amt: str,
-    ) -> pl.DataFrame:
-        """
-        :param product_symbol: str
-        :param ccy: str
-        :param side: str (borrow, repay)
-        :param amt: str
-        """
-        payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
-            "ccy": ccy,
-            "side": side,
-            "amt": amt,
-        }
-
-        res = self._request(
-            method="POST",
-            path=Account.QUICK_BORROW_REPAY,
-            query=payload,
-        )
-        return res
-
     def get_interest_limits(
         self,
         ccy: str = None,
@@ -726,27 +699,6 @@ class AccountHTTP(HTTPManager):
             query=payload,
         )
         return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
-
-    def set_risk_offset_amt(
-        self,
-        ccy: str,
-        clSpotInUseAmt: str,
-    ) -> pl.DataFrame:
-        """
-        :param ccy: str
-        :param clSpotInUseAmt: str
-        """
-        payload = {
-            "ccy": ccy,
-            "clSpotInUseAmt": clSpotInUseAmt,
-        }
-
-        res = self._request(
-            method="POST",
-            path=Account.SET_RISK_OFFSET_AMT,
-            query=payload,
-        )
-        return res
 
     def set_auto_loan(
         self,

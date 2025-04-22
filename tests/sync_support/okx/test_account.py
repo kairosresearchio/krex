@@ -116,11 +116,6 @@ def test_get_max_withdrawal():
     assert res is not None
 
 
-def test_get_quick_borrow_repay_history():
-    res = client.get_quick_borrow_repay_history(product_symbol="BTC-USDT-SPOT")
-    assert res is not None
-
-
 def test_get_interest_limits():
     res = client.get_interest_limits()
     assert res is not None
