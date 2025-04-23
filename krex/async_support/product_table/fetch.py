@@ -4,6 +4,7 @@ from typing import Dict
 from dataclasses import dataclass, asdict
 from ...utils.decimal_utils import reverse_decimal_places
 from ...utils.common import Common
+from ...utils.common_dataframe import to_dataframe
 
 
 @dataclass
@@ -192,7 +193,8 @@ async def bitmart() -> pl.DataFrame:
     markets = []
     quote_currencies = {"USDT", "USDC", "USD"}
 
-    df_swap = await market_http.get_contracts_details()
+    res_swap = await market_http.get_contracts_details()
+    df_swap = to_dataframe(res_swap.get("data", {}).get("symbols", []))
     for market in df_swap.iter_rows(named=True):
         matched_quote = next(
             (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
@@ -220,7 +222,8 @@ async def bitmart() -> pl.DataFrame:
             )
         )
 
-    df_spot = await market_http.get_trading_pairs_details()
+    res_spot = await market_http.get_trading_pairs_details()
+    df_spot = to_dataframe(res_spot.get("data", {}).get("symbols", []))
     for market in df_spot.iter_rows(named=True):
         matched_quote = next(
             (quote for quote in quote_currencies if market["symbol"].endswith(quote)),

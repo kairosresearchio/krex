@@ -1,8 +1,6 @@
-import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
 from ..utils.common import Common
-from ..utils.common_dataframe import to_dataframe
 
 
 class TradeHTTP(HTTPManager):
@@ -520,7 +518,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         ordId: str = None,
         clOrdId: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param ordId: str
@@ -539,7 +537,7 @@ class TradeHTTP(HTTPManager):
             path=Trade.ORDER_INFO,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_order_list(
         self,
@@ -550,7 +548,7 @@ class TradeHTTP(HTTPManager):
         ordType: str = None,
         state: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -581,7 +579,7 @@ class TradeHTTP(HTTPManager):
             path=Trade.ORDERS_PENDING,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_orders_history(
         self,
@@ -595,7 +593,7 @@ class TradeHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -635,7 +633,7 @@ class TradeHTTP(HTTPManager):
             path=Trade.ORDERS_HISTORY,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_orders_history_archive(
         self,
@@ -649,7 +647,7 @@ class TradeHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -689,7 +687,7 @@ class TradeHTTP(HTTPManager):
             path=Trade.ORDERS_HISTORY_ARCHIVE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_fills(
         self,
@@ -702,7 +700,7 @@ class TradeHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -739,7 +737,7 @@ class TradeHTTP(HTTPManager):
             path=Trade.ORDER_FILLS,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_fills_history(
         self,
@@ -752,7 +750,7 @@ class TradeHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -789,12 +787,12 @@ class TradeHTTP(HTTPManager):
             path=Trade.ORDERS_FILLS_HISTORY,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_oneclick_repay_list(
         self,
         debtType: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param debtType: str (cross, isolated)
         """
@@ -807,7 +805,7 @@ class TradeHTTP(HTTPManager):
             path=Trade.ONE_CLICK_REPAY_SUPPORT,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def oneclick_repay(
         self,
@@ -834,7 +832,7 @@ class TradeHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param after: str
         :param before: str
@@ -853,7 +851,7 @@ class TradeHTTP(HTTPManager):
             path=Trade.ONE_CLICK_REPAY_HISTORY,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def mass_cancel(
         self,
@@ -890,10 +888,10 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def get_account_rate_limit(self) -> pl.DataFrame:
+    def get_account_rate_limit(self):
         res = self._request(
             method="GET",
             path=Trade.ACCOUNT_RATE_LIMIT,
             query=None,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res

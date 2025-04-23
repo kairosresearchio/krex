@@ -1,8 +1,6 @@
-import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.trade import SpotTrade, FuturesTrade
 from ...utils.common import Common
-from ...utils.common_dataframe import to_dataframe
 
 
 class TradeHTTP(HTTPManager):
@@ -525,7 +523,7 @@ class TradeHTTP(HTTPManager):
         client_order_id: str = None,
     ):
         positions = await self.get_contract_position(product_symbol)
-        short_size = positions.filter(pl.col("position_type") == 2)["current_amount"].cast(pl.Int64).sum()
+        short_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 2)
 
         if short_size != 0:
             excess_size = size - short_size
@@ -566,7 +564,7 @@ class TradeHTTP(HTTPManager):
         client_order_id: str = None,
     ):
         positions = await self.get_contract_position(product_symbol)
-        long_size = positions.filter(pl.col("position_type") == 1)["current_amount"].cast(pl.Int64).sum()
+        long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
 
         if long_size != 0:
             excess_size = size - long_size
@@ -644,7 +642,7 @@ class TradeHTTP(HTTPManager):
         client_order_id: str = None,
     ):
         positions = await self.get_contract_position(product_symbol)
-        short_size = positions.filter(pl.col("position_type") == 2)["current_amount"].cast(pl.Int64).sum()
+        short_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 2)
 
         if short_size != 0:
             excess_size = size - short_size
@@ -690,8 +688,7 @@ class TradeHTTP(HTTPManager):
         client_order_id: str = None,
     ):
         positions = await self.get_contract_position(product_symbol)
-        # long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
-        long_size = positions.filter(pl.col("position_type") == 1)["current_amount"].cast(pl.Int64).sum()
+        long_size = sum(int(p["current_amount"]) for p in positions if p["position_type"] == 1)
 
         if long_size != 0:
             excess_size = size - long_size
@@ -855,7 +852,7 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         order_id: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param order_id: str
@@ -870,15 +867,14 @@ class TradeHTTP(HTTPManager):
             path=FuturesTrade.GET_ORDER_DETAIL,
             query=payload,
         )
-
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def get_contract_order_history(
         self,
         product_symbol: str,
         start_time: str = None,
         end_time: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param start_time: str
@@ -897,8 +893,7 @@ class TradeHTTP(HTTPManager):
             path=FuturesTrade.GET_ORDER_HISTORY,
             query=payload,
         )
-
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def get_contract_open_order(
         self,
@@ -906,7 +901,7 @@ class TradeHTTP(HTTPManager):
         type: str = None,
         order_state: str = None,
         limit: int = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param type: str (limit, market, trailing)
@@ -928,13 +923,12 @@ class TradeHTTP(HTTPManager):
             path=FuturesTrade.GET_ALL_OPEN_ORDERS,
             query=payload,
         )
-
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def get_contract_position(
         self,
         product_symbol: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         """
@@ -947,41 +941,14 @@ class TradeHTTP(HTTPManager):
             path=FuturesTrade.GET_CURRENT_POSITION,
             query=payload,
         )
-
-        schema = [
-            "symbol",
-            "leverage",
-            "timestamp",
-            "current_fee",
-            "open_timestamp",
-            "current_value",
-            "mark_value",
-            "mark_price",
-            "position_value",
-            "position_cross",
-            "maintenance_margin",
-            "margin_type",
-            "position_mode",
-            "close_vol",
-            "close_avg_price",
-            "open_avg_price",
-            "entry_price",
-            "current_amount",
-            "unrealized_value",
-            "realized_value",
-            "position_type",
-            "account",
-        ]
-
-        data = res.get("data", [])
-        return pl.DataFrame(data, schema=schema, orient="row") if data else pl.DataFrame(schema=schema)
+        return res
 
     async def get_contract_trade(
         self,
         product_symbol: str,
         start_time: str = None,
         end_time: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param start_time: str
@@ -1001,7 +968,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def get_contract_transaction_history(
         self,
@@ -1010,7 +977,7 @@ class TradeHTTP(HTTPManager):
         start_time: int = None,
         end_time: int = None,
         page_size: int = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param flow_type: int (0 = All (async default), 1 = Transfer, 2 = Realized PNL, 3 = Funding Fee, 4 = Commission Fee, 5 = Liquidation)
@@ -1036,7 +1003,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-        return to_dataframe(res.get("data", []))
+        return res
 
     async def get_contract_transfer_list(
         self,

@@ -1,8 +1,6 @@
-import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.public import Public
 from ..utils.common import Common
-from ..utils.common_dataframe import to_dataframe
 
 
 class PublicHTTP(HTTPManager):
@@ -12,7 +10,7 @@ class PublicHTTP(HTTPManager):
         uly: str = None,
         instFamily: str = None,
         product_symbol: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str
         :param uly: str
@@ -34,12 +32,12 @@ class PublicHTTP(HTTPManager):
             path=Public.GET_INSTRUMENT_INFO,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_funding_rate(
         self,
         product_symbol: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         """
@@ -52,7 +50,7 @@ class PublicHTTP(HTTPManager):
             path=Public.GET_FUNDING_RATE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_funding_rate_history(
         self,
@@ -60,7 +58,7 @@ class PublicHTTP(HTTPManager):
         before: str = None,
         after: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param before: str
@@ -82,4 +80,4 @@ class PublicHTTP(HTTPManager):
             path=Public.GET_FUNDING_RATE_HISTORY,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res

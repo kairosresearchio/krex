@@ -1,12 +1,10 @@
-import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.account import Account
 from ..utils.common import Common
-from ..utils.common_dataframe import to_dataframe
 
 
 class AccountHTTP(HTTPManager):
-    def get_wallet_balance(self) -> pl.DataFrame:
+    def get_wallet_balance(self):
         """
         default UNIFIED account and ensure the account is upgraded to unified account before trading
         """
@@ -19,12 +17,12 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_WALLET_BALANCE,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_transferable_amount(
         self,
         coins: list = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coins: list
         """
@@ -40,9 +38,9 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_TRANSFERABLE_AMOUNT,
             query=payload,
         )
-        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
+        return res
 
-    def upgrade_to_unified_trading_account(self) -> pl.DataFrame:
+    def upgrade_to_unified_trading_account(self):
         res = self._request(
             method="POST",
             path=Account.UPGRADE_TO_UNIFIED_ACCOUNT,
@@ -55,7 +53,7 @@ class AccountHTTP(HTTPManager):
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param startTime: int
@@ -74,12 +72,12 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_BORROW_HISTORY,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def repay_liability(
         self,
         coin: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         """
@@ -99,7 +97,7 @@ class AccountHTTP(HTTPManager):
     def get_collateral_info(
         self,
         coin: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         """
@@ -114,13 +112,13 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_COLLATERAL_INFO,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def set_collateral_coin(
         self,
         coin: str,
         switch: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param switch: str "ON" or "OFF"
@@ -141,7 +139,7 @@ class AccountHTTP(HTTPManager):
         self,
         product_symbol: str = None,
         category: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         Get the trading fee rate
         if product_symbol is not specified, pls specify the category
@@ -162,7 +160,7 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_FEE_RATE,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def get_account_info(self):
         res = self._request(
@@ -170,7 +168,7 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_ACCOUNT_INFO,
             query=None,
         )
-        return to_dataframe(res["result"]) if "result" in res else pl.DataFrame()
+        return res
 
     def get_transaction_log(
         self,
@@ -178,7 +176,7 @@ class AccountHTTP(HTTPManager):
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param category: str
         :param coin: str
@@ -200,12 +198,12 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_TRANSACTION_LOG,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def set_margin_mode(
         self,
         margin_mode: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param margin_mode: str ISOLATED_MARGIN, REGULAR_MARGIN(i.e. Cross margin), PORTFOLIO_MARGIN
         """

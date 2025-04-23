@@ -1,16 +1,14 @@
-import polars as pl
 import uuid
 import time
 from ._http_manager import HTTPManager
 from .endpoints.asset import Asset
-from ..utils.common_dataframe import to_dataframe
 
 
 class AssetHTTP(HTTPManager):
     def get_coin_info(
         self,
         coin: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         """
@@ -37,7 +35,7 @@ class AssetHTTP(HTTPManager):
         self,
         # accountType: str,
         coin: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         default accountType: SPOT
         :param coin: str
@@ -60,7 +58,7 @@ class AssetHTTP(HTTPManager):
         accountType: str,
         coin: str = None,
         memberId: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param accountType: str
         :param coin: str
@@ -87,7 +85,7 @@ class AssetHTTP(HTTPManager):
         coin: str,
         memberId: str = None,
         toAccountType: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param accountType: str
         :param coin: str
@@ -113,7 +111,7 @@ class AssetHTTP(HTTPManager):
     def get_withdrawable_amount(
         self,
         coin: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         """
@@ -133,7 +131,7 @@ class AssetHTTP(HTTPManager):
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param startTime: int
@@ -158,7 +156,7 @@ class AssetHTTP(HTTPManager):
         self,
         fromAccountType: str,
         toAccountType: str,
-    ) -> pl.DataFrame:
+    ):
         """ "
         :param fromAccountType: str
         :param toAccountType: str
@@ -181,7 +179,7 @@ class AssetHTTP(HTTPManager):
         amount: str,
         fromAccountType: str,
         toAccountType: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param amount: str
@@ -212,7 +210,7 @@ class AssetHTTP(HTTPManager):
         toMemberId: int,
         fromAccountType: str,
         toAccountType: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :coin: str
         :amount: str
@@ -245,7 +243,7 @@ class AssetHTTP(HTTPManager):
         status: str = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param status: str
@@ -272,7 +270,7 @@ class AssetHTTP(HTTPManager):
     def set_deposit_account(
         self,
         accountType: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param accountType: str
         :param coin: str
@@ -293,7 +291,7 @@ class AssetHTTP(HTTPManager):
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param startTime: str
@@ -320,7 +318,7 @@ class AssetHTTP(HTTPManager):
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param subMemberId: str
         :param coin: str
@@ -348,7 +346,7 @@ class AssetHTTP(HTTPManager):
         coin: str = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param startTime: str
@@ -372,7 +370,7 @@ class AssetHTTP(HTTPManager):
     def get_master_deposit_address(
         self,
         coin: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         """
@@ -392,7 +390,7 @@ class AssetHTTP(HTTPManager):
         coin: str,
         chainType: str,
         subMemberId: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param chainType: str
@@ -417,7 +415,7 @@ class AssetHTTP(HTTPManager):
         withdrawType: int = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param withdrawType: int
@@ -448,7 +446,7 @@ class AssetHTTP(HTTPManager):
         address: str,
         amount: str,
         tag: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param coin: str
         :param chain: str
@@ -480,7 +478,7 @@ class AssetHTTP(HTTPManager):
     def cancel_withdrawal(
         self,
         id: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param id: str
         """

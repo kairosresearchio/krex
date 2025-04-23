@@ -28,7 +28,6 @@ version = "0.1.0"
 [project.urls]
 Repository = "https://github.com/kairos-research-ltd/krex"
 
-# uv sync
 [dependency-groups]
 dev = [
   "ruff>=0.9.9",

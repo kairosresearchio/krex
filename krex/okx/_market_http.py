@@ -1,8 +1,6 @@
-import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.market import Market
 from ..utils.common import Common
-from ..utils.common_dataframe import to_dataframe
 
 
 class MarketHTTP(HTTPManager):
@@ -13,7 +11,7 @@ class MarketHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param bar: str
@@ -38,13 +36,13 @@ class MarketHTTP(HTTPManager):
             path=Market.GET_KLINE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_orderbook(
         self,
         product_symbol: str,
         sz: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param sz: str
@@ -60,14 +58,14 @@ class MarketHTTP(HTTPManager):
             path=Market.GET_ORDERBOOK,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_tickers(
         self,
         instType: str,
         uly: str = None,
         instFamily: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, SWAP, FUTURES, OPTION)
         :param uly: str
@@ -86,4 +84,4 @@ class MarketHTTP(HTTPManager):
             path=Market.GET_TICKERS,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res

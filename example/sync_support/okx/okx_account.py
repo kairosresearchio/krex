@@ -118,9 +118,6 @@ print(result)
 result = client.get_interest_limits()
 print(result)
 
-result = client.spot_borrow_repay_history()
-print(result)
-
 result = client.set_leverage(
     lever="10",
     mgnMode="cross",

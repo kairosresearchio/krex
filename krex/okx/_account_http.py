@@ -1,8 +1,6 @@
-import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.account import Account
 from ..utils.common import Common
-from ..utils.common_dataframe import to_dataframe
 
 
 class AccountHTTP(HTTPManager):
@@ -12,7 +10,7 @@ class AccountHTTP(HTTPManager):
         product_symbol: str = None,
         instFamily: str = None,
         uly: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param product_symbol: str Only applicable to FUTURES/SWAP/OPTION.If instType is OPTION, either uly or instFamily is required.
@@ -34,12 +32,12 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_INSTRUMENTS,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_account_balance(
         self,
         ccy: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param ccy: str
         """
@@ -55,13 +53,13 @@ class AccountHTTP(HTTPManager):
             path=Account.ACCOUNT_INFO,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_positions(
         self,
         instType: str = None,
         product_symbol: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (MARGIN, SWAP, FUTURES, OPTION) instId will be checked against instType when both parameters are passed.
         :param product_symbol: str
@@ -77,7 +75,7 @@ class AccountHTTP(HTTPManager):
             path=Account.POSITION_INFO,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_positions_history(
         self,
@@ -88,7 +86,7 @@ class AccountHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (MARGIN, SWAP, FUTURES, OPTION)
         :param product_symbol: str
@@ -119,12 +117,12 @@ class AccountHTTP(HTTPManager):
             path=Account.POSITIONS_HISTORY,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_position_risk(
         self,
         instType: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (MARGIN, SWAP, FUTURES, OPTION)
         """
@@ -137,7 +135,7 @@ class AccountHTTP(HTTPManager):
             path=Account.POSITION_RISK,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_account_bills(
         self,
@@ -151,7 +149,7 @@ class AccountHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param product_symbol: str
@@ -191,7 +189,7 @@ class AccountHTTP(HTTPManager):
             path=Account.BILLS_DETAIL,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_account_bills_archive(
         self,
@@ -205,7 +203,7 @@ class AccountHTTP(HTTPManager):
         begin: str = None,
         end: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param product_symbol: str
@@ -245,13 +243,13 @@ class AccountHTTP(HTTPManager):
             path=Account.BILLS_ARCHIVE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_account_bills_history_archive(
         self,
         year: str,
         quarter: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param year: str
         :param quarter: str
@@ -266,13 +264,13 @@ class AccountHTTP(HTTPManager):
             path=Account.BILLS_HISTORY_ARCHIVE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def post_account_bills_history_archive(
         self,
         year: str,
         quarter: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param year: str
         :param quarter: str
@@ -295,7 +293,7 @@ class AccountHTTP(HTTPManager):
             path=Account.ACCOUNT_CONFIG,
             query=None,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def set_position_mode(self, posMode: str):
         """
@@ -319,7 +317,7 @@ class AccountHTTP(HTTPManager):
         product_symbol: str = None,
         ccy: str = None,
         posSide: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param lever: str
         :param mgnMode: str (cross, isolated), Can only be cross if ccy is passed.
@@ -352,7 +350,7 @@ class AccountHTTP(HTTPManager):
         ccy: str = None,
         px: str = None,
         leverage: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param tdMode: str (cross, isolated, cash, spot_isolated)
@@ -376,7 +374,7 @@ class AccountHTTP(HTTPManager):
             path=Account.MAX_TRADE_SIZE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_max_avail_size(
         self,
@@ -385,7 +383,7 @@ class AccountHTTP(HTTPManager):
         ccy: str = None,
         reduceOnly: str = None,
         px: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param tdMode: str (cross, isolated, cash, spot_isolated)
@@ -409,7 +407,7 @@ class AccountHTTP(HTTPManager):
             path=Account.MAX_AVAIL_SIZE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def adjustment_margin(
         self,
@@ -418,7 +416,7 @@ class AccountHTTP(HTTPManager):
         type: str,
         amt: str,
         ccy: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param product_symbol: str
         :param posSide: str
@@ -447,7 +445,7 @@ class AccountHTTP(HTTPManager):
         mgnMode: str,
         product_symbol: str = None,
         ccy: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param mgnMode: str (cross, isolated)
         :param product_symbol: str
@@ -466,7 +464,7 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_LEVERAGE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_adjust_leverage(
         self,
@@ -476,7 +474,7 @@ class AccountHTTP(HTTPManager):
         product_symbol: str = None,
         ccy: str = None,
         posSide: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (MARGIN, SWAP, FUTURES)
         :param mgnMode: str (cross, isolated)
@@ -502,7 +500,7 @@ class AccountHTTP(HTTPManager):
             path=Account.GET_ADJUST_LEVERAGE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_max_loan(
         self,
@@ -510,7 +508,7 @@ class AccountHTTP(HTTPManager):
         product_symbol: str = None,
         ccy: str = None,
         mgnCcy: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param mgnMode: str (cross, isolated)
         :param product_symbol: str
@@ -532,7 +530,7 @@ class AccountHTTP(HTTPManager):
             path=Account.MAX_LOAN,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_fee_rates(
         self,
@@ -541,7 +539,7 @@ class AccountHTTP(HTTPManager):
         product_symbol: str = None,
         uly: str = None,
         instFamily: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param instType: str (SPOT, MARGIN, SWAP, FUTURES, OPTION)
         :param ruleType: str Trading rule types normal: normal trading pre_market: pre-market trading ruleType can not be passed through together with product_symbol/instFamily/uly
@@ -566,7 +564,7 @@ class AccountHTTP(HTTPManager):
             path=Account.FEE_RATES,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_interest_accrued(
         self,
@@ -576,7 +574,7 @@ class AccountHTTP(HTTPManager):
         after: str = None,
         before: str = None,
         limit: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param ccy: str
         :param product_symbol: str
@@ -604,12 +602,12 @@ class AccountHTTP(HTTPManager):
             path=Account.INTEREST_ACCRUED,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_interest_rate(
         self,
         ccy: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param ccy: str
         """
@@ -622,12 +620,12 @@ class AccountHTTP(HTTPManager):
             path=Account.INTEREST_RATE,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def set_greeks(
         self,
         greeksType: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param greeksType: str PA: Greeks in coins, BS: Black-Scholes Greeks in dollars
         """
@@ -645,7 +643,7 @@ class AccountHTTP(HTTPManager):
     def set_isolated_mode(
         self,
         type: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param type: str (MARGIN, CONTRACTS)
         """
@@ -664,7 +662,7 @@ class AccountHTTP(HTTPManager):
     def get_max_withdrawal(
         self,
         ccy: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param ccy: str
         """
@@ -680,12 +678,12 @@ class AccountHTTP(HTTPManager):
             path=Account.MAX_WITHDRAWAL,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def get_interest_limits(
         self,
         ccy: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param ccy: str
         """
@@ -698,12 +696,12 @@ class AccountHTTP(HTTPManager):
             path=Account.INTEREST_LIMITS,
             query=payload,
         )
-        return to_dataframe(res["data"]) if "data" in res else pl.DataFrame()
+        return res
 
     def set_auto_loan(
         self,
         autoLoan: bool,
-    ) -> pl.DataFrame:
+    ):
         """
         :param autoLoan: bool
         """

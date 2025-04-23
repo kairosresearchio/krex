@@ -121,11 +121,6 @@ def test_get_interest_limits():
     assert res is not None
 
 
-def test_spot_borrow_repay_history():
-    res = client.spot_borrow_repay_history()
-    assert res is not None
-
-
 def test_set_leverage():
     res = client.set_leverage(lever="10", mgnMode="cross", product_symbol="BTC-USDT-SWAP")
     assert res is not None

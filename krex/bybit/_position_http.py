@@ -1,8 +1,6 @@
-import polars as pl
 from ._http_manager import HTTPManager
 from .endpoints.position import Position
 from ..utils.common import Common
-from ..utils.common_dataframe import to_dataframe
 
 
 class PositionHTTP(HTTPManager):
@@ -12,7 +10,7 @@ class PositionHTTP(HTTPManager):
         product_symbol: str = None,
         settleCoin: str = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param category: str (linear, inverse, option)
         :param symbol: str
@@ -33,13 +31,13 @@ class PositionHTTP(HTTPManager):
             path=Position.GET_POSITIONS,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res
 
     def set_leverage(
         self,
         product_symbol: str,
         leverage: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param category: str (linear, inverse)
         :param symbol: str
@@ -65,7 +63,7 @@ class PositionHTTP(HTTPManager):
         mode: str,
         symbol: str = None,
         coin: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param mode: str. 0: Merged Single. 3: Both Sides
         :param symbol: str
@@ -101,7 +99,7 @@ class PositionHTTP(HTTPManager):
         slLimitPrice: str = None,
         tpOrderType: str = None,
         slOrderType: str = None,
-    ) -> pl.DataFrame:
+    ):
         """
         :param symbol: str
         :param tpslMode: str. `Full`: entire position TP/SL, `Partial`: partial position TP/SL
@@ -149,7 +147,7 @@ class PositionHTTP(HTTPManager):
         product_symbol: str,
         autoAddMargin: int,
         # positionIdx: int = None,
-    ) -> pl.DataFrame:
+    ):
         """ "
         :param symbol: str
         :param autoAddMargin: int (0:closing, 1:opening)
@@ -173,7 +171,7 @@ class PositionHTTP(HTTPManager):
         self,
         product_symbol: str,
         margin: str,
-    ) -> pl.DataFrame:
+    ):
         """
         :param category: str
         :param symbol: str
@@ -198,7 +196,7 @@ class PositionHTTP(HTTPManager):
         product_symbol: str = None,
         startTime: int = None,
         limit: int = 20,
-    ) -> pl.DataFrame:
+    ):
         """
         :param category: str
         :param symbol: str
@@ -220,4 +218,4 @@ class PositionHTTP(HTTPManager):
             path=Position.GET_CLOSED_PNL,
             query=payload,
         )
-        return to_dataframe(res["result"]["list"]) if "list" in res.get("result", {}) else pl.DataFrame()
+        return res

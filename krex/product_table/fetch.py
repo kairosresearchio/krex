@@ -4,6 +4,7 @@ from typing import Dict
 from dataclasses import dataclass, asdict
 from ..utils.decimal_utils import reverse_decimal_places
 from ..utils.common import Common
+from ..utils.common_dataframe import to_dataframe
 
 
 @dataclass
@@ -82,7 +83,8 @@ async def bybit() -> Dict[str, Dict[str, str]]:
 
     markets = []
 
-    df_linear = market_http.get_instruments_info(category="linear")
+    res_linear = market_http.get_instruments_info(category="linear")
+    df_linear = to_dataframe(res_linear["result"]["list"]) if "list" in res_linear.get("result", {}) else pl.DataFrame()
     for market in df_linear.iter_rows(named=True):
         markets.append(
             MarketInfo(
@@ -99,7 +101,10 @@ async def bybit() -> Dict[str, Dict[str, str]]:
             )
         )
 
-    df_inverse = market_http.get_instruments_info(category="inverse")
+    res_inverse = market_http.get_instruments_info(category="inverse")
+    df_inverse = (
+        to_dataframe(res_inverse["result"]["list"]) if "list" in res_inverse.get("result", {}) else pl.DataFrame()
+    )
     for market in df_inverse.iter_rows(named=True):
         markets.append(
             MarketInfo(
@@ -115,7 +120,8 @@ async def bybit() -> Dict[str, Dict[str, str]]:
             )
         )
 
-    df_spot = market_http.get_instruments_info(category="spot")
+    res_spot = market_http.get_instruments_info(category="spot")
+    df_spot = to_dataframe(res_spot["result"]["list"]) if "list" in res_spot.get("result", {}) else pl.DataFrame()
     for market in df_spot.iter_rows(named=True):
         if not market["symbol"].endswith(("USDT", "USDC")):
             continue
@@ -144,7 +150,8 @@ async def okx() -> Dict[str, Dict[str, str]]:
 
     markets = []
 
-    df_swap = public_http.get_public_instruments(instType="SWAP")
+    res_swap = public_http.get_public_instruments(instType="SWAP")
+    df_swap = to_dataframe(res_swap["data"]) if "data" in res_swap else pl.DataFrame()
     for market in df_swap.iter_rows(named=True):
         base = strip_number(market["baseCcy"])
         quote = market["quoteCcy"]
@@ -169,7 +176,8 @@ async def okx() -> Dict[str, Dict[str, str]]:
             )
         )
 
-    df_spot = public_http.get_public_instruments(instType="SPOT")
+    res_spot = public_http.get_public_instruments(instType="SPOT")
+    df_spot = to_dataframe(res_spot["data"]) if "data" in res_spot else pl.DataFrame()
     for market in df_spot.iter_rows(named=True):
         if not market["instId"].endswith(("USDT", "USDC")):
             continue
@@ -199,7 +207,8 @@ async def bitmart() -> pl.DataFrame:
     markets = []
     quote_currencies = {"USDT", "USDC", "USD"}
 
-    df_swap = market_http.get_contracts_details()
+    res_swap = market_http.get_contracts_details()
+    df_swap = to_dataframe(res_swap.get("data", {}).get("symbols", []))
     for market in df_swap.iter_rows(named=True):
         matched_quote = next(
             (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
@@ -227,7 +236,8 @@ async def bitmart() -> pl.DataFrame:
             )
         )
 
-    df_spot = market_http.get_trading_pairs_details()
+    res_spot = market_http.get_trading_pairs_details()
+    df_spot = to_dataframe(res_spot.get("data", {}).get("symbols", []))
     for market in df_spot.iter_rows(named=True):
         matched_quote = next(
             (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
