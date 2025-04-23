@@ -7,6 +7,7 @@ from krex.async_support.bitmart.client import Client
 from krex.websocket.bitmart import BitmartPublicWsClient
 from krex.websocket.data.market_data import MarketData
 from krex.websocket.bot.slack import Slack
+from krex.utils.common_dataframe import to_dataframe
 
 
 load_dotenv()
@@ -30,12 +31,23 @@ async def initialize(shared_data: MarketData):
     )
     await bitmart_client.async_init()
 
-    kline_df = await bitmart_client.get_contract_kline(
+    raw = await bitmart_client.get_contract_kline(
         product_symbol="ETH-USDT-SWAP",
         interval="1m",
         start_time=int((datetime.now() - timedelta(minutes=100)).timestamp()),
         end_time=int(datetime.now().timestamp()),
     )
+    kline_df = to_dataframe(raw.get("data", [])).rename(
+        {
+            "timestamp": "datetime",
+            "open_price": "open",
+            "high_price": "high",
+            "low_price": "low",
+            "close_price": "close",
+            "volume": "volume",
+        }
+    )
+
     await shared_data.update_kline_data("bitmart", "ETH-USDT-SWAP", kline_df)
 
     ws_client = await BitmartPublicWsClient.create(

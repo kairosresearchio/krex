@@ -1,5 +1,5 @@
 import asyncio
-import pandas as pd
+import polars as pl
 from typing import Dict, Any
 
 from ..models.order import TradeStatus
@@ -27,9 +27,6 @@ class MarketData:
         self._trade_data = {}
         self._balance_data = {}
 
-    # async def async_init(self):
-    #     pass
-
     async def update_depth_data(self, exchange: str, symbol: str, data: BookTicker) -> None:
         async with self._data_lock:
             self._depth_data.setdefault(exchange, {})[symbol] = data
@@ -42,18 +39,21 @@ class MarketData:
         async with self._data_lock:
             return self._depth_data.copy()
 
-    async def update_kline_data(self, exchange: str, symbol: str, data: pd.DataFrame) -> None:
+    async def update_kline_data(self, exchange: str, symbol: str, data: pl.DataFrame) -> None:
         async with self._data_lock:
             self._kline_data.setdefault(exchange, {})
-
             if symbol in self._kline_data[exchange]:
-                self._kline_data[exchange][symbol] = pd.concat([self._kline_data[exchange][symbol], data], join="outer")
+                existing_df = self._kline_data[exchange][symbol]
+                combined_df = pl.concat([existing_df, data])
             else:
-                self._kline_data[exchange][symbol] = data
+                combined_df = data
 
-            df = self._kline_data[exchange][symbol]
-            df = df[~df.index.duplicated(keep="last")]
-            self._kline_data[exchange][symbol] = df.tail(1000)
+            combined_df = combined_df.sort("datetime")
+            combined_df = combined_df.unique(subset=["datetime"], keep="last")
+            if combined_df.height > 1000:
+                combined_df = combined_df.slice(-1000, 1000)
+
+            self._kline_data[exchange][symbol] = combined_df
 
     async def get_kline_data(self, exchange: str, symbol: str) -> Any:
         async with self._data_lock:

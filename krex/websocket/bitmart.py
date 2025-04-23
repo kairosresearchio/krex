@@ -3,8 +3,7 @@ import time
 import hmac
 import hashlib
 import logging
-import pandas as pd
-
+import polars as pl
 from krex.async_support.product_table.manager import ProductTableManager
 from .models.balance import BalanceInfo
 from .base import WsClient
@@ -137,20 +136,18 @@ class BitmartPublicWsClient(WsClient):
         elif payload.get("data") and payload.get("group", "").startswith("futures/klineBin"):
             try:
                 data_payload = payload["data"]["items"][0]
-                df = pd.DataFrame(
-                    [
-                        {
-                            "open": float(data_payload["o"]),
-                            "high": float(data_payload["h"]),
-                            "low": float(data_payload["l"]),
-                            "close": float(data_payload["c"]),
-                            "volume": float(data_payload["v"]),
-                            "datetime": int(data_payload["ts"]),
-                        }
-                    ]
+                df = pl.DataFrame(
+                    {
+                        "open": [float(data_payload["o"])],
+                        "high": [float(data_payload["h"])],
+                        "low": [float(data_payload["l"])],
+                        "close": [float(data_payload["c"])],
+                        "volume": [float(data_payload["v"])],
+                        "datetime": [int(data_payload["ts"])],
+                    }
                 )
-                df["datetime"] = pd.to_datetime(df["datetime"], unit="s")
-                df.set_index("datetime", inplace=True)
+                df = df.with_columns([pl.col("datetime").cast(pl.Datetime).dt.cast_time_unit("s")])
+                df = df.set_sorted("datetime")
 
                 product_symbol = self.ptm.get_product_symbol(payload["data"]["symbol"], "bitmart")
                 await self.market_data.update_kline_data("bitmart", product_symbol, df)

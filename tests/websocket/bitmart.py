@@ -1,5 +1,5 @@
 import os
-import pandas as pd
+import polars as pl
 import pytest
 from unittest.mock import AsyncMock, patch
 from krex.websocket.data.market_data import MarketData
@@ -49,16 +49,16 @@ async def test_initialize_should_return_ws_client():
         patch("krex.websocket.bitmart.BitmartPublicWsClient.create", new_callable=AsyncMock) as mock_ws_create,
     ):
         mock_client = AsyncMock()
-        mock_client.get_contract_kline.return_value = pd.DataFrame(
+        mock_client.get_contract_kline.return_value = pl.DataFrame(
             {
-                "datetime": pd.date_range("2023-01-01", periods=1, freq="min"),
+                "datetime": [1672531200 * 1000],
                 "open": [100],
                 "high": [110],
                 "low": [90],
                 "close": [105],
                 "volume": [1000],
             }
-        )
+        ).with_columns([pl.col("datetime").cast(pl.Datetime).dt.cast_time_unit("ms")])
         mock_client_cls.return_value = mock_client
 
         mock_ws_client = AsyncMock()
