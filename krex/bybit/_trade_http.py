@@ -548,7 +548,7 @@ class TradeHTTP(HTTPManager):
         )
         return res
 
-    def set_dcp(
+    def set_dcp( # currently no need to be tested
         self,
         timeWindow: int,
         product: str = None,

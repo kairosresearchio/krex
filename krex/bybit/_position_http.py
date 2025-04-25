@@ -85,7 +85,7 @@ class PositionHTTP(HTTPManager):
         )
         return res
 
-    def set_trading_stop(
+    def set_trading_stop( # currently no need to be tested
         self,
         category: str,
         symbol: str,
@@ -142,7 +142,7 @@ class PositionHTTP(HTTPManager):
         )
         return res
 
-    def set_auto_add_margin(
+    def set_auto_add_margin( # currently no need to be tested
         self,
         product_symbol: str,
         autoAddMargin: int,
@@ -167,7 +167,7 @@ class PositionHTTP(HTTPManager):
         )
         return res
 
-    def add_or_reduce_margin(
+    def add_or_reduce_margin( # currently no need to be tested
         self,
         product_symbol: str,
         margin: str,

@@ -409,7 +409,7 @@ class AccountHTTP(HTTPManager):
         )
         return res
 
-    def adjustment_margin(
+    def adjustment_margin( # currently not needed
         self,
         product_symbol: str,
         posSide: str,

@@ -85,12 +85,18 @@ class AssetHTTP(HTTPManager):
         :param subAcct: str
         :param loanTrans: str
         """
+        account_map = {
+            "FUND": "6",
+            "TRADING": "18",
+        }
+        
         payload = {
             "ccy": ccy,
             "amt": amt,
-            "from": from_account,
-            "to": to_account,
+            "from": account_map.get(from_account),
+            "to": account_map.get(to_account),
         }
+        
         if type is not None:
             payload["type"] = type
         if subAcct is not None:
@@ -426,7 +432,7 @@ class AssetHTTP(HTTPManager):
         )
         return res
 
-    def get_convert_currencies_pair(
+    def get_convert_currencies_pair( # currently not in use
         self,
         fromCcy: str,
         toCcy: str,
@@ -446,7 +452,7 @@ class AssetHTTP(HTTPManager):
         )
         return res
 
-    def post_estimate_quote(
+    def post_estimate_quote( # currently not in use
         self,
         baseCcy: str,
         quoteCcy: str,
@@ -484,7 +490,7 @@ class AssetHTTP(HTTPManager):
         )
         return res
 
-    def post_convert_trade(
+    def post_convert_trade( # currently not in use
         self,
         quoteId: str,
         baseCcy: str,

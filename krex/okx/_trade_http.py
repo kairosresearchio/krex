@@ -95,7 +95,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side=side,
             ordType="market",
@@ -107,13 +107,13 @@ class TradeHTTP(HTTPManager):
     def place_market_buy_order(
         self,
         product_symbol: str,
-        tdMode: str,
+        tdMode: str, # cash or cross
         sz: str,
         reduceOnly: bool = None,
         ccy: str = None,
     ):
         return self.place_market_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side="buy",
             sz=sz,
@@ -130,7 +130,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_market_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side="sell",
             sz=sz,
@@ -149,7 +149,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side=side,
             ordType="limit",
@@ -169,7 +169,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side="buy",
             sz=sz,
@@ -188,7 +188,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side="sell",
             sz=sz,
@@ -207,8 +207,8 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+        return self.place_order(
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side=side,
             ordType="post_only",
@@ -228,7 +228,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_post_only_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side="buy",
             sz=sz,
@@ -247,7 +247,7 @@ class TradeHTTP(HTTPManager):
         ccy: str = None,
     ):
         return self.place_post_only_limit_order(
-            product_symbol=self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            product_symbol=product_symbol,
             tdMode=tdMode,
             side="sell",
             sz=sz,
@@ -256,7 +256,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_multiple_orders(
+    def place_multiple_orders( # currently not in use
         self,
         product_symbol: str,
         tdMode: str,
@@ -362,24 +362,35 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def cancel_multiple_orders(
+    def cancel_all_orders(
         self,
-        product_symbol: str,
-        ordId: str = None,
-        clOrdId: str = None,
+        product_symbol: str = None,
     ):
         """
         :param product_symbol: str
         :param ordId: str
         :param clOrdId: str
         """
-        payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
-        }
-        if ordId is not None:
-            payload["ordId"] = ordId
-        if clOrdId is not None:
-            payload["clOrdId"] = clOrdId
+        payload = []
+        
+        all_orders = self.get_order_list()
+        all_orders = all_orders["data"]
+        if product_symbol is not None:
+            exchange_symbol = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            for order in all_orders:
+                if order["instId"] == exchange_symbol:
+                    payload.append({
+                        "instId": order["instId"],
+                        "ordId": order["ordId"],
+                        "clOrdId": order["clOrdId"],
+                    })
+        else:
+            for order in all_orders:
+                payload.append({
+                    "instId": order["instId"],
+                    "ordId": order["ordId"],
+                    "clOrdId": order["clOrdId"],
+                })        
 
         return self._request(
             method="POST",
@@ -853,7 +864,7 @@ class TradeHTTP(HTTPManager):
         )
         return res
 
-    def mass_cancel(
+    def mass_cancel( # currently not in use, this is option only
         self,
         instFamily: str,
     ):
@@ -871,7 +882,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def mass_all_cancel(
+    def mass_all_cancel( # currently not in use, this is option only
         self,
         timeOut: str,
     ):
