@@ -8,24 +8,23 @@ class FutureMarket(str, Enum):
     GET_KLINE = "/futures/{settle}/candlesticks"
     LIST_TICKERS = "/futures/{settle}/tickers"
     FUNDING_RATE_HISTORY = "/futures/{settle}/funding_rate"
-    
+
     def __str__(self) -> str:
         return self.value
 
 
 class DeliveryMarket(str, Enum):
     GET_ALL_CONTRACTS = "/delivery/{settle}/contracts"
-    GET_ORDERBOOK = "/delivery/{settle}/order_book"
+    ORDER_BOOK = "/delivery/{settle}/order_book"
     GET_KLINE = "/delivery/{settle}/candlesticks"
     LIST_TICKERS = "/delivery/{settle}/tickers"
 
 
 class SpotMarket(str, Enum):
-    LIST_ALL_CURRENCY_PAIRS = "/spot/currency_pairs"
-    GET_ORDERBOOK = "/spot/order_book"
+    GET_ALL_CURRENCY_PAIRS = "/spot/currency_pairs"
+    ORDER_BOOK = "/spot/order_book"
     GET_KLINE = "/spot/candlesticks"
     LIST_TICKERS = "/spot/tickers"
-    
-    
+
     def __str__(self) -> str:
         return self.value
