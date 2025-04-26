@@ -40,17 +40,6 @@ print(result)
 # result = client.get_oneclick_repay_list()
 # print(result)
 
-# # need test
-# result = client.get_order(
-#     product_symbol="BTC-USDT-SPOT",
-#     ordId="1234567890",
-# )
-# print(result)
-
-# # need test
-# result = client.get_oneclick_repay_list()
-# print(result)
-
 # # # need test
 # result = client.get_oneclick_repay_history()
 # print(result)

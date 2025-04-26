@@ -409,37 +409,6 @@ class AccountHTTP(HTTPManager):
         )
         return res
 
-    def adjustment_margin( # currently not needed
-        self,
-        product_symbol: str,
-        posSide: str,
-        type: str,
-        amt: str,
-        ccy: str = None,
-    ):
-        """
-        :param product_symbol: str
-        :param posSide: str
-        :param type: str the default is net, long, short, net
-        :param amt: str add or reduce margin amount
-        :param ccy: str Applicable to isolated MARGIN orders
-        """
-        payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
-            "posSide": posSide,
-            "type": type,
-            "amt": amt,
-        }
-        if ccy is not None:
-            payload["ccy"] = ccy
-
-        res = self._request(
-            method="POST",
-            path=Account.ADJUSTMENT_MARGIN,
-            query=payload,
-        )
-        return res
-
     def get_leverage(
         self,
         mgnMode: str,

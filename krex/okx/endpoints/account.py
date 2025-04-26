@@ -15,7 +15,6 @@ class Account(str, Enum):
     SET_LEVERAGE = "/api/v5/account/set-leverage"
     MAX_TRADE_SIZE = "/api/v5/account/max-size"
     MAX_AVAIL_SIZE = "/api/v5/account/max-avail-size"
-    ADJUSTMENT_MARGIN = "/api/v5/account/position/margin-balance"
     GET_LEVERAGE = "/api/v5/account/leverage-info"
     GET_ADJUST_LEVERAGE = "/api/v5/account/adjust-leverage-info"
     MAX_LOAN = "/api/v5/account/max-loan"

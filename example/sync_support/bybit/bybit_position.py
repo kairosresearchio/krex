@@ -19,15 +19,3 @@ print(result)
 
 # result = client.switch_position_mode(0, "BTCUSDT")
 # print(result)
-
-# # need test
-# result = client.set_trading_stop()
-# print(result)
-
-# # need test
-# result = client.set_auto_add_margin()
-# print(result)
-
-# # need test
-# result = client.add_or_reduce_margin()
-# print(result)

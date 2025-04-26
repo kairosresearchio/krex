@@ -17,7 +17,4 @@ class Asset(str, Enum):
     EXCHANGE_LIST = "/api/v5/asset/exchange-list"
     MONTHLY_STATEMENT = "/api/v5/asset/monthly-statement"
     GET_CURRENCIES = "/api/v5/asset/convert/currencies"
-    GET_CURRENCY_PAIR = "/api/v5/asset/convert/currency-pair"
-    ESTIMATE_QUOTE = "/api/v5/asset/convert/estimate-quote"
-    CONVERT_TRADE = "/api/v5/asset/convert/trade"
     CONVERT_HISTORY = "/api/v5/asset/convert/history"

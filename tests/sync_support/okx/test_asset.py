@@ -64,13 +64,3 @@ def test_get_monthly_statement():
 def test_get_convert_currencies():
     res = client.get_convert_currencies()
     assert res is not None
-
-
-def test_get_convert_history():
-    res = client.get_convert_history()
-    assert res is not None
-
-
-def test_get_convert_currencies_pair():
-    res = client.get_convert_currencies_pair(fromCcy="USDT", toCcy="BTC")
-    assert res is not None

@@ -89,14 +89,14 @@ class AssetHTTP(HTTPManager):
             "FUND": "6",
             "TRADING": "18",
         }
-        
+
         payload = {
             "ccy": ccy,
             "amt": amt,
             "from": account_map.get(from_account),
             "to": account_map.get(to_account),
         }
-        
+
         if type is not None:
             payload["type"] = type
         if subAcct is not None:
@@ -429,134 +429,5 @@ class AssetHTTP(HTTPManager):
             method="GET",
             path=Asset.GET_CURRENCIES,
             query=None,
-        )
-        return res
-
-    def get_convert_currencies_pair( # currently not in use
-        self,
-        fromCcy: str,
-        toCcy: str,
-    ):
-        """
-        :param fromCcy: str
-        :param toCcy: str
-        """
-        payload = {
-            "fromCcy": fromCcy,
-            "toCcy": toCcy,
-        }
-        res = self._request(
-            method="GET",
-            path=Asset.GET_CURRENCY_PAIR,
-            query=payload,
-        )
-        return res
-
-    def post_estimate_quote( # currently not in use
-        self,
-        baseCcy: str,
-        quoteCcy: str,
-        side: str,
-        rfqSz: str,
-        rfqSzCcy: str,
-        clQReqId: str = None,
-        tag: str = None,
-    ):
-        """
-        :param baseCcy: str
-        :param quoteCcy: str
-        :param side: str
-        :param rfqSz: str
-        :param rfqSzCcy: str
-        :param clQReqId: str
-        :param tag: str
-        """
-        payload = {
-            "baseCcy": baseCcy,
-            "quoteCcy": quoteCcy,
-            "side": side,
-            "rfqSz": rfqSz,
-            "rfqSzCcy": rfqSzCcy,
-        }
-        if clQReqId is not None:
-            payload["clQReqId"] = clQReqId
-        if tag is not None:
-            payload["tag"] = tag
-
-        res = self._request(
-            method="POST",
-            path=Asset.ESTIMATE_QUOTE,
-            query=payload,
-        )
-        return res
-
-    def post_convert_trade( # currently not in use
-        self,
-        quoteId: str,
-        baseCcy: str,
-        quoteCcy: str,
-        side: str,
-        sz: str,
-        szCcy: str,
-        clTReqId: str = None,
-        tag: str = None,
-    ):
-        """
-        :param quoteId: str
-        :param baseCcy: str
-        :param quoteCcy: str
-        :param side: str
-        :param sz: str
-        :param szCcy: str
-        :param clTReqId: str
-        :param tag: str
-        """
-        payload = {
-            "quoteId": quoteId,
-            "baseCcy": baseCcy,
-            "quoteCcy": quoteCcy,
-            "side": side,
-            "sz": sz,
-            "szCcy": szCcy,
-        }
-        if clTReqId is not None:
-            payload["clTReqId"] = clTReqId
-        if tag is not None:
-            payload["tag"] = tag
-
-        res = self._request(
-            method="POST",
-            path=Asset.CONVERT_TRADE,
-            query=payload,
-        )
-        return res
-
-    def get_convert_history(
-        self,
-        clTReqId: str = None,
-        after: str = None,
-        before: str = None,
-        limit: str = None,
-    ):
-        """
-        :param clTReqId: str
-        :param after: str
-        :param before: str
-        :param limit: str
-        """
-        payload = {}
-        if clTReqId is not None:
-            payload["clTReqId"] = clTReqId
-        if after is not None:
-            payload["after"] = after
-        if before is not None:
-            payload["before"] = before
-        if limit is not None:
-            payload["limit"] = limit
-
-        res = self._request(
-            method="GET",
-            path=Asset.CONVERT_HISTORY,
-            query=payload,
         )
         return res
