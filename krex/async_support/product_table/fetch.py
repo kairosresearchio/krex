@@ -138,50 +138,61 @@ def format_product_symbol(symbol: str) -> str:
 #     return pd.DataFrame(markets)
 
 
-# async def okx() -> Dict[str, Dict[str, str]]:
-#     from ..okx._public_http import PublicHTTP
+async def okx() -> pl.DataFrame:
+    from ..okx._public_http import PublicHTTP
 
-#     public_http = PublicHTTP()
+    public_http = PublicHTTP()
+    await public_http.async_init()
 
-#     markets = []
+    markets = []
 
-#     response = await public_http.get_instruments(instType="SWAP")
-#     for market in response["data"]:
-#         markets.append(
-#             MarketInfo(
-#                 exchange=Common.OKX,
-#                 exchange_symbol=market["instId"],
-#                 product_symbol=strip_number(market["instId"]),
-#                 product_type=market["instType"],
-#                 base_currency=strip_number(market["baseCcy"]),
-#                 quote_currency=market["quoteCcy"],
-#                 price_precision=market["tickSz"],
-#                 size_precision=market["lotSz"],
-#                 min_size=market["minSz"],
-#                 size_per_contract=market["ctVal"],
-#             )
-#         )
+    res_swap = await public_http.get_public_instruments(instType="SWAP")
+    df_swap = to_dataframe(res_swap["data"]) if "data" in res_swap else pl.DataFrame()
+    for market in df_swap.iter_rows(named=True):
+        base = strip_number(market["baseCcy"])
+        quote = market["quoteCcy"]
 
-#     response = await public_http.get_instruments(instType="SPOT")
-#     for market in response["data"]:
-#         if not market["instId"].endswith(("USDT", "USDC")):
-#             continue
-#         markets.append(
-#             MarketInfo(
-#                 exchange=Common.OKX,
-#                 exchange_symbol=market["instId"],
-#                 product_symbol=market["instId"] + "-SPOT",
-#                 product_type=market["instType"],
-#                 base_currency=strip_number(market["baseCcy"]),
-#                 quote_currency=market["quoteCcy"],
-#                 price_precision=market["tickSz"],
-#                 size_precision=market["lotSz"],
-#                 min_size=market["minSz"],
-#             )
-#         )
+        if not base or not quote:
+            parts = market["instId"].split("-")
+            if len(parts) >= 2:
+                base, quote = parts[0], parts[1]
 
-#     markets = [market.to_dict() for market in markets]
-#     return pd.DataFrame(markets)
+        markets.append(
+            MarketInfo(
+                exchange=Common.OKX,
+                exchange_symbol=market["instId"],
+                product_symbol=strip_number(market["instId"]),
+                product_type=market["instType"],
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=market["tickSz"],
+                size_precision=market["lotSz"],
+                min_size=market["minSz"],
+                size_per_contract=market["ctVal"],
+            )
+        )
+
+    res_spot = await public_http.get_public_instruments(instType="SPOT")
+    df_spot = to_dataframe(res_spot["data"]) if "data" in res_spot else pl.DataFrame()
+    for market in df_spot.iter_rows(named=True):
+        if not market["instId"].endswith(("USDT", "USDC", "USD")):
+            continue
+        markets.append(
+            MarketInfo(
+                exchange=Common.OKX,
+                exchange_symbol=market["instId"],
+                product_symbol=market["instId"] + "-SPOT",
+                product_type=market["instType"],
+                base_currency=strip_number(market["baseCcy"]),
+                quote_currency=market["quoteCcy"],
+                price_precision=market["tickSz"],
+                size_precision=market["lotSz"],
+                min_size=market["minSz"],
+            )
+        )
+
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
 
 
 async def bitmart() -> pl.DataFrame:
@@ -225,6 +236,9 @@ async def bitmart() -> pl.DataFrame:
     res_spot = await market_http.get_trading_pairs_details()
     df_spot = to_dataframe(res_spot.get("data", {}).get("symbols", []))
     for market in df_spot.iter_rows(named=True):
+        if not market["symbol"].endswith(("USDT", "USDC", "USD")):
+            continue
+
         matched_quote = next(
             (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
             None,

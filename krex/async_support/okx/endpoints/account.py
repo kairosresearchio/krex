@@ -1,0 +1,28 @@
+from enum import Enum
+
+
+class Account(str, Enum):
+    GET_INSTRUMENTS = "/api/v5/account/instruments"
+    ACCOUNT_INFO = "/api/v5/account/balance"
+    POSITION_INFO = "/api/v5/account/positions"
+    POSITIONS_HISTORY = "/api/v5/account/positions-history"
+    POSITION_RISK = "/api/v5/account/account-position-risk"
+    BILLS_DETAIL = "/api/v5/account/bills"
+    BILLS_ARCHIVE = "/api/v5/account/bills-archive"
+    BILLS_HISTORY_ARCHIVE = "/api/v5/account/bills-history-archive"
+    ACCOUNT_CONFIG = "/api/v5/account/config"
+    POSITION_MODE = "/api/v5/account/set-position-mode"
+    SET_LEVERAGE = "/api/v5/account/set-leverage"
+    MAX_TRADE_SIZE = "/api/v5/account/max-size"
+    MAX_AVAIL_SIZE = "/api/v5/account/max-avail-size"
+    GET_LEVERAGE = "/api/v5/account/leverage-info"
+    GET_ADJUST_LEVERAGE = "/api/v5/account/adjust-leverage-info"
+    MAX_LOAN = "/api/v5/account/max-loan"
+    FEE_RATES = "/api/v5/account/trade-fee"
+    INTEREST_ACCRUED = "/api/v5/account/interest-accrued"
+    INTEREST_RATE = "/api/v5/account/interest-rate"
+    SET_GREEKS = "/api/v5/account/set-greeks"
+    SET_ISOLATED_MODE = "/api/v5/account/set-isolated-mode"
+    MAX_WITHDRAWAL = "/api/v5/account/max-withdrawal"
+    INTEREST_LIMITS = "/api/v5/account/interest-limits"
+    SET_AUTO_LOAN = "/api/v5/account/set-auto-loan"
