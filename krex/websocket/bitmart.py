@@ -41,6 +41,7 @@ class BitmartPublicWsClient(WsClient):
         self.memo = memo
 
         self.market_data = MarketData()
+        self.ptm = None
 
     @classmethod
     async def create(cls, **kwargs):
@@ -64,11 +65,9 @@ class BitmartPublicWsClient(WsClient):
     async def on_open(self):
         await super().on_open()
 
-        # 1. Send access
         sign_message = json.dumps(self.sign())
         await self.websocket.send(sign_message)
 
-        # 2. 等待 access 成功後再 subscribe
         while True:
             message = await self.websocket.recv()
             payload = json.loads(message)
@@ -76,7 +75,6 @@ class BitmartPublicWsClient(WsClient):
                 break
             logger.debug(f"Waiting for access confirmation: {payload}")
 
-        # 3. Then subscribe
         subscribe_message = json.dumps(self.subscription)
         await self.websocket.send(subscribe_message)
         logger.info(f"Sent subscription message: {subscribe_message}")
@@ -146,7 +144,7 @@ class BitmartPublicWsClient(WsClient):
                         "datetime": [int(data_payload["ts"])],
                     }
                 )
-                df = df.with_columns([pl.col("datetime").cast(pl.Datetime).dt.cast_time_unit("s")])
+                df = df.with_columns([pl.col("datetime").cast(pl.Datetime).dt.cast_time_unit("ms")])
                 df = df.set_sorted("datetime")
 
                 product_symbol = self.ptm.get_product_symbol(payload["data"]["symbol"], "bitmart")
@@ -156,42 +154,16 @@ class BitmartPublicWsClient(WsClient):
 
         elif payload.get("group", "").startswith("futures/asset:"):
             data = payload.get("data")
-            if isinstance(data, dict):
-                try:
-                    balance_info = BalanceInfo(
-                        symbol=data["currency"],
-                        available_balance=float(data.get("available_balance", 0.0)),
-                        position_deposit=float(data.get("position_deposit", 0.0)),
-                        frozen_balance=float(data.get("frozen_balance", 0.0)),
-                    )
-                    await self.market_data.update_balance(Exchange.BITMART, data["currency"], balance_info)
-                    logger.info(f"Updated BalanceInfo: {balance_info}")
-                except Exception as e:
-                    logger.error(f"Error processing balance data: {e}")
-            elif isinstance(data, list):
-                for item in data:
-                    try:
-                        balance_info = BalanceInfo(
-                            symbol=item["currency"],
-                            available_balance=float(item.get("available_balance", 0.0)),
-                            position_deposit=float(item.get("position_deposit", 0.0)),
-                            frozen_balance=float(item.get("frozen_balance", 0.0)),
-                        )
-                        await self.market_data.update_balance(Exchange.BITMART, item["currency"], balance_info)
-                        logger.info(f"Updated BalanceInfo: {balance_info}")
-                    except Exception as e:
-                        logger.error(f"Error processing balance data item: {e}")
-
-        elif payload.get("group", "").startswith("futures/asset:"):
             try:
-                balance_data = payload.get("data", {})
-                balance_info = BalanceInfo(
-                    symbol=balance_data["currency"],
-                    available_balance=float(balance_data.get("available_balance", 0.0)),
-                    position_deposit=float(balance_data.get("position_deposit", 0.0)),
-                    frozen_balance=float(balance_data.get("frozen_balance", 0.0)),
-                )
-                await self.market_data.update_balance(Exchange.BITMART, balance_data["currency"], balance_info)
-                logger.info(f"Updated BalanceInfo: {balance_info}")
+                balance_items = data if isinstance(data, list) else [data]
+                for item in balance_items:
+                    balance_info = BalanceInfo(
+                        symbol=item["currency"],
+                        available_balance=float(item.get("available_balance", 0.0)),
+                        position_deposit=float(item.get("position_deposit", 0.0)),
+                        frozen_balance=float(item.get("frozen_balance", 0.0)),
+                    )
+                    await self.market_data.update_balance(Exchange.BITMART, item["currency"], balance_info)
+                    logger.info(f"Updated BalanceInfo: {balance_info}")
             except Exception as e:
-                logger.error(f"Error processing balance data: {e}")
+                logger.error(f"Error processing balance data: {e}, payload: {payload}")

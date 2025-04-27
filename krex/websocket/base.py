@@ -53,7 +53,6 @@ class WsClient:
         logger.info("WebSocket connection opened")
         await self.send_slack(f"[INFO] - {self.__class__.__name__} WebSocket connection opened")
 
-        # 傳送訂閱訊息
         subscribe_message = json.dumps(self.subscription)
         await self.websocket.send(subscribe_message)
         logger.info(f"Sent subscription message: {subscribe_message}")
@@ -78,9 +77,20 @@ class WsClient:
             await asyncio.sleep(1)
 
     async def receive_loop(self):
+        first_message = True
         try:
             async for message in self.websocket:
                 self.last_message_time = asyncio.get_event_loop().time()
+
+                if first_message:
+                    try:
+                        parsed = json.loads(message)
+                        print("📥 Received first raw message:")
+                        print(json.dumps(parsed, indent=2, ensure_ascii=False))
+                    except Exception:
+                        print("📥 Received non-JSON first message:", message)
+                    first_message = False
+
                 await self.on_message(message)
         except Exception as e:
             await self.on_error(e)
