@@ -1,10 +1,10 @@
 from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
-from ..utils.common import Common
+from ...utils.common import Common
 
 
 class TradeHTTP(HTTPManager):
-    def place_order(
+    async def place_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -85,7 +85,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def place_market_order(
+    async def place_market_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -104,7 +104,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_market_buy_order(
+    async def place_market_buy_order(
         self,
         product_symbol: str,
         tdMode: str,  # cash or cross
@@ -121,7 +121,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_market_sell_order(
+    async def place_market_sell_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -138,7 +138,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_limit_order(
+    async def place_limit_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -159,7 +159,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_limit_buy_order(
+    async def place_limit_buy_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -178,7 +178,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_limit_sell_order(
+    async def place_limit_sell_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -197,7 +197,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_post_only_limit_order(
+    async def place_post_only_limit_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -218,7 +218,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_post_only_limit_buy_order(
+    async def place_post_only_limit_buy_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -237,7 +237,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_post_only_limit_sell_order(
+    async def place_post_only_limit_sell_order(
         self,
         product_symbol: str,
         tdMode: str,
@@ -256,7 +256,7 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def cancel_order(
+    async def cancel_order(
         self,
         product_symbol: str,
         ordId: str = None,
@@ -281,7 +281,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def cancel_all_orders(
+    async def cancel_all_orders(
         self,
         product_symbol: str = None,
     ):
@@ -321,7 +321,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def amend_order(
+    async def amend_order(
         self,
         product_symbol: str,
         ordId: str = None,
@@ -370,7 +370,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def amend_multiple_orders(
+    async def amend_multiple_orders(
         self,
         product_symbol: str,
         ordId: str = None,
@@ -419,7 +419,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def close_positions(
+    async def close_positions(
         self,
         product_symbol: str,
         mgnMode: str,
@@ -447,7 +447,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def get_order(
+    async def get_order(
         self,
         product_symbol: str,
         ordId: str = None,
@@ -466,14 +466,14 @@ class TradeHTTP(HTTPManager):
         if clOrdId is not None:
             payload["clOrdId"] = clOrdId
 
-        res = self._request(
+        res = await self._request(
             method="GET",
             path=Trade.ORDER_INFO,
             query=payload,
         )
         return res
 
-    def get_order_list(
+    async def get_order_list(
         self,
         instType: str = None,
         uly: str = None,
@@ -508,14 +508,14 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        res = self._request(
+        res = await self._request(
             method="GET",
             path=Trade.ORDERS_PENDING,
             query=payload,
         )
         return res
 
-    def get_orders_history(
+    async def get_orders_history(
         self,
         instType: str,
         uly: str = None,
@@ -562,14 +562,14 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        res = self._request(
+        res = await self._request(
             method="GET",
             path=Trade.ORDERS_HISTORY,
             query=payload,
         )
         return res
 
-    def get_orders_history_archive(
+    async def get_orders_history_archive(
         self,
         instType: str,
         uly: str = None,
@@ -616,14 +616,14 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        res = self._request(
+        res = await self._request(
             method="GET",
             path=Trade.ORDERS_HISTORY_ARCHIVE,
             query=payload,
         )
         return res
 
-    def get_fills(
+    async def get_fills(
         self,
         instType: str = None,
         uly: str = None,
@@ -666,14 +666,14 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        res = self._request(
+        res = await self._request(
             method="GET",
             path=Trade.ORDER_FILLS,
             query=payload,
         )
         return res
 
-    def get_fills_history(
+    async def get_fills_history(
         self,
         instType: str,
         uly: str = None,
@@ -716,15 +716,15 @@ class TradeHTTP(HTTPManager):
         if limit is not None:
             payload["limit"] = limit
 
-        res = self._request(
+        res = await self._request(
             method="GET",
             path=Trade.ORDERS_FILLS_HISTORY,
             query=payload,
         )
         return res
 
-    def get_account_rate_limit(self):
-        res = self._request(
+    async def get_account_rate_limit(self):
+        res = await self._request(
             method="GET",
             path=Trade.ACCOUNT_RATE_LIMIT,
             query=None,

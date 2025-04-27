@@ -127,11 +127,3 @@ print(result)
 
 # result = client.set_isolated_mode(type="CONTRACTS")
 # print(result)
-
-# # need test
-# result = client.spot_manual_borrow_repay(
-#     ccy="USDT",
-#     side="borrow",
-#     amt="0.01",
-# )
-# print(result)

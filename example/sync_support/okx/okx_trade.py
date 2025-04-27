@@ -35,11 +35,3 @@ print(result)
 
 result = client.get_account_rate_limit()
 print(result)
-
-# # need test
-# result = client.get_oneclick_repay_list()
-# print(result)
-
-# # # need test
-# result = client.get_oneclick_repay_history()
-# print(result)

@@ -1,4 +1,5 @@
 import pytest
+import pytest_asyncio
 from krex.async_support.bitmart.client import Client
 
 
@@ -7,57 +8,60 @@ BITMART_API_SECRET = "66b82353bfee263185b36bdcaa244ee805c68aa87fd593addcd5124ff3
 MEMO = "trade"
 
 
-@pytest.mark.asyncio
-async def test_get_account_balance():
-    async with Client(api_key=BITMART_API_KEY, api_secret=BITMART_API_SECRET, memo=MEMO) as client:
-        res = await client.get_account_balance()
-        assert res is not None
+@pytest_asyncio.fixture
+async def client():
+    async with Client(
+        api_key=BITMART_API_KEY,
+        api_secret=BITMART_API_SECRET,
+        memo=MEMO,
+    ) as client_instance:
+        yield client_instance
 
 
 @pytest.mark.asyncio
-async def test_get_account_currencies():
-    async with Client(api_key=BITMART_API_KEY, api_secret=BITMART_API_SECRET, memo=MEMO) as client:
-        res = await client.get_account_currencies()
-        assert res is not None
+async def test_get_account_balance(client):
+    res = await client.get_account_balance()
+    assert res is not None
 
 
 @pytest.mark.asyncio
-async def test_get_spot_wallet():
-    async with Client(api_key=BITMART_API_KEY, api_secret=BITMART_API_SECRET, memo=MEMO) as client:
-        res = await client.get_spot_wallet()
-        assert res is not None
+async def test_get_account_currencies(client):
+    res = await client.get_account_currencies()
+    assert res is not None
 
 
 @pytest.mark.asyncio
-async def test_get_deposit_address():
-    async with Client(api_key=BITMART_API_KEY, api_secret=BITMART_API_SECRET, memo=MEMO) as client:
-        res = await client.get_deposit_address(currency="BTC")
-        assert res is not None
+async def test_get_spot_wallet(client):
+    res = await client.get_spot_wallet()
+    assert res is not None
 
 
+@pytest.mark.asyncio
+async def test_get_deposit_address(client):
+    res = await client.get_deposit_address(currency="BTC")
+    assert res is not None
+
+
+# 如果要啟用這段，把註解取消
 # @pytest.mark.asyncio
-# async def test_get_withdraw_charge():
-#     async with Client(api_key=BITMART_API_KEY, api_secret=BITMART_API_SECRET, memo=MEMO) as client:
-#         res = await client.get_withdraw_charge(currency="BTC")
-#         assert res is not None
+# async def test_get_withdraw_charge(client):
+#     res = await client.get_withdraw_charge(currency="BTC")
+#     assert res is not None
 
 
 @pytest.mark.asyncio
-async def test_get_deposit_withdraw_history():
-    async with Client(api_key=BITMART_API_KEY, api_secret=BITMART_API_SECRET, memo=MEMO) as client:
-        res = await client.get_deposit_withdraw_history(currency="USDT")
-        assert res is not None
+async def test_get_deposit_withdraw_history(client):
+    res = await client.get_deposit_withdraw_history(currency="USDT")
+    assert res is not None
 
 
 @pytest.mark.asyncio
-async def test_get_deposit_withdraw_history_detail():
-    async with Client(api_key=BITMART_API_KEY, api_secret=BITMART_API_SECRET, memo=MEMO) as client:
-        res = await client.get_deposit_withdraw_history_detail(id="26695771")
-        assert res is not None
+async def test_get_deposit_withdraw_history_detail(client):
+    res = await client.get_deposit_withdraw_history_detail(id="26695771")
+    assert res is not None
 
 
 @pytest.mark.asyncio
-async def test_get_contract_assets():
-    async with Client(api_key=BITMART_API_KEY, api_secret=BITMART_API_SECRET, memo=MEMO) as client:
-        res = await client.get_contract_assets()
-        assert res is not None
+async def test_get_contract_assets(client):
+    res = await client.get_contract_assets()
+    assert res is not None
