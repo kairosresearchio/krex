@@ -548,27 +548,6 @@ class TradeHTTP(HTTPManager):
         )
         return res
 
-    def set_dcp( # currently no need to be tested
-        self,
-        timeWindow: int,
-        product: str = None,
-    ):
-        """
-        :param timeWindow: int
-        :param product: str
-        """
-        payload = {
-            "timeWindow": timeWindow,
-        }
-        if product is not None:
-            payload["product"] = product
-
-        return self._request(
-            method="POST",
-            path=Trade.SET_DCP,
-            query=payload,
-        )
-
     # spot margin trade http
     def get_vip_margin_data(
         self,

@@ -13,7 +13,6 @@ class Trade(str, Enum):
     BATCH_AMEND_ORDER = "/v5/order/amend-batch"
     BATCH_CANCEL_ORDER = "/v5/order/cancel-batch"
     GET_BORROW_QUOTA = "/v5/order/spot-borrow-check"
-    SET_DCP = "/v5/order/disconnected-cancel-all"
 
     def __str__(self) -> str:
         return self.value

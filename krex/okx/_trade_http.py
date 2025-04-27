@@ -107,7 +107,7 @@ class TradeHTTP(HTTPManager):
     def place_market_buy_order(
         self,
         product_symbol: str,
-        tdMode: str, # cash or cross
+        tdMode: str,  # cash or cross
         sz: str,
         reduceOnly: bool = None,
         ccy: str = None,
@@ -256,87 +256,6 @@ class TradeHTTP(HTTPManager):
             ccy=ccy,
         )
 
-    def place_multiple_orders( # currently not in use
-        self,
-        product_symbol: str,
-        tdMode: str,
-        side: str,
-        ordType: str,
-        sz: str,
-        ccy: str = None,
-        clOrdId: str = None,
-        tag: str = None,
-        posSide: str = None,
-        px: str = None,
-        pxUsd: str = None,
-        pxVol: str = None,
-        reduceOnly: bool = False,
-        tgtCcy: str = None,
-        banAmend: bool = False,
-        quickMgnType: str = None,
-        stpId: str = None,
-        stpMode: str = None,
-    ):
-        """
-        :param product_symbol: str
-        :param tdMode: str
-        :param side: str
-        :param ordType: str
-        :param sz: str
-        :param ccy: str
-        :param clOrdId: str
-        :param tag: str
-        :param posSide: str
-        :param px: str
-        :param pxUsd: str
-        :param pxVol: str
-        :param reduceOnly: bool
-        :param tgtCcy: str
-        :param banAmend: bool
-        :param quickMgnType: str
-        :param stpId: str
-        :param stpMode: str
-        """
-        payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
-            "tdMode": tdMode,
-            "side": side,
-            "ordType": ordType,
-            "sz": sz,
-        }
-        if ccy is not None:
-            payload["ccy"] = ccy
-        if clOrdId is not None:
-            payload["clOrdId"] = clOrdId
-        if tag is not None:
-            payload["tag"] = tag
-        if posSide is not None:
-            payload["posSide"] = posSide
-        if px is not None:
-            payload["px"] = px
-        if pxUsd is not None:
-            payload["pxUsd"] = pxUsd
-        if pxVol is not None:
-            payload["pxVol"] = pxVol
-        if reduceOnly is not None:
-            payload["reduceOnly"] = reduceOnly
-        if tgtCcy is not None:
-            payload["tgtCcy"] = tgtCcy
-        if banAmend is not None:
-            payload["banAmend"] = banAmend
-        if quickMgnType is not None:
-            payload["quickMgnType"] = quickMgnType
-        if stpId is not None:
-            payload["stpId"] = stpId
-        if stpMode is not None:
-            payload["stpMode"] = stpMode
-
-        return self._request(
-            method="POST",
-            path=Trade.BATCH_ORDERS,
-            query=payload,
-        )
-
     def cancel_order(
         self,
         product_symbol: str,
@@ -372,25 +291,29 @@ class TradeHTTP(HTTPManager):
         :param clOrdId: str
         """
         payload = []
-        
+
         all_orders = self.get_order_list()
         all_orders = all_orders["data"]
         if product_symbol is not None:
             exchange_symbol = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
             for order in all_orders:
                 if order["instId"] == exchange_symbol:
-                    payload.append({
+                    payload.append(
+                        {
+                            "instId": order["instId"],
+                            "ordId": order["ordId"],
+                            "clOrdId": order["clOrdId"],
+                        }
+                    )
+        else:
+            for order in all_orders:
+                payload.append(
+                    {
                         "instId": order["instId"],
                         "ordId": order["ordId"],
                         "clOrdId": order["clOrdId"],
-                    })
-        else:
-            for order in all_orders:
-                payload.append({
-                    "instId": order["instId"],
-                    "ordId": order["ordId"],
-                    "clOrdId": order["clOrdId"],
-                })        
+                    }
+                )
 
         return self._request(
             method="POST",
@@ -863,41 +786,6 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
         return res
-
-    def mass_cancel( # currently not in use, this is option only
-        self,
-        instFamily: str,
-    ):
-        """
-        :param instFamily: str
-        """
-        payload = {
-            "instType": "OPTION",
-            "instFamily": instFamily,
-        }
-
-        return self._request(
-            method="POST",
-            path=Trade.MASS_CANCEL,
-            query=payload,
-        )
-
-    def mass_all_cancel( # currently not in use, this is option only
-        self,
-        timeOut: str,
-    ):
-        """
-        :param timeOut: str
-        """
-        payload = {
-            "timeOut": timeOut,
-        }
-
-        return self._request(
-            method="POST",
-            path=Trade.CANCEL_ALL_AFTER,
-            query=payload,
-        )
 
     def get_account_rate_limit(self):
         res = self._request(

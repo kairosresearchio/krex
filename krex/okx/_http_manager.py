@@ -82,7 +82,7 @@ class HTTPManager:
 
         timestamp = generate_timestamp(iso_format=True)
         body = query if method.upper() == "POST" else ""
-        body_str = json.dumps(body) if isinstance(body, dict) else ""
+        body_str = json.dumps(body) if isinstance(body, (dict, list)) else body
 
         if self.api_key and self.api_secret and self.passphrase:
             sign = _sign(pre_hash(timestamp, method.upper(), path, body_str), self.api_secret)

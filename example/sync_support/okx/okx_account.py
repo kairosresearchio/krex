@@ -125,16 +125,7 @@ result = client.set_leverage(
 )
 print(result)
 
-result = client.set_isolated_mode(type="CONTRACTS")
-print(result)
-
-# # need test
-# result = client.adjustment_margin(
-#     product_symbol="BTC-USDT-SWAP",
-#     posSide="short",
-#     type="add",
-#     amt="0.001",
-# )
+# result = client.set_isolated_mode(type="CONTRACTS")
 # print(result)
 
 # # need test
@@ -143,8 +134,4 @@ print(result)
 #     side="borrow",
 #     amt="0.01",
 # )
-# print(result)
-
-# # need test
-# result = client.set_auto_loan(autoLoan="true")
 # print(result)
