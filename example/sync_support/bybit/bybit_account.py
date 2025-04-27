@@ -37,7 +37,3 @@ print(result)
 
 # result = client.set_margin_mode("PORTFOLIO_MARGIN")
 # print(result)
-
-# # need test
-# result = client.repay_liability()
-# print(result)

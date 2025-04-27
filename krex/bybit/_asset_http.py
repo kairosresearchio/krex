@@ -385,30 +385,6 @@ class AssetHTTP(HTTPManager):
         )
         return res
 
-    def get_sub_deposit_address( # currently no in use
-        self,
-        coin: str,
-        chainType: str,
-        subMemberId: str,
-    ):
-        """
-        :param coin: str
-        :param chainType: str
-        :param subMemberId: srt
-        """
-        payload = {
-            "coin": coin,
-            "chainType": chainType,
-            "subMemberId": subMemberId,
-        }
-
-        res = self._request(
-            method="GET",
-            path=Asset.GET_SUB_DEPOSIT_ADDRESS,
-            query=payload,
-        )
-        return res
-
     def get_withdrawal_records(
         self,
         coin: str = None,

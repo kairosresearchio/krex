@@ -18,7 +18,6 @@ class Asset(str, Enum):
     GET_SUB_ACCOUNT_DEPOSIT_RECORDS = "/v5/asset/deposit/query-sub-member-record"
     GET_INTERNAL_DEPOSIT_RECORDS = "/v5/asset/deposit/query-internal-record"
     GET_MASTER_DEPOSIT_ADDRESS = "/v5/asset/deposit/query-address"
-    GET_SUB_DEPOSIT_ADDRESS = "/v5/asset/deposit/query-sub-member-address"
     GET_WITHDRAWAL_RECORDS = "/v5/asset/withdraw/query-record"
     WITHDRAW = "/v5/asset/withdraw/create"
     CANCEL_WITHDRAWAL = "/v5/asset/withdraw/cancel"

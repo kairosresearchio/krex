@@ -57,31 +57,3 @@ print(result)
 #     toAccountType="FUND",
 # )
 # print(result)
-
-# # need test
-# result = client.cancel_withdrawal()
-# print(result)
-
-# # need test
-# result = client.withdraw()
-# print(result)
-
-# # need test
-# result = client.get_sub_deposit_address(
-#     coin="USDT",
-#     chainType="TRX",
-#     subMemberId=592334,
-# )
-# print(result)
-
-# # need test
-# result = client.get_sub_deposit_records(subMemberId="ooxx")
-# print(result)
-
-# # need test
-# result = client.set_deposit_account(accountType="UNIFIED")
-# print(result)
-
-# # # need test
-# result = client.create_universal_transfer()
-# print(result)

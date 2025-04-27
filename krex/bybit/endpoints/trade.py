@@ -11,7 +11,6 @@ class Trade(str, Enum):
     GET_EXECUTION_LIST = "/v5/execution/list"
     BATCH_PLACE_ORDER = "/v5/order/create-batch"
     BATCH_AMEND_ORDER = "/v5/order/amend-batch"
-    BATCH_CANCEL_ORDER = "/v5/order/cancel-batch"
     GET_BORROW_QUOTA = "/v5/order/spot-borrow-check"
 
     def __str__(self) -> str:

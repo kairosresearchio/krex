@@ -500,32 +500,6 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def cancel_batch_order( # currently not used
-        self,
-        category: str,
-        request: list,
-    ):
-        """
-        :param category: str (linear, option, spot, inverse)
-        :param request: list
-            request=[
-                {
-                    "symbol": "BTCUSDT",
-                    "orderId": "1666800494330512128"
-                },
-            ]
-        """
-        payload = {
-            "category": category,
-            "request": request,
-        }
-
-        return self._request(
-            method="POST",
-            path=Trade.BATCH_CANCEL_ORDER,
-            query=payload,
-        )
-
     def get_borrow_quota(
         self,
         product_symbol: str,
