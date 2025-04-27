@@ -385,7 +385,7 @@ class AssetHTTP(HTTPManager):
         )
         return res
 
-    def get_sub_deposit_address(
+    def get_sub_deposit_address( # currently no in use
         self,
         coin: str,
         chainType: str,

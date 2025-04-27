@@ -500,7 +500,7 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
-    def cancel_batch_order(
+    def cancel_batch_order( # currently not used
         self,
         category: str,
         request: list,
