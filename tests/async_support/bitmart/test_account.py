@@ -42,11 +42,10 @@ async def test_get_deposit_address(client):
     assert res is not None
 
 
-# 如果要啟用這段，把註解取消
-# @pytest.mark.asyncio
-# async def test_get_withdraw_charge(client):
-#     res = await client.get_withdraw_charge(currency="BTC")
-#     assert res is not None
+@pytest.mark.asyncio
+async def test_get_withdraw_charge(client):
+    res = await client.get_withdraw_charge(currency="BTC")
+    assert res is not None
 
 
 @pytest.mark.asyncio

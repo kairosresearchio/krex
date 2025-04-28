@@ -32,9 +32,9 @@ def test_get_deposit_address():
     assert res is not None
 
 
-# def test_get_withdraw_charge():
-#     res = client.get_withdraw_charge(currency="BTC")
-#     assert res is not None
+def test_get_withdraw_charge():
+    res = client.get_withdraw_charge(currency="BTC")
+    assert res is not None
 
 
 def test_get_deposit_withdraw_history():

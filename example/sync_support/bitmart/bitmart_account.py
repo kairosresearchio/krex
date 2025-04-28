@@ -32,8 +32,8 @@ print("4. get_deposit_address:", res)
 
 
 # get withdraw charge
-# res = client.get_withdraw_charge(currency="BTC")
-# print("5. get_withdraw_charge:", res)
+res = client.get_withdraw_charge(currency="BTC")
+print("5. get_withdraw_charge:", res)
 
 
 # get deposit withdraw history

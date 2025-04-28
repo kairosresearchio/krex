@@ -2,11 +2,11 @@ import hmac
 import hashlib
 import logging
 import json
-import requests
+import httpx
 from dataclasses import dataclass, field
 from ..product_table.manager import ProductTableManager
-from ..utils.errors import FailedRequestError
-from ..utils.helpers import generate_timestamp
+from ...utils.errors import FailedRequestError
+from ...utils.helpers import generate_timestamp
 
 HTTP_URL = "https://{SUBDOMAIN}.{DOMAIN}.{TLD}"
 SUBDOMAIN_TESTNET = "api-testnet"
@@ -42,24 +42,22 @@ class HTTPManager:
     max_retries: int = field(default=3)
     retry_delay: int = field(default=3)
     logger: logging.Logger = field(default=None)
-    session: requests.Session = field(default_factory=requests.Session, init=False)
+    session: httpx.AsyncClient = field(init=False)
     ptm: ProductTableManager = field(init=False)
 
-    def __post_init__(self):
-        if self.logger is None:
-            self._logger = logging.getLogger(__name__)
-        else:
-            self._logger = self.logger
-
+    async def async_init(self):
+        self.session = httpx.AsyncClient(timeout=self.timeout)
+        self._logger = self.logger or logging.getLogger(__name__)
+        self.ptm = await ProductTableManager.get_instance()
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
-        self.ptm = ProductTableManager.get_instance()
+        return self
 
     def _auth(self, payload, timestamp):
         param_str = f"{timestamp}{self.api_key}{self.recv_window}{payload}"
         return hmac.new(self.api_secret.encode(), param_str.encode(), hashlib.sha256).hexdigest()
 
-    def _request(self, method, path, query=None):
+    async def _request(self, method, path, query=None):
         if query is None:
             query = {}
 
@@ -73,7 +71,7 @@ class HTTPManager:
             else:
                 payload = ""
         else:
-            payload = json.dumps(query)
+            payload = json.dumps(query, separators=(",", ":"), ensure_ascii=False)
 
         if self.api_key and self.api_secret:
             signature = self._auth(payload, timestamp)
@@ -85,9 +83,9 @@ class HTTPManager:
 
         try:
             if method.upper() == "GET":
-                response = self.session.get(url, headers=headers, timeout=self.timeout)
+                response = await self.session.get(url, headers=headers)
             elif method.upper() == "POST":
-                response = self.session.post(url, json=query if query else {}, headers=headers, timeout=self.timeout)
+                response = await self.session.post(url, headers=headers, json=query if query else {})
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -107,7 +105,6 @@ class HTTPManager:
                     resp_headers=response.headers,
                 )
 
-            # If http status is not 2xx (like 403, 404)
             if not response.status_code // 100 == 2:
                 raise FailedRequestError(
                     request=f"{method.upper()} {url} | Body: {query}",
@@ -119,7 +116,7 @@ class HTTPManager:
 
             return data
 
-        except requests.exceptions.RequestException as e:
+        except httpx.HTTPError as e:
             raise FailedRequestError(
                 request=f"{method.upper()} {url} | Body: {payload}",
                 message=f"Request failed: {str(e)}",

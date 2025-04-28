@@ -79,7 +79,7 @@ class TradeHTTP(HTTPManager):
         if stpMode is not None:
             payload["stpMode"] = stpMode
 
-        return self._request(
+        return await self._request(
             method="POST",
             path=Trade.PLACE_ORDER,
             query=payload,
@@ -94,7 +94,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_order(
+        return await self.place_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side=side,
@@ -112,7 +112,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_market_order(
+        return await self.place_market_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side="buy",
@@ -129,7 +129,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_market_order(
+        return await self.place_market_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side="sell",
@@ -148,7 +148,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_order(
+        return await self.place_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side=side,
@@ -168,7 +168,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_limit_order(
+        return await self.place_limit_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side="buy",
@@ -187,7 +187,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_limit_order(
+        return await self.place_limit_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side="sell",
@@ -207,7 +207,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_order(
+        return await self.place_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side=side,
@@ -227,7 +227,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_post_only_limit_order(
+        return await self.place_post_only_limit_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side="buy",
@@ -246,7 +246,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         ccy: str = None,
     ):
-        return self.place_post_only_limit_order(
+        return await self.place_post_only_limit_order(
             product_symbol=product_symbol,
             tdMode=tdMode,
             side="sell",
@@ -275,7 +275,7 @@ class TradeHTTP(HTTPManager):
         if clOrdId is not None:
             payload["clOrdId"] = clOrdId
 
-        return self._request(
+        return await self._request(
             method="POST",
             path=Trade.CANCEL_ORDER,
             query=payload,
@@ -315,7 +315,7 @@ class TradeHTTP(HTTPManager):
                     }
                 )
 
-        return self._request(
+        return await self._request(
             method="POST",
             path=Trade.CANCEL_BATCH_ORDERS,
             query=payload,
@@ -364,7 +364,7 @@ class TradeHTTP(HTTPManager):
         if reqId is not None:
             payload["reqId"] = reqId
 
-        return self._request(
+        return await self._request(
             method="POST",
             path=Trade.AMEND_ORDER,
             query=payload,
@@ -413,7 +413,7 @@ class TradeHTTP(HTTPManager):
         if reqId is not None:
             payload["reqId"] = reqId
 
-        return self._request(
+        return await self._request(
             method="POST",
             path=Trade.AMEND_BATCH_ORDER,
             query=payload,
@@ -441,7 +441,7 @@ class TradeHTTP(HTTPManager):
         if ccy is not None:
             payload["ccy"] = ccy
 
-        return self._request(
+        return await self._request(
             method="POST",
             path=Trade.CLOSE_POSITION,
             query=payload,

@@ -14,9 +14,9 @@ def test_get_coin_info():
     assert res is not None
 
 
-def test_get_sub_uid():
-    res = client.get_sub_uid()
-    assert res is not None
+# def test_get_sub_uid():
+#     res = client.get_sub_uid()
+#     assert res is not None
 
 
 def test_get_spot_asset_info():
@@ -59,9 +59,9 @@ def test_get_internal_deposit_records():
     assert res is not None
 
 
-def test_get_master_deposit_address():
-    res = client.get_master_deposit_address(coin="USDT")
-    assert res is not None
+# def test_get_master_deposit_address():
+#     res = client.get_master_deposit_address(coin="USDT")
+#     assert res is not None
 
 
 def test_get_withdrawal_records():

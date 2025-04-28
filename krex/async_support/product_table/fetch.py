@@ -76,66 +76,72 @@ def format_product_symbol(symbol: str) -> str:
     return f"{symbol}-SWAP"
 
 
-# async def bybit() -> Dict[str, Dict[str, str]]:
-#     from ..bybit._market_http import MarketHTTP
+async def bybit() -> pl.DataFrame:
+    from ..bybit._market_http import MarketHTTP
 
-#     market_http = MarketHTTP()
+    market_http = MarketHTTP()
+    await market_http.async_init()
 
-#     markets = []
+    markets = []
 
-#     response = await market_http.get_instruments_info(category="linear")
-#     for market in response["result"]["list"]:
-#         markets.append(
-#             MarketInfo(
-#                 exchange=Common.BYBIT,
-#                 exchange_symbol=market["symbol"],
-#                 product_symbol=format_product_symbol(strip_number(market["symbol"])),
-#                 product_type="linear",
-#                 base_currency=strip_number(market["baseCoin"]),
-#                 quote_currency=market["quoteCoin"],
-#                 price_precision=market["priceFilter"]["tickSize"],
-#                 size_precision=market["lotSizeFilter"]["qtyStep"],
-#                 min_size=market["lotSizeFilter"]["minOrderQty"],
-#                 min_notional=market["lotSizeFilter"].get("minNotionalValue", "0"),
-#             )
-#         )
+    res_linear = await market_http.get_instruments_info(category="linear")
+    df_linear = to_dataframe(res_linear["result"]["list"]) if "list" in res_linear.get("result", {}) else pl.DataFrame()
+    for market in df_linear.iter_rows(named=True):
+        markets.append(
+            MarketInfo(
+                exchange=Common.BYBIT,
+                exchange_symbol=market["symbol"],
+                product_symbol=format_product_symbol(strip_number(market["symbol"])),
+                product_type="linear",
+                base_currency=strip_number(market["baseCoin"]),
+                quote_currency=market["quoteCoin"],
+                price_precision=market["priceFilter"]["tickSize"],
+                size_precision=market["lotSizeFilter"]["qtyStep"],
+                min_size=market["lotSizeFilter"]["minOrderQty"],
+                min_notional=market["lotSizeFilter"].get("minNotionalValue", "0"),
+            )
+        )
 
-#     response = await market_http.get_instruments_info(category="inverse")
-#     for market in response["result"]["list"]:
-#         markets.append(
-#             MarketInfo(
-#                 exchange=Common.BYBIT,
-#                 exchange_symbol=market["symbol"],
-#                 product_symbol=format_product_symbol(market["symbol"]),
-#                 product_type="inverse",
-#                 base_currency=strip_number(market["baseCoin"]),
-#                 quote_currency=market["quoteCoin"],
-#                 price_precision=market["priceFilter"]["tickSize"],
-#                 size_precision=market["lotSizeFilter"]["qtyStep"],
-#                 min_size=market["lotSizeFilter"]["minOrderQty"],
-#             )
-#         )
+    res_inverse = await market_http.get_instruments_info(category="inverse")
+    df_inverse = (
+        to_dataframe(res_inverse["result"]["list"]) if "list" in res_inverse.get("result", {}) else pl.DataFrame()
+    )
+    for market in df_inverse.iter_rows(named=True):
+        markets.append(
+            MarketInfo(
+                exchange=Common.BYBIT,
+                exchange_symbol=market["symbol"],
+                product_symbol=format_product_symbol(market["symbol"]),
+                product_type="inverse",
+                base_currency=strip_number(market["baseCoin"]),
+                quote_currency=market["quoteCoin"],
+                price_precision=market["priceFilter"]["tickSize"],
+                size_precision=market["lotSizeFilter"]["qtyStep"],
+                min_size=market["lotSizeFilter"]["minOrderQty"],
+            )
+        )
 
-#     response = await market_http.get_instruments_info(category="spot")
-#     for market in response["result"]["list"]:
-#         if not market["symbol"].endswith(("USDT", "USDC")):
-#             continue
-#         markets.append(
-#             MarketInfo(
-#                 exchange=Common.BYBIT,
-#                 exchange_symbol=market["symbol"],
-#                 product_symbol=f"{market['symbol'][:-4]}-{market['symbol'][-4:]}-SPOT",
-#                 product_type="spot",
-#                 base_currency=strip_number(market["baseCoin"]),
-#                 quote_currency=market["quoteCoin"],
-#                 price_precision=market["priceFilter"]["tickSize"],
-#                 size_precision=market["lotSizeFilter"]["basePrecision"],
-#                 min_size=market["lotSizeFilter"]["minOrderQty"],
-#                 min_notional=market["lotSizeFilter"].get("minNotionalValue", "0"),
-#             )
-#         )
-#     markets = [market.to_dict() for market in markets]
-#     return pd.DataFrame(markets)
+    res_spot = await market_http.get_instruments_info(category="spot")
+    df_spot = to_dataframe(res_spot["result"]["list"]) if "list" in res_spot.get("result", {}) else pl.DataFrame()
+    for market in df_spot.iter_rows(named=True):
+        if not market["symbol"].endswith(("USDT", "USDC")):
+            continue
+        markets.append(
+            MarketInfo(
+                exchange=Common.BYBIT,
+                exchange_symbol=market["symbol"],
+                product_symbol=f"{market['symbol'][:-4]}-{market['symbol'][-4:]}-SPOT",
+                product_type="spot",
+                base_currency=strip_number(market["baseCoin"]),
+                quote_currency=market["quoteCoin"],
+                price_precision=market["priceFilter"]["tickSize"],
+                size_precision=market["lotSizeFilter"]["basePrecision"],
+                min_size=market["lotSizeFilter"]["minOrderQty"],
+                min_notional=market["lotSizeFilter"].get("minNotionalValue", "0"),
+            )
+        )
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
 
 
 async def okx() -> pl.DataFrame:

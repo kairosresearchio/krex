@@ -8,7 +8,7 @@ client = Client(
     api_secret=BYBIT_API_SECRET,
 )
 
-result = client.get_positions()
+result = client.get_positions(product_symbol="BTC-USDT-SWAP")
 print(result)
 
 result = client.get_closed_pnl()

@@ -24,8 +24,8 @@ async def main():
         res = await client.get_deposit_address(currency="BTC")
         print("4. get_deposit_address:", "\n", res, "\n")
 
-        # res = await client.get_withdraw_charge(currency="BTC")
-        # print("5. get_withdraw_charge:", "\n", res, "\n")
+        res = await client.get_withdraw_charge(currency="BTC")
+        print("5. get_withdraw_charge:", "\n", res, "\n")
 
         res = await client.get_deposit_withdraw_history(currency="USDT")
         print("6. get_deposit_withdraw_history:", "\n", res, "\n")

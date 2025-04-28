@@ -11,8 +11,8 @@ client = Client(
 result = client.get_coin_info()
 print(result)
 
-result = client.get_sub_uid()
-print(result)
+# result = client.get_sub_uid()
+# print(result)
 
 result = client.get_spot_asset_info()
 print(result)
@@ -38,8 +38,8 @@ print(result)
 result = client.get_internal_deposit_records()
 print(result)
 
-result = client.get_master_deposit_address(coin="USDT")
-print(result)
+# result = client.get_master_deposit_address(coin="USDT")
+# print(result)
 
 result = client.get_withdrawal_records()
 print(result)

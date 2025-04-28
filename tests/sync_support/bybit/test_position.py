@@ -10,7 +10,7 @@ client = Client(
 
 
 def test_get_positions():
-    res = client.get_positions()
+    res = client.get_positions(product_symbol="BTC-USDT-SWAP")
     assert res is not None
 
 

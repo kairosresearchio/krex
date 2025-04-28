@@ -15,7 +15,7 @@ def test_get_wallet_balance():
 
 
 def test_get_transferable_amount():
-    res = client.get_transferable_amount()
+    res = client.get_transferable_amount(coins=["BTC", "ETH"])
     assert res is not None
 
 

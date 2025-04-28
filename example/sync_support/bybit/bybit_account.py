@@ -11,7 +11,7 @@ client = Client(
 result = client.get_wallet_balance()
 print(result)
 
-result = client.get_transferable_amount()
+result = client.get_transferable_amount(coins=["BTC", "ETH"])
 print(result)
 
 # result = client.upgrade_to_unified_trading_account()

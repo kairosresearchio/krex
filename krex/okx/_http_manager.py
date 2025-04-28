@@ -105,7 +105,7 @@ class HTTPManager:
             except Exception:
                 data = {}
 
-            if data.get("code", 0) != "0":
+            if data.get("code", "0") != "0":
                 code = data.get("code", "Unknown")
                 error_message = data.get("msg", "Unknown error")
                 raise FailedRequestError(

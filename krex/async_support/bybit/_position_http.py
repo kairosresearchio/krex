@@ -1,0 +1,116 @@
+from ._http_manager import HTTPManager
+from .endpoints.position import Position
+from ...utils.common import Common
+
+
+class PositionHTTP(HTTPManager):
+    async def get_positions(
+        self,
+        category: str = "linear",
+        product_symbol: str = None,
+        settleCoin: str = None,
+        limit: int = 20,
+    ):
+        """
+        :param category: str (linear, inverse, option)
+        :param symbol: str
+        :param limit: str
+        """
+        payload = {
+            "category": category,
+            "limit": limit,
+        }
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+        if settleCoin is not None:
+            payload["settleCoin"] = settleCoin
+
+        res = await self._request(
+            method="GET",
+            path=Position.GET_POSITIONS,
+            query=payload,
+        )
+        return res
+
+    async def set_leverage(
+        self,
+        product_symbol: str,
+        leverage: str,
+    ):
+        """
+        :param category: str (linear, inverse)
+        :param symbol: str
+        :param buyLeverage: str
+        :param sellLeverage: str
+        """
+        payload = {
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "buyLeverage": leverage,
+            "sellLeverage": leverage,
+        }
+
+        res = await self._request(
+            method="POST",
+            path=Position.SET_LEVERAGE,
+            query=payload,
+        )
+        return res
+
+    async def switch_position_mode(
+        self,
+        mode: str,
+        symbol: str = None,
+        coin: str = None,
+    ):
+        """
+        :param mode: str. 0: Merged Single. 3: Both Sides
+        :param symbol: str
+        :param coin: str
+        """
+        payload = {
+            "category": "linear",
+            "mode": mode,
+        }
+        if symbol is not None:
+            payload["symbol"] = symbol
+        if coin is not None:
+            payload["coin"] = coin
+
+        res = await self._request(
+            method="POST",
+            path=Position.SWITCH_POSITION_MODE,
+            query=payload,
+        )
+        return res
+
+    async def get_closed_pnl(
+        self,
+        category: str = "linear",
+        product_symbol: str = None,
+        startTime: int = None,
+        limit: int = 20,
+    ):
+        """
+        :param category: str
+        :param symbol: str
+        :param margin: str
+        :param positionIdx: int
+        """
+        payload = {
+            "category": category,
+            "limit": limit,
+        }
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+        if startTime is not None:
+            payload["startTime"] = startTime
+
+        res = await self._request(
+            method="GET",
+            path=Position.GET_CLOSED_PNL,
+            query=payload,
+        )
+        return res
