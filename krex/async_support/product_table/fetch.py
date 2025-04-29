@@ -273,3 +273,78 @@ async def bitmart() -> pl.DataFrame:
 
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
+
+
+async def binance() -> pl.DataFrame:
+    from ..binance._market_http import MarketHTTP
+
+    market_http = MarketHTTP()
+    await market_http.async_init()
+
+    markets = []
+    quote_currencies = {"USDT", "USDC", "USD"}
+
+    res_spot = await market_http.get_spot_exchange_info()
+    df_spot = to_dataframe(res_spot.get("symbols", []))
+    for market in df_spot.iter_rows(named=True):
+        if not market["symbol"].endswith(("USDT", "USDC", "USD")):
+            continue
+
+        matched_quote = next(
+            (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
+            None,
+        )
+
+        if matched_quote:
+            product_symbol = clean_symbol(f"{market['baseAsset']}-{market['quoteAsset']}-SPOT")
+
+        price_filter = next((f for f in market["filters"] if f["filterType"] == "PRICE_FILTER"), {})
+        lot_size_filter = next((f for f in market["filters"] if f["filterType"] == "LOT_SIZE"), {})
+        min_notional_filter = next((f for f in market["filters"] if f["filterType"] == "MIN_NOTIONAL"), {})
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.BINANCE,
+                exchange_symbol=market["symbol"],
+                product_symbol=product_symbol,
+                product_type="spot",
+                base_currency=market["baseAsset"],
+                quote_currency=market["quoteAsset"],
+                price_precision=price_filter.get("tickSize", "0"),
+                size_precision=lot_size_filter.get("stepSize", "0"),
+                min_size=lot_size_filter.get("minQty", "0"),
+                min_notional=min_notional_filter.get("notional", "0"),
+            )
+        )
+
+    res_futures = await market_http.get_futures_exchange_info()
+    df_futures = to_dataframe(res_futures.get("symbols", []))
+    for market in df_futures.iter_rows(named=True):
+        if not market["symbol"].endswith(("USDT", "USDC", "USD", "BUSD")):
+            continue
+
+        base = strip_number(market["baseAsset"])
+        quote = market["quoteAsset"]
+        product_symbol = f"{base}-{quote}-SWAP"
+
+        price_filter = next((f for f in market["filters"] if f["filterType"] == "PRICE_FILTER"), {})
+        lot_size_filter = next((f for f in market["filters"] if f["filterType"] == "LOT_SIZE"), {})
+        min_notional_filter = next((f for f in market["filters"] if f["filterType"] == "MIN_NOTIONAL"), {})
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.BINANCE,
+                exchange_symbol=market["symbol"],
+                product_symbol=product_symbol,
+                product_type="futures",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=price_filter.get("tickSize", "0"),
+                size_precision=lot_size_filter.get("stepSize", "0"),
+                min_size=lot_size_filter.get("minQty", "0"),
+                min_notional=min_notional_filter.get("notional", "0"),
+            )
+        )
+
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
