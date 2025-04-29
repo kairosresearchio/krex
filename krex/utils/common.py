@@ -6,6 +6,7 @@ class Common(str, Enum):
     OKX = "okx"
     BITMART = "bitmart"
     GATEIO = "gateio"
+    BINANCE = "binance"
 
     def __str__(self) -> str:
         return self.value

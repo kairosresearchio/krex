@@ -5,11 +5,12 @@ import requests
 import logging
 from dataclasses import dataclass, field
 from urllib.parse import urlencode
-from .endpoints.market import FuturesMarket
+from .endpoints.market import FuturesMarket, SpotMarket
 from .endpoints.trade import FuturesTrade
 from .endpoints.account import FuturesAccount
 from ..product_table.manager import ProductTableManager
-from ...utils.errors import FailedRequestError
+from ..utils.errors import FailedRequestError
+from ..utils.helpers import generate_timestamp
 
 
 @dataclass
@@ -27,7 +28,9 @@ class HTTPManager:
             FuturesMarket,
             FuturesAccount,
         },
-        "https://api.binance.com": {},
+        "https://api.binance.com": {
+            SpotMarket,
+        },
     }
 
     def __post_init__(self):
@@ -51,34 +54,59 @@ class HTTPManager:
     def _headers(self):
         return {"X-MBX-APIKEY": self.api_key} if self.api_key else {}
 
-    def _request(self, method, path, query: dict = None, signed: bool = False):
+    def _request(self, method, path, query: dict = None, signed: bool = True):
         if query is None:
             query = {}
 
         if signed:
+            if not (self.api_key and self.api_secret):
+                raise ValueError("Signed request requires API Key and Secret.")
             query["timestamp"] = int(time.time() * 1000)
             query["recvWindow"] = 5000
             query["signature"] = self._sign(query)
 
-        base_url = self._get_base_url(path)
-        url = f"{base_url}{path}"
-        if method.upper() == "GET":
-            url += f"?{urlencode(query)}" if query else ""
-            request_func = self.session.get
-        elif method.upper() == "POST":
-            request_func = self.session.post
-        elif method.upper() == "DELETE":
-            request_func = self.session.delete
-        elif method.upper() == "PUT":
-            request_func = self.session.put
-        else:
-            raise ValueError(f"Unsupported method: {method}")
-
         try:
-            response = request_func(url, headers=self._headers(), timeout=self.timeout)
-            response.raise_for_status()
-            return response.json()
+            base_url = self._get_base_url(path)
+            url = f"{base_url}{path}"
+            if method.upper() == "GET":
+                url += f"?{urlencode(query)}" if query else ""
+                response = self.session.get(url, headers=self._headers(), timeout=self.timeout)
+            elif method.upper() == "POST":
+                response = self.session.post(url, headers=self._headers(), timeout=self.timeout, data=query)
+            elif method.upper() == "DELETE":
+                url += f"?{urlencode(query)}" if query else ""
+                response = self.session.delete(url, headers=self._headers(), timeout=self.timeout)
+            else:
+                raise ValueError(f"Unsupported method: {method}")
 
+            try:
+                data = response.json()
+            except Exception:
+                data = {}
+
+            timestamp = generate_timestamp(iso_format=True)
+            if isinstance(data, dict) and "code" in data and str(data["code"]) != "200":
+                code = data.get("code", "Unknown")
+                error_message = data.get("msg", "Unknown error")
+                raise FailedRequestError(
+                    request=f"{method} {url} | Body: {query}",
+                    message=f"BINANCE API Error: [{code}] {error_message}",
+                    status_code=response.status_code,
+                    time=timestamp,
+                    resp_headers=response.headers,
+                )
+
+            # If http status is not 2xx (like 403, 404)
+            if not response.status_code // 100 == 2:
+                raise FailedRequestError(
+                    request=f"{method.upper()} {url} | Body: {query}",
+                    message=f"HTTP Error {response.status_code}: {response.text}",
+                    status_code=response.status_code,
+                    time=timestamp,
+                    resp_headers=response.headers,
+                )
+
+            return data
         except requests.exceptions.RequestException as e:
             raise FailedRequestError(
                 request=f"{method.upper()} {url} | Params: {query}",

@@ -1,13 +1,14 @@
 import asyncio
 import polars as pl
 from contextlib import asynccontextmanager
-from .fetch import bybit, okx, bitmart, gateio
+from .fetch import bybit, okx, bitmart, gateio, binance
 
 VALID_EXCHANGES = [
     bybit,
     okx,
     bitmart,
     gateio,
+    binance,
 ]
 
 
