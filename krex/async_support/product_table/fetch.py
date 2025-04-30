@@ -275,6 +275,104 @@ async def bitmart() -> pl.DataFrame:
     return pl.DataFrame(markets)
 
 
+async def gateio() -> pl.DataFrame:
+    from ..gateio._market_http import MarketHTTP
+
+    market_http = MarketHTTP()
+    await market_http.async_init()
+
+    markets = []
+    quote_currencies = {"USDT", "USDC", "USD"}
+
+    res_futures = await market_http.get_all_futures_contracts()
+    df_futures = to_dataframe(res_futures)
+    for market in df_futures.iter_rows(named=True):
+        matched_quote = next(
+            (quote for quote in quote_currencies if market["name"].endswith(quote)),
+            None,
+        )
+
+        if matched_quote:
+            base = clean_symbol(market["name"][: -len(matched_quote)])
+            product_symbol = f"{base}-{matched_quote}-SWAP"
+        else:
+            product_symbol = f"{clean_symbol(market['name'])}-SWAP"
+
+        parts = market["name"].split("_")
+        if len(parts) >= 2:
+            base, quote = parts[0], parts[1]
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.GATEIO,
+                exchange_symbol=market["name"],
+                product_symbol=product_symbol,
+                product_type="futures",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=market["order_price_round"],
+                size_precision=str(market["order_size_min"]),
+                min_size=str(market["order_size_min"]),
+                size_per_contract=market["quanto_multiplier"],
+            )
+        )
+
+    res_delivery = await market_http.get_all_delivery_contracts()
+    df_deliver = to_dataframe(res_delivery)
+    for market in df_deliver.iter_rows(named=True):
+        matched_quote = next(
+            (quote for quote in quote_currencies if market["name"].split("_")[1].endswith(quote)),
+            None,
+        )
+
+        if matched_quote:
+            base = clean_symbol(market["name"].split("_")[0])
+            product_symbol = f"{base}-{matched_quote}-{market['name'].split('_')[2]}-SWAP"
+        else:
+            product_symbol = f"{clean_symbol(market['name'])}-SWAP"
+
+        parts = market["name"].split("_")
+        if len(parts) >= 2:
+            base, quote = parts[0], parts[1]
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.GATEIO,
+                exchange_symbol=market["name"],
+                product_symbol=product_symbol,
+                product_type="delivery",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=market["order_price_round"],
+                size_precision=str(market["order_size_min"]),
+                min_size=str(market["order_size_min"]),
+                size_per_contract=market["quanto_multiplier"],
+            )
+        )
+
+    res_spot = await market_http.get_spot_all_currency_pairs()
+    df_spot = to_dataframe(res_spot)
+    for market in df_spot.iter_rows(named=True):
+        if not market["id"].endswith(("USDT", "USDC", "USD")):
+            continue
+        markets.append(
+            MarketInfo(
+                exchange=Common.GATEIO,
+                exchange_symbol=market["id"],
+                product_symbol=f"{market['base']}-{market['quote']}-SPOT",
+                product_type="spot",
+                base_currency=market["base"],
+                quote_currency=market["quote"],
+                price_precision=reverse_decimal_places(market["precision"]),
+                size_precision=reverse_decimal_places(market["amount_precision"]),
+                min_size=market["min_base_amount"],
+            )
+        )
+
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
+
+
 async def binance() -> pl.DataFrame:
     from ..binance._market_http import MarketHTTP
 

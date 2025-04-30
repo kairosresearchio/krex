@@ -359,8 +359,8 @@ async def gateio() -> pl.DataFrame:
                 product_type="spot",
                 base_currency=market["base"],
                 quote_currency=market["quote"],
-                price_precision=market["precision"],
-                size_precision=market["amount_precision"],
+                price_precision=reverse_decimal_places(market["precision"]),
+                size_precision=reverse_decimal_places(market["amount_precision"]),
                 min_size=market["min_base_amount"],
             )
         )
