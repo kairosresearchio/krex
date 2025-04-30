@@ -55,6 +55,7 @@ class HTTPManager:
         path_params: Optional[dict] = None,
         query: Optional[dict] = None,
         body: Optional[dict] = None,
+        signed: bool = True,
     ):
         query = query or {}
         body = body or {}
@@ -69,7 +70,9 @@ class HTTPManager:
             "Content-Type": "application/json",
         }
 
-        if self.api_key and self.api_secret:
+        if signed:
+            if not (self.api_key and self.api_secret):
+                raise ValueError("Signed request requires API Key and Secret.")
             sign = self._sign(method, full_path, query, body, timestamp)
             headers.update(
                 {

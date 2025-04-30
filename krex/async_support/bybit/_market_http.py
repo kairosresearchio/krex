@@ -36,6 +36,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=Market.GET_INSTRUMENTS_INFO,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -67,6 +68,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=Market.GET_KLINE,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -91,6 +93,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=Market.GET_ORDERBOOK,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -118,6 +121,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=Market.GET_TICKERS,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -146,5 +150,6 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=Market.GET_FUNDING_RATE_HISTORY,
             query=payload,
+            signed=False,
         )
         return res

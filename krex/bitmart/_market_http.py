@@ -10,6 +10,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.GET_SPOT_CURRENCIES,
             query=None,
+            signed=False,
         )
         return res
 
@@ -18,6 +19,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.GET_TRADING_PAIRS,
             query=None,
+            signed=False,
         )
         return res
 
@@ -26,6 +28,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.GET_TRADING_PAIRS_DETAILS,
             query=None,
+            signed=False,
         )
         return res
 
@@ -34,6 +37,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.GET_TICKER_OF_ALL_PAIRS,
             query=None,
+            signed=False,
         )
         return res
 
@@ -52,6 +56,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.GET_TICKER_OF_A_PAIR,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -84,6 +89,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.GET_SPOT_KLINE,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -102,6 +108,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.GET_CONTRACTS_DETAILS,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -120,6 +127,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.GET_DEPTH,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -146,6 +154,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.GET_CONTRACTS_KLINE,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -164,6 +173,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.GET_CURRENT_FUNDING_RATE,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -186,5 +196,6 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.GET_FUNDING_RATE_HISTORY,
             query=payload,
+            signed=False,
         )
         return res

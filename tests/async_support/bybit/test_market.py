@@ -2,16 +2,10 @@ import pytest
 import pytest_asyncio
 from krex.async_support.bybit.client import Client
 
-BYBIT_API_KEY = "VLOpq0qMKPNWhMbKVH"
-BYBIT_API_SECRET = "Q3OKhzHiVSOYE2tF8ns2My4mQU7B8d5MnbOt"
-
 
 @pytest_asyncio.fixture
 async def client():
-    async with Client(
-        api_key=BYBIT_API_KEY,
-        api_secret=BYBIT_API_SECRET,
-    ) as client_instance:
+    async with Client() as client_instance:
         yield client_instance
 
 

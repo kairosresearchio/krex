@@ -59,7 +59,13 @@ class HTTPManager:
         param_str = f"{timestamp}{self.api_key}{self.recv_window}{payload}"
         return hmac.new(self.api_secret.encode(), param_str.encode(), hashlib.sha256).hexdigest()
 
-    def _request(self, method, path, query=None):
+    def _request(
+        self,
+        method: str,
+        path: str,
+        query: dict = None,
+        signed: bool = True,
+    ):
         if query is None:
             query = {}
 
@@ -75,7 +81,9 @@ class HTTPManager:
         else:
             payload = json.dumps(query)
 
-        if self.api_key and self.api_secret:
+        if signed:
+            if not (self.api_key and self.api_secret):
+                raise ValueError("Signed request requires API Key and Secret.")
             signature = self._auth(payload, timestamp)
             headers = get_header(self.api_key, signature, timestamp, self.recv_window)
         else:

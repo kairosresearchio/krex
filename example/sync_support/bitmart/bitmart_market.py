@@ -1,15 +1,7 @@
 from krex.bitmart.client import Client
 from datetime import datetime, timedelta
 
-BITMART_API_KEY = "613c8332848ff6b83aa915ae6270f2e842901036"
-BITMART_API_SECRET = "66b82353bfee263185b36bdcaa244ee805c68aa87fd593addcd5124ff334ea3f"
-MEMO = "trade"
-
-client = Client(
-    api_key=BITMART_API_KEY,
-    api_secret=BITMART_API_SECRET,
-    memo=MEMO,
-)
+client = Client()
 
 
 # get account balance
@@ -42,8 +34,8 @@ res = client.get_spot_kline("BTC-USDT-SPOT", "5m")
 print("6. get_spot_kline:", res)
 
 # get_contracts_details
-# res = client.get_contracts_details()
-# print("7. get_contracts_details:", res)
+res = client.get_contracts_details()
+print("7. get_contracts_details:", res)
 
 # get_depth
 res = client.get_depth(product_symbol="BTC-USDT-SWAP")

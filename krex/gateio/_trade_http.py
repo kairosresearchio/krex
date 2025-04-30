@@ -1179,40 +1179,6 @@ class TradeHTTP(HTTPManager):
         )
         return res
 
-    def close_position_when_crossccy_disabled(
-        self,
-        product_symbol: str,
-        amount: str,
-        price: str,
-        text: str = None,
-        action_mode: str = None,
-    ):
-        """
-        :param product_symbol: str
-        :param amount: str
-        :param price: str
-        :param text: str
-        :param action_mode: str
-        """
-
-        body = {
-            "currency_pair": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
-            "amount": amount,
-            "price": price,
-        }
-
-        if text is not None:
-            body["text"] = text
-        if action_mode is not None:
-            body["action_mode"] = action_mode
-
-        res = self._request(
-            method="POST",
-            path=SpotTrade.CLOSE_POSITION_WHEN_CROSSCURRENCY_DISABLED,
-            body=body,
-        )
-        return res
-
     def get_spot_trading_history(
         self,
         product_symbol: str = None,

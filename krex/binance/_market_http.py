@@ -55,6 +55,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.BOOK_TICKER,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -88,6 +89,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.KLINE,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -103,6 +105,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.PREMIUM_INDEX,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -127,5 +130,6 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.FUNDING_RATE_HISTORY,
             query=payload,
+            signed=False,
         )
         return res

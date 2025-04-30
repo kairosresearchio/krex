@@ -30,6 +30,7 @@ class MarketHTTP(HTTPManager):
             path=FutureMarket.GET_ALL_CONTRACTS,
             path_params=path_params,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -51,6 +52,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FutureMarket.GET_A_SINGLE_CONTRACT,
             path_params=path_params,
+            signed=False,
         )
         return res
 
@@ -97,6 +99,7 @@ class MarketHTTP(HTTPManager):
             path=path_,
             path_params=path_params,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -147,6 +150,7 @@ class MarketHTTP(HTTPManager):
             path=path_,
             path_params=path_params,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -181,6 +185,7 @@ class MarketHTTP(HTTPManager):
             path=path_,
             path_params=path_params,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -218,6 +223,7 @@ class MarketHTTP(HTTPManager):
             path=FutureMarket.FUNDING_RATE_HISTORY,
             path_params=path_params,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -230,6 +236,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=DeliveryMarket.GET_ALL_CONTRACTS,
             path_params=path_params,
+            signed=False,
         )
         return res
 
@@ -237,6 +244,7 @@ class MarketHTTP(HTTPManager):
         res = self._request(
             method="GET",
             path=SpotMarket.GET_ALL_CURRENCY_PAIRS,
+            signed=False,
         )
         return res
 
@@ -267,6 +275,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.ORDER_BOOK,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -301,6 +310,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.GET_KLINE,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -324,5 +334,6 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.LIST_TICKERS,
             query=payload,
+            signed=False,
         )
         return res

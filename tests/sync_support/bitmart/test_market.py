@@ -1,16 +1,8 @@
 from datetime import datetime, timedelta
 from krex.bitmart.client import Client
 
-BITMART_API_KEY = "613c8332848ff6b83aa915ae6270f2e842901036"
-BITMART_API_SECRET = "66b82353bfee263185b36bdcaa244ee805c68aa87fd593addcd5124ff334ea3f"
-MEMO = "trade"
 
-
-client = Client(
-    api_key=BITMART_API_KEY,
-    api_secret=BITMART_API_SECRET,
-    memo=MEMO,
-)
+client = Client()
 
 
 def test_get_spot_currencies():

@@ -73,7 +73,13 @@ class HTTPManager:
 
         self.ptm = ProductTableManager.get_instance()
 
-    def _request(self, method, path, query=None):
+    def _request(
+        self,
+        method: str,
+        path: str,
+        query: dict = None,
+        signed: bool = True,
+    ):
         if query is None:
             query = {}
 
@@ -84,19 +90,21 @@ class HTTPManager:
         body = query if method.upper() == "POST" else ""
         body_str = json.dumps(body) if isinstance(body, (dict, list)) else body
 
-        if self.api_key and self.api_secret and self.passphrase:
+        if signed:
+            if not (self.api_key and self.api_secret and self.passphrase):
+                raise ValueError("Signed request requires API Key and Secret and Passphrase.")
             sign = _sign(pre_hash(timestamp, method.upper(), path, body_str), self.api_secret)
-            header = get_header(self.api_key, sign, timestamp, self.passphrase, self.flag)
+            headers = get_header(self.api_key, sign, timestamp, self.passphrase, self.flag)
         else:
-            header = get_header_no_sign(self.flag)
+            headers = get_header_no_sign(self.flag)
 
         url = self.base_api + path
 
         try:
             if method.upper() == "GET":
-                response = self.session.get(url, headers=header)
+                response = self.session.get(url, headers=headers)
             elif method.upper() == "POST":
-                response = self.session.post(url, json=body, headers=header)
+                response = self.session.post(url, json=body, headers=headers)
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 

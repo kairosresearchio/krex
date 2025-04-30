@@ -35,6 +35,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=Market.GET_KLINE,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -57,6 +58,7 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=Market.GET_ORDERBOOK,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -83,5 +85,6 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=Market.GET_TICKERS,
             query=payload,
+            signed=False,
         )
         return res

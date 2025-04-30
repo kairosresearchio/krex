@@ -31,6 +31,7 @@ class PublicHTTP(HTTPManager):
             method="GET",
             path=Public.GET_INSTRUMENT_INFO,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -49,6 +50,7 @@ class PublicHTTP(HTTPManager):
             method="GET",
             path=Public.GET_FUNDING_RATE,
             query=payload,
+            signed=False,
         )
         return res
 
@@ -79,5 +81,6 @@ class PublicHTTP(HTTPManager):
             method="GET",
             path=Public.GET_FUNDING_RATE_HISTORY,
             query=payload,
+            signed=False,
         )
         return res

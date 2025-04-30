@@ -42,7 +42,6 @@ class SpotTrade(str, Enum):
 
     # "GET" get order, "POST" amend order, "DELETE" cancel single order
     SINGLE_ORDER = "/spot/orders/{order_id}"
-    CLOSE_POSITION_WHEN_CROSSCURRENCY_DISABLED = "/spot/cross_liquidate_orders"
     LIST_PERSONAL_TRADING_HISTORY = "/spot/my_trades"
 
     def __str__(self) -> str:

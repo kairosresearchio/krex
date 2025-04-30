@@ -1,13 +1,9 @@
-import os
 from dotenv import load_dotenv
 from krex.gateio.client import Client
 
 load_dotenv()
 
-client = Client(
-    api_key=os.getenv("GATEIO_APIKEY"),
-    api_secret=os.getenv("GATEIO_APISECRET"),
-)
+client = Client()
 
 
 def test_get_all_futures_contracts():

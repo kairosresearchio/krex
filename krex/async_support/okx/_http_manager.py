@@ -69,7 +69,13 @@ class HTTPManager:
         self.ptm = await ProductTableManager.get_instance()
         return self
 
-    async def _request(self, method, path, query=None):
+    async def _request(
+        self,
+        method: str,
+        path: str,
+        query: dict = None,
+        signed: bool = True,
+    ):
         if query is None:
             query = {}
 
@@ -80,7 +86,9 @@ class HTTPManager:
         body = query if method.upper() == "POST" else ""
         body_str = json.dumps(body, separators=(",", ":"), ensure_ascii=False) if isinstance(body, (dict, list)) else ""
 
-        if self.api_key and self.api_secret and self.passphrase:
+        if signed:
+            if not (self.api_key and self.api_secret and self.passphrase):
+                raise ValueError("Signed request requires API Key and Secret and Passphrase.")
             sign = _sign(pre_hash(timestamp, method.upper(), path, body_str), self.api_secret)
             headers = get_header(self.api_key, sign, timestamp, self.passphrase, self.flag)
         else:

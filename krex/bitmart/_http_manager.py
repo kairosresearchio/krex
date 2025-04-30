@@ -70,7 +70,13 @@ class HTTPManager:
                 return base_url
         raise ValueError(f"Unknown API path: {path} (type={type(path)})")
 
-    def _request(self, method, path, query=None):
+    def _request(
+        self,
+        method: str,
+        path: str,
+        query: dict = None,
+        signed: bool = True,
+    ):
         if query is None:
             query = {}
 
@@ -81,11 +87,11 @@ class HTTPManager:
             params_str = "&".join(f"{k}={v}" for k, v in sorted(query.items()) if v)
             url = f"{url}?{params_str}"
 
-        # print(f"Requesting: {url}")
-
         timestamp = generate_timestamp()
 
-        if self.api_key and self.api_secret and self.memo:
+        if signed:
+            if not (self.api_key and self.api_secret and self.memo):
+                raise ValueError("Signed request requires API Key and Secret and Memo.")
             sign = sign_message(timestamp, self.memo, json.dumps(query), self.api_secret)
             headers = get_header(self.api_key, sign, timestamp, self.memo)
         else:

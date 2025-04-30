@@ -141,12 +141,6 @@ client = Client(
 # )
 # print(result)
 
-# need test
-# result = client.get_futures_auto_deleveraging_history(
-#     product_symbol="BTC-USDT-SWAP",
-# )
-# print(result)
-
 # # ========== Delivery ==========
 # result = client.place_contract_post_only_limit_buy_order(
 #     product_symbol="BTC-USDT-20250502-SWAP",
@@ -312,13 +306,5 @@ client = Client(
 #     account="margin",
 #     price="91000",
 #     auto_borrow=True,
-# )
-# print(result)
-
-# need test
-# result = client.close_position_when_crossccy_disabled(
-#     product_symbol="BTC-USDT-SPOT",
-#     amount="0.00005",
-#     price="91000",
 # )
 # print(result)
