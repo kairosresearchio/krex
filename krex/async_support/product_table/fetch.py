@@ -197,6 +197,30 @@ async def okx() -> pl.DataFrame:
             )
         )
 
+    res_futures = await public_http.get_public_instruments(instType="FUTURES")
+    df_futures = to_dataframe(res_futures["data"]) if "data" in res_futures else pl.DataFrame()
+    for market in df_futures.iter_rows(named=True):
+        base = strip_number(market["baseCcy"])
+        quote = market["quoteCcy"]
+
+        if not base or not quote:
+            parts = market["instId"].split("-")
+            if len(parts) >= 2:
+                base, quote = parts[0], parts[1]
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.OKX,
+                exchange_symbol=market["instId"],
+                product_symbol=strip_number(market["instId"]),
+                product_type=market["instType"],
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=market["tickSz"],
+                size_precision=market["lotSz"],
+                min_size=market["minSz"],
+            )
+        )
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
 
