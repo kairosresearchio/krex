@@ -221,6 +221,7 @@ async def okx() -> pl.DataFrame:
                 min_size=market["minSz"],
             )
         )
+
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
 
