@@ -54,6 +54,7 @@ class BybitPublicLinearWsClient(WsClient):
                 symbol = topic.split(".")[-1]
                 book_ticker = BookTicker(
                     symbol=symbol,
+                    product_type="linear",
                     best_bid_price=float(data["b"][0][0]),
                     best_bid_quantity=float(data["b"][0][1]),
                     best_ask_price=float(data["a"][0][0]),
@@ -70,11 +71,11 @@ class BybitPublicLinearWsClient(WsClient):
                 ticker_data = data[0]
                 book_ticker = BookTicker(
                     symbol=symbol,
+                    product_type="linear",
                     best_bid_price=float(ticker_data["bid1Price"]),
                     best_bid_quantity=float(ticker_data["bid1Size"]),
                     best_ask_price=float(ticker_data["ask1Price"]),
                     best_ask_quantity=float(ticker_data["ask1Size"]),
-                    funding_rate=float(ticker_data.get("fundingRate")),
                     timestamp=int(payload.get("ts")),
                 )
                 await self.market_data.update_depth_data("bybit", symbol, book_ticker)
@@ -137,6 +138,7 @@ class BybitPublicSpotWsClient(WsClient):
                 symbol = topic.split(".")[-1]
                 book_ticker = BookTicker(
                     symbol=symbol,
+                    product_type="spot",
                     best_bid_price=float(data["b"][0][0]),
                     best_bid_quantity=float(data["b"][0][1]),
                     best_ask_price=float(data["a"][0][0]),
@@ -153,6 +155,7 @@ class BybitPublicSpotWsClient(WsClient):
                 ticker_data = data[0]
                 book_ticker = BookTicker(
                     symbol=symbol,
+                    product_type="spot",
                     best_bid_price=float(ticker_data["bid1Price"]),
                     best_bid_quantity=float(ticker_data["bid1Size"]),
                     best_ask_price=float(ticker_data["ask1Price"]),

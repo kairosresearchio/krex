@@ -54,7 +54,8 @@ class OkxPublicWsClient(WsClient):
             try:
                 data_payload = data[0]
                 book_ticker = BookTicker(
-                    symbol=payload["arg"].get("instId", ""),
+                    symbol=payload["arg"].get("instId"),
+                    product_type="SWAP" if payload["arg"].get("instId").endswith("-SWAP") else "SPOT",
                     best_bid_price=float(data_payload.get("bids", [[0, 0]])[0][0]),
                     best_bid_quantity=float(data_payload.get("bids", [[0, 0]])[0][1]),
                     best_ask_price=float(data_payload.get("asks", [[0, 0]])[0][0]),
