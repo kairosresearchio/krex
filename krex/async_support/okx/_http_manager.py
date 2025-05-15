@@ -62,11 +62,13 @@ class HTTPManager:
     logger: logging.Logger = field(default=None)
     session: httpx.AsyncClient = field(init=False)
     ptm: ProductTableManager = field(init=False)
+    preload_product_table: bool = field(default=True)
 
     async def async_init(self):
         self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
-        self.ptm = await ProductTableManager.get_instance()
+        if self.preload_product_table:
+            self.ptm = await ProductTableManager.get_instance()
         return self
 
     async def _request(

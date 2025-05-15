@@ -42,6 +42,7 @@ class HTTPManager:
     logger: logging.Logger = field(default=None)
     session: requests.Session = field(default_factory=requests.Session, init=False)
     ptm: ProductTableManager = field(init=False)
+    preload_product_table: bool = field(default=True)
 
     api_map = {
         "https://api-cloud.bitmart.com": {
@@ -62,7 +63,8 @@ class HTTPManager:
         else:
             self._logger = self.logger
 
-        self.ptm = ProductTableManager.get_instance()
+        if self.preload_product_table:
+            self.ptm = ProductTableManager.get_instance()
 
     def _get_base_url(self, path):
         for base_url, enums in self.api_map.items():

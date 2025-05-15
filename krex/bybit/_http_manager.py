@@ -44,6 +44,7 @@ class HTTPManager:
     logger: logging.Logger = field(default=None)
     session: requests.Session = field(default_factory=requests.Session, init=False)
     ptm: ProductTableManager = field(init=False)
+    preload_product_table: bool = field(default=True)
 
     def __post_init__(self):
         if self.logger is None:
@@ -53,7 +54,9 @@ class HTTPManager:
 
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
-        self.ptm = ProductTableManager.get_instance()
+        
+        if self.preload_product_table:
+            self.ptm = ProductTableManager.get_instance()
 
     def _auth(self, payload, timestamp):
         param_str = f"{timestamp}{self.api_key}{self.recv_window}{payload}"

@@ -18,7 +18,7 @@ class HTTPManager:
     base_url: str = field(default="https://api.gateio.ws")
     logger: logging.Logger = field(default=None)
     session: requests.Session = field(default_factory=requests.Session, init=False)
-    ptm: ProductTableManager = field(init=False)
+    preload_product_table: bool = field(default=True)
 
     def __post_init__(self):
         if self.logger is None:
@@ -26,7 +26,8 @@ class HTTPManager:
         else:
             self._logger = self.logger
 
-        self.ptm = ProductTableManager.get_instance()
+        if self.preload_product_table:
+            self.ptm = ProductTableManager.get_instance()
 
     def _resolve_path(self, path_template, path_params: dict = None) -> str:
         if isinstance(path_template, Enum):
