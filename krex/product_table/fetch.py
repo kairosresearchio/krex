@@ -194,7 +194,7 @@ async def okx() -> pl.DataFrame:
                 min_size=market["minSz"],
             )
         )
-        
+
     res_futures = public_http.get_public_instruments(instType="FUTURES")
     df_futures = to_dataframe(res_futures["data"]) if "data" in res_futures else pl.DataFrame()
     for market in df_futures.iter_rows(named=True):
