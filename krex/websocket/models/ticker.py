@@ -9,3 +9,4 @@ class BookTicker:
     best_ask_price: float
     best_ask_quantity: float
     timestamp: int
+    funding_rate: float = 0.0

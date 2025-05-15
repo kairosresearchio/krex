@@ -22,7 +22,7 @@ def safe_float(value, default=0.0):
         return default
 
 
-class BybitPublicWsClient(WsClient):
+class BybitPublicLinearWsClient(WsClient):
     URI = "wss://stream.bybit.com/v5/public/linear"
     SANDBOX_URI = "wss://stream-testnet.bybit.com/v5/public/linear"
 
@@ -58,12 +58,29 @@ class BybitPublicWsClient(WsClient):
                     best_bid_quantity=float(data["b"][0][1]),
                     best_ask_price=float(data["a"][0][0]),
                     best_ask_quantity=float(data["a"][0][1]),
-                    timestamp=int(payload.get("ts", 0)),
+                    timestamp=int(payload.get("ts")),
                 )
                 await self.market_data.update_depth_data("bybit", symbol, book_ticker)
             except Exception as e:
                 logger.error(f"Error processing book ticker: {e}")
-
+                
+        elif topic.startswith("tickers.") and data:
+            try:
+                symbol = topic.split(".")[-1]
+                ticker_data = data[0]
+                book_ticker = BookTicker(
+                    symbol=symbol,
+                    best_bid_price=float(ticker_data["bid1Price"]),
+                    best_bid_quantity=float(ticker_data["bid1Size"]),
+                    best_ask_price=float(ticker_data["ask1Price"]),
+                    best_ask_quantity=float(ticker_data["ask1Size"]),
+                    funding_rate=float(ticker_data.get("fundingRate")),
+                    timestamp=int(payload.get("ts")),
+                )
+                await self.market_data.update_depth_data("bybit", symbol, book_ticker)
+            except Exception as e:
+                logger.error(f"Error processing ticker data: {e}")
+                
         elif topic.startswith("kline.") and data:
             try:
                 kline = data[0]
@@ -88,6 +105,87 @@ class BybitPublicWsClient(WsClient):
             except Exception as e:
                 logger.error(f"Error processing kline data: {e}")
 
+class BybitPublicSpotWsClient(WsClient):
+    URI = "wss://stream.bybit.com/v5/public/spot"
+    SANDBOX_URI = "wss://stream-testnet.bybit.com/v5/public/spot"
+
+    def __init__(
+        self,
+        subscription: dict,
+        is_sandbox: bool = False,
+        slack=None,
+        slack_bot_name: str = None,
+        slack_channel_name: str = None,
+    ):
+        super().__init__(subscription, is_sandbox, slack, slack_bot_name, slack_channel_name)
+        self.market_data = MarketData()
+
+    @classmethod
+    async def create(cls, **kwargs):
+        self = cls(**kwargs)
+        return self
+
+    async def on_message(self, message: str):
+        await super().on_message(message)
+        payload = json.loads(message)
+
+        topic = payload.get("topic", "")
+        data = payload.get("data", [])
+
+        if topic.startswith("orderbook.1.") and data:
+            try:
+                symbol = topic.split(".")[-1]
+                book_ticker = BookTicker(
+                    symbol=symbol,
+                    best_bid_price=float(data["b"][0][0]),
+                    best_bid_quantity=float(data["b"][0][1]),
+                    best_ask_price=float(data["a"][0][0]),
+                    best_ask_quantity=float(data["a"][0][1]),
+                    timestamp=int(payload.get("ts")),
+                )
+                await self.market_data.update_depth_data("bybit", symbol, book_ticker)
+            except Exception as e:
+                logger.error(f"Error processing book ticker: {e}")
+        
+        elif topic.startswith("tickers.") and data:
+            try:
+                symbol = topic.split(".")[-1]
+                ticker_data = data[0]
+                book_ticker = BookTicker(
+                    symbol=symbol,
+                    best_bid_price=float(ticker_data["bid1Price"]),
+                    best_bid_quantity=float(ticker_data["bid1Size"]),
+                    best_ask_price=float(ticker_data["ask1Price"]),
+                    best_ask_quantity=float(ticker_data["ask1Size"]),
+                    timestamp=int(payload.get("ts")),
+                )
+                await self.market_data.update_depth_data("bybit", symbol, book_ticker)
+            except Exception as e:
+                logger.error(f"Error processing ticker data: {e}")
+
+        elif topic.startswith("kline.") and data:
+            try:
+                kline = data[0]
+                symbol = topic.split(".")[-1]
+
+                df = (
+                    pl.DataFrame(
+                        {
+                            "open": [float(kline["open"])],
+                            "high": [float(kline["high"])],
+                            "low": [float(kline["low"])],
+                            "close": [float(kline["close"])],
+                            "volume": [float(kline["volume"])],
+                            "datetime": [int(kline["start"])],
+                        }
+                    )
+                    .with_columns(pl.col("datetime").cast(pl.Int64).cast(pl.Datetime("ms")))
+                    .set_sorted("datetime")
+                )
+
+                await self.market_data.update_kline_data("bybit", symbol, df)
+            except Exception as e:
+                logger.error(f"Error processing kline data: {e}")
 
 class BybitPrivateWsClient(WsClient):
     URI = "wss://stream.bybit.com/v5/private"
