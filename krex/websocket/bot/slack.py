@@ -17,7 +17,7 @@ class Slack:
 
         url = "https://slack.com/api/chat.postMessage"
         headers = {"Authorization": f"Bearer {bot_token}"}
-        data = {"channel": channel_id, "text": text}
+        data = {"channel": channel_id, "text": f"```{text}```"}
 
         async with httpx.AsyncClient() as client:
             response = await client.post(url, headers=headers, data=data)
