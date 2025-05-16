@@ -2,6 +2,7 @@ import asyncio
 import websockets
 import json
 import logging
+import traceback
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -61,8 +62,7 @@ class WsClient:
         await self.send_slack(f"[CRITICAL] - {self.__class__.__name__} WebSocket connection closed")
 
     async def on_error(self, error: Exception):
-        logger.error(f"WebSocket error: {error}")
-        await self.send_slack(f"[CRITICAL] - {self.__class__.__name__} Error occurred: {error}")
+        await self.send_slack(f"[CRITICAL] - {self.__class__.__name__} Error occurred: {traceback.format_exc()}")
         await self.reconnect()
 
     async def message_check_loop(self):
@@ -96,18 +96,16 @@ class WsClient:
             await self.on_error(e)
 
     async def connect(self):
-        try:
-            async with websockets.connect(self.uri, ping_interval=10, ping_timeout=3) as ws:
-                self.websocket = ws
-                await self.on_open()
+        async with websockets.connect(self.uri, ping_interval=10, ping_timeout=3) as ws:
+            self.websocket = ws
+            await self.on_open()
 
+            try:
                 check_task = asyncio.create_task(self.message_check_loop())
                 await self.receive_loop()
                 check_task.cancel()
-        except Exception as e:
-            await self.on_error(e)
-        finally:
-            await self.on_close()
+            finally:
+                await self.on_close()
 
     async def reconnect(self):
         if self.should_run:
@@ -122,7 +120,13 @@ class WsClient:
 
     async def start(self):
         self.should_run = True
-        await self.connect()
+        while self.should_run:
+            try:
+                await self.connect()
+            except Exception as e:
+                logger.error(f"Connection error: {e}")
+                await self.send_slack(f"[CRITICAL] - {self.__class__.__name__}, Connection error: {traceback.format_exc()}")
+                await asyncio.sleep(0.1)
 
     async def stop(self):
         self.should_run = False
