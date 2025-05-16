@@ -2,6 +2,7 @@ import json
 import time
 import hmac
 import logging
+import asyncio
 import polars as pl
 from .base import WsClient
 from .data.market_data import MarketData
@@ -41,6 +42,20 @@ class BybitPublicLinearWsClient(WsClient):
     async def create(cls, **kwargs):
         self = cls(**kwargs)
         return self
+    
+    async def on_open(self):
+        linear_args_plan = [self.subscription["args"][i : i + 10] for i in range(0, len(self.subscription["args"]), 10)]
+        for linear_args in linear_args_plan:
+            subscribe_message = json.dumps(
+                {
+                    "op": "subscribe",
+                    "args": linear_args,
+                }
+            )
+            await self.websocket.send(subscribe_message)
+            logger.info(f"Sent subscription message: {subscribe_message}")
+            await asyncio.sleep(0.3)
+        await self.send_slack(f"[INFO] - {self.__class__.__name__} WebSocket connection opened")
 
     async def on_message(self, message: str):
         await super().on_message(message)
@@ -114,6 +129,20 @@ class BybitPublicSpotWsClient(WsClient):
     async def create(cls, **kwargs):
         self = cls(**kwargs)
         return self
+    
+    async def on_open(self):
+        spot_args_plan = [self.subscription["args"][i : i + 10] for i in range(0, len(self.subscription["args"]), 10)]
+        for spot_args in spot_args_plan:
+            subscribe_message = json.dumps(
+                {
+                    "op": "subscribe",
+                    "args": spot_args,
+                }
+            )
+            await self.websocket.send(subscribe_message)
+            logger.info(f"Sent subscription message: {subscribe_message}")
+            asyncio.sleep(0.3)
+        await self.send_slack(f"[INFO] - {self.__class__.__name__} WebSocket connection opened")
 
     async def on_message(self, message: str):
         await super().on_message(message)

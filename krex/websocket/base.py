@@ -50,11 +50,10 @@ class WsClient:
         logger.info(f"Received message: {message}")
 
     async def on_open(self):
-        logger.info("WebSocket connection opened")
-        await self.send_slack(f"[INFO] - {self.__class__.__name__} WebSocket connection opened")
-
         subscribe_message = json.dumps(self.subscription)
         await self.websocket.send(subscribe_message)
+        await self.send_slack(f"[INFO] - {self.__class__.__name__} WebSocket connection opened")
+        logger.info("WebSocket connection opened")
         logger.info(f"Sent subscription message: {subscribe_message}")
 
     async def on_close(self):
