@@ -64,6 +64,7 @@ class WsClient:
     async def on_error(self, error: Exception):
         logger.error(f"WebSocket error: {error}")
         await self.send_slack(f"[CRITICAL] - {self.__class__.__name__} Error occurred: {error}")
+        await self.reconnect()
 
     async def message_check_loop(self):
         while self.should_run:

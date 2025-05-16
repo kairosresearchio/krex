@@ -51,46 +51,39 @@ class OkxPublicWsClient(WsClient):
         data = payload.get("data", [])
 
         if channel == "bbo-tbt" and data:
-            try:
-                data_payload = data[0]
-                book_ticker = BookTicker(
-                    symbol=payload["arg"].get("instId"),
-                    product_type="SWAP" if payload["arg"].get("instId").endswith("-SWAP") else "SPOT",
-                    best_bid_price=float(data_payload.get("bids", [[0, 0]])[0][0]),
-                    best_bid_quantity=float(data_payload.get("bids", [[0, 0]])[0][1]),
-                    best_ask_price=float(data_payload.get("asks", [[0, 0]])[0][0]),
-                    best_ask_quantity=float(data_payload.get("asks", [[0, 0]])[0][1]),
-                    timestamp=int(data_payload.get("ts", 0)),
-                )
-                await self.market_data.update_depth_data("okx", book_ticker.symbol, book_ticker)
-            except Exception as e:
-                logger.error(f"Error processing book ticker: {e}")
+            data_payload = data[0]
+            book_ticker = BookTicker(
+                symbol=payload["arg"].get("instId"),
+                product_type="SWAP" if payload["arg"].get("instId").endswith("-SWAP") else "SPOT",
+                best_bid_price=float(data_payload.get("bids", [[0, 0]])[0][0]),
+                best_bid_quantity=float(data_payload.get("bids", [[0, 0]])[0][1]),
+                best_ask_price=float(data_payload.get("asks", [[0, 0]])[0][0]),
+                best_ask_quantity=float(data_payload.get("asks", [[0, 0]])[0][1]),
+                timestamp=int(data_payload.get("ts", 0)),
+            )
+            await self.market_data.update_depth_data("okx", book_ticker.symbol, book_ticker)
 
         elif channel and "candle" in channel and data:
-            try:
-                kline_payload = data[0]
-                symbol = payload["arg"].get("instId", "")
+            kline_payload = data[0]
+            symbol = payload["arg"].get("instId", "")
 
-                new_df = (
-                    pl.DataFrame(
-                        {
-                            "open": [float(kline_payload[1])],
-                            "high": [float(kline_payload[2])],
-                            "low": [float(kline_payload[3])],
-                            "close": [float(kline_payload[4])],
-                            "volume": [float(kline_payload[5])],
-                            "datetime": [int(kline_payload[0])],
-                        }
-                    )
-                    .with_columns(pl.col("datetime").cast(pl.Int64).cast(pl.Datetime("ms")))
-                    .set_sorted("datetime")
+            new_df = (
+                pl.DataFrame(
+                    {
+                        "open": [float(kline_payload[1])],
+                        "high": [float(kline_payload[2])],
+                        "low": [float(kline_payload[3])],
+                        "close": [float(kline_payload[4])],
+                        "volume": [float(kline_payload[5])],
+                        "datetime": [int(kline_payload[0])],
+                    }
                 )
+                .with_columns(pl.col("datetime").cast(pl.Int64).cast(pl.Datetime("ms")))
+                .set_sorted("datetime")
+            )
 
-                # 直接送到 update_kline_data，由 shared_data 去處理要怎麼存
-                await self.market_data.update_kline_data("okx", symbol, new_df)
-
-            except Exception as e:
-                logger.error(f"Error processing kline data: {e}")
+            # 直接送到 update_kline_data，由 shared_data 去處理要怎麼存
+            await self.market_data.update_kline_data("okx", symbol, new_df)
 
 
 class OkxPrivateWsClient(WsClient):
