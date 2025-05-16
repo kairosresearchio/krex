@@ -93,8 +93,7 @@ class BybitPublicLinearWsClient(WsClient):
                 .with_columns(pl.col("datetime").cast(pl.Int64).cast(pl.Datetime("ms")))
                 .set_sorted("datetime")
             )
-
-        await self.market_data.update_kline_data("bybit", symbol, df)
+            await self.market_data.update_kline_data("bybit", symbol, df)
 
 class BybitPublicSpotWsClient(WsClient):
     URI = "wss://stream.bybit.com/v5/public/spot"
@@ -168,7 +167,6 @@ class BybitPublicSpotWsClient(WsClient):
                 .with_columns(pl.col("datetime").cast(pl.Int64).cast(pl.Datetime("ms")))
                 .set_sorted("datetime")
             )
-
             await self.market_data.update_kline_data("bybit", symbol, df)
 
 class BybitPrivateWsClient(WsClient):
