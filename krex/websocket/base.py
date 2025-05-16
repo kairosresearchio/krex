@@ -34,6 +34,7 @@ class WsClient:
         self.slack_bot_name = slack_bot_name
         self.slack_channel_name = slack_channel_name
 
+        self.message_check_task = None
         self.last_message_time = asyncio.get_event_loop().time()
 
     async def send_slack(self, msg: str):
@@ -59,6 +60,8 @@ class WsClient:
 
     async def on_close(self):
         logger.info("WebSocket connection closed")
+        if self.message_check_task:
+            self.message_check_task.cancel()
         await self.send_slack(f"[CRITICAL] - {self.__class__.__name__} WebSocket connection closed")
 
     async def on_error(self, error: Exception):
@@ -101,9 +104,8 @@ class WsClient:
             await self.on_open()
 
             try:
-                check_task = asyncio.create_task(self.message_check_loop())
+                self.message_check_task = asyncio.create_task(self.message_check_loop())
                 await self.receive_loop()
-                check_task.cancel()
             finally:
                 await self.on_close()
 

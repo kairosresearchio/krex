@@ -141,7 +141,7 @@ class BybitPublicSpotWsClient(WsClient):
             )
             await self.websocket.send(subscribe_message)
             logger.info(f"Sent subscription message: {subscribe_message}")
-            asyncio.sleep(0.3)
+            await asyncio.sleep(0.3)
         await self.send_slack(f"[INFO] - {self.__class__.__name__} WebSocket connection opened")
 
     async def on_message(self, message: str):
