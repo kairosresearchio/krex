@@ -4,6 +4,7 @@ import json
 import logging
 import traceback
 from datetime import datetime
+from .models.ticker import BookTicker
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -21,12 +22,14 @@ class WsClient:
         self,
         subscription: dict,
         is_sandbox: bool = False,
+        orderbook_queue: asyncio.Queue = None,
         slack=None,
         slack_bot_name: str = None,
         slack_channel_name: str = None,
     ):
         self.uri = self.URI if not is_sandbox else self.SANDBOX_URI
         self.subscription = subscription
+        self.orderbook_queue = orderbook_queue
         self.should_run = True
         self.websocket = None
 
@@ -50,6 +53,17 @@ class WsClient:
 
     async def on_message(self, message: str):
         logger.info(f"Received message: {message}")
+    
+    async def update_orderbook_queue(self, exchange: str, symbol: str, ticker: BookTicker):
+        if not self.orderbook_queue:
+            return
+        await self.orderbook_queue.put(
+            (
+                exchange,
+                symbol,
+                ticker,
+            )
+        )
 
     async def on_open(self):
         subscribe_message = json.dumps(self.subscription)

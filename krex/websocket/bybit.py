@@ -31,11 +31,19 @@ class BybitPublicLinearWsClient(WsClient):
         self,
         subscription: dict,
         is_sandbox: bool = False,
+        orderbook_queue=None,
         slack=None,
         slack_bot_name: str = None,
         slack_channel_name: str = None,
     ):
-        super().__init__(subscription, is_sandbox, slack, slack_bot_name, slack_channel_name)
+        super().__init__(
+            subscription,
+            is_sandbox,
+            orderbook_queue,
+            slack, 
+            slack_bot_name, 
+            slack_channel_name
+        )
         self.market_data = MarketData()
 
     @classmethod
@@ -57,6 +65,8 @@ class BybitPublicLinearWsClient(WsClient):
             await asyncio.sleep(0.3)
         await self.send_slack(f"[INFO] - {self.__class__.__name__} WebSocket connection opened")
 
+    
+        
     async def on_message(self, message: str):
         await super().on_message(message)
         payload = json.loads(message)
@@ -76,6 +86,7 @@ class BybitPublicLinearWsClient(WsClient):
                 timestamp=int(payload.get("ts")),
             )
             await self.market_data.update_depth_data("bybit", symbol, book_ticker)
+            await self.update_orderbook_queue("bybit", symbol, book_ticker)
                 
         elif topic.startswith("tickers.") and data:
             symbol = topic.split(".")[-1]
@@ -118,11 +129,19 @@ class BybitPublicSpotWsClient(WsClient):
         self,
         subscription: dict,
         is_sandbox: bool = False,
+        orderbook_queue=None,
         slack=None,
         slack_bot_name: str = None,
         slack_channel_name: str = None,
     ):
-        super().__init__(subscription, is_sandbox, slack, slack_bot_name, slack_channel_name)
+        super().__init__(
+            subscription,
+            is_sandbox,
+            orderbook_queue,
+            slack, 
+            slack_bot_name, 
+            slack_channel_name
+        )
         self.market_data = MarketData()
 
     @classmethod
@@ -163,6 +182,7 @@ class BybitPublicSpotWsClient(WsClient):
                 timestamp=int(payload.get("ts")),
             )
             await self.market_data.update_depth_data("bybit", symbol, book_ticker)
+            await self.update_orderbook_queue("bybit", symbol, book_ticker)
 
         elif topic.startswith("tickers.") and data:
             symbol = topic.split(".")[-1]

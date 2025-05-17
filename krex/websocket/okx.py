@@ -31,11 +31,19 @@ class OkxPublicWsClient(WsClient):
         self,
         subscription: dict,
         is_sandbox: bool = False,
+        orderbook_queue=None,
         slack=None,
         slack_bot_name: str = None,
         slack_channel_name: str = None,
     ):
-        super().__init__(subscription, is_sandbox, slack, slack_bot_name, slack_channel_name)
+        super().__init__(
+            subscription,
+            is_sandbox,
+            orderbook_queue, 
+            slack, 
+            slack_bot_name, 
+            slack_channel_name
+        )
         self.market_data = MarketData()
 
     @classmethod
@@ -62,6 +70,7 @@ class OkxPublicWsClient(WsClient):
                 timestamp=int(data_payload.get("ts", 0)),
             )
             await self.market_data.update_depth_data("okx", book_ticker.symbol, book_ticker)
+            await self.update_orderbook_queue("okx", symbol, book_ticker)
 
         elif channel and "candle" in channel and data:
             kline_payload = data[0]
