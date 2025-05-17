@@ -70,7 +70,7 @@ class OkxPublicWsClient(WsClient):
                 timestamp=int(data_payload.get("ts", 0)),
             )
             await self.market_data.update_depth_data("okx", book_ticker.symbol, book_ticker)
-            await self.update_orderbook_queue("okx", symbol, book_ticker)
+            await self.update_orderbook_queue("okx", book_ticker.symbol, book_ticker)
 
         elif channel and "candle" in channel and data:
             kline_payload = data[0]
