@@ -30,6 +30,7 @@ class OrderSide(Enum):
 class Exchange(Enum):
     OKX = "okx"
     BITMART = "bitmart"
+    BYBIT = "bybit"
 
 
 @dataclass

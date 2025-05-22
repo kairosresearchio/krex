@@ -54,7 +54,7 @@ class HTTPManager:
 
         subdomain = SUBDOMAIN_TESTNET if self.testnet else SUBDOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
-        
+
         if self.preload_product_table:
             self.ptm = ProductTableManager.get_instance()
 

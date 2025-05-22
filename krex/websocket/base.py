@@ -53,7 +53,7 @@ class WsClient:
 
     async def on_message(self, message: str):
         logger.info(f"Received message: {message}")
-    
+
     async def update_orderbook_queue(self, exchange: str, symbol: str, ticker: BookTicker):
         if not self.orderbook_queue:
             return
@@ -141,7 +141,9 @@ class WsClient:
                 await self.connect()
             except Exception as e:
                 logger.error(f"Connection error: {e}")
-                await self.send_slack(f"[CRITICAL] - {self.__class__.__name__}, Connection error: {traceback.format_exc()}")
+                await self.send_slack(
+                    f"[CRITICAL] - {self.__class__.__name__}, Connection error: {traceback.format_exc()}"
+                )
                 await asyncio.sleep(0.1)
 
     async def stop(self):

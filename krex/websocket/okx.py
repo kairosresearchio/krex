@@ -36,14 +36,7 @@ class OkxPublicWsClient(WsClient):
         slack_bot_name: str = None,
         slack_channel_name: str = None,
     ):
-        super().__init__(
-            subscription,
-            is_sandbox,
-            orderbook_queue, 
-            slack, 
-            slack_bot_name, 
-            slack_channel_name
-        )
+        super().__init__(subscription, is_sandbox, orderbook_queue, slack, slack_bot_name, slack_channel_name)
         self.market_data = MarketData()
 
     @classmethod

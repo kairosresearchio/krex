@@ -95,11 +95,11 @@ class ProductTableManager:
 
         if data.height > 1:
             raise ProductTableError(
-                f"Exist multiple {key} for product_code: {product_symbol}, exchange: {exchange}, product_type: {product_type}"
+                f"Exist multiple {key} for product_symbol: {product_symbol}, exchange: {exchange}, product_type: {product_type}"
             )
         if data.height == 0:
             raise ProductTableError(
-                f"Not exist {key} for product_code: {product_symbol}, exchange: {exchange}, product_type: {product_type}, exchange_symbol: {exchange_symbol}"
+                f"Not exist {key} for product_symbol: {product_symbol}, exchange: {exchange}, product_type: {product_type}, exchange_symbol: {exchange_symbol}"
             )
 
         return data.select(key).item()

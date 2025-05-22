@@ -36,21 +36,14 @@ class BybitPublicLinearWsClient(WsClient):
         slack_bot_name: str = None,
         slack_channel_name: str = None,
     ):
-        super().__init__(
-            subscription,
-            is_sandbox,
-            orderbook_queue,
-            slack, 
-            slack_bot_name, 
-            slack_channel_name
-        )
+        super().__init__(subscription, is_sandbox, orderbook_queue, slack, slack_bot_name, slack_channel_name)
         self.market_data = MarketData()
 
     @classmethod
     async def create(cls, **kwargs):
         self = cls(**kwargs)
         return self
-    
+
     async def on_open(self):
         linear_args_plan = [self.subscription["args"][i : i + 10] for i in range(0, len(self.subscription["args"]), 10)]
         for linear_args in linear_args_plan:
@@ -65,8 +58,6 @@ class BybitPublicLinearWsClient(WsClient):
             await asyncio.sleep(0.3)
         await self.send_slack(f"[INFO] - {self.__class__.__name__} WebSocket connection opened")
 
-    
-        
     async def on_message(self, message: str):
         await super().on_message(message)
         payload = json.loads(message)
@@ -87,7 +78,7 @@ class BybitPublicLinearWsClient(WsClient):
             )
             await self.market_data.update_depth_data("bybit", symbol, book_ticker)
             await self.update_orderbook_queue("bybit", symbol, book_ticker)
-                
+
         elif topic.startswith("tickers.") and data:
             symbol = topic.split(".")[-1]
             ticker_data = data[0]
@@ -100,7 +91,7 @@ class BybitPublicLinearWsClient(WsClient):
                 best_ask_quantity=float(ticker_data["ask1Size"]),
                 timestamp=int(payload.get("ts")),
             )
-            
+
         elif topic.startswith("kline.") and data:
             kline = data[0]
             symbol = topic.split(".")[-1]
@@ -121,6 +112,7 @@ class BybitPublicLinearWsClient(WsClient):
             )
             await self.market_data.update_kline_data("bybit", symbol, df)
 
+
 class BybitPublicSpotWsClient(WsClient):
     URI = "wss://stream.bybit.com/v5/public/spot"
     SANDBOX_URI = "wss://stream-testnet.bybit.com/v5/public/spot"
@@ -134,21 +126,14 @@ class BybitPublicSpotWsClient(WsClient):
         slack_bot_name: str = None,
         slack_channel_name: str = None,
     ):
-        super().__init__(
-            subscription,
-            is_sandbox,
-            orderbook_queue,
-            slack, 
-            slack_bot_name, 
-            slack_channel_name
-        )
+        super().__init__(subscription, is_sandbox, orderbook_queue, slack, slack_bot_name, slack_channel_name)
         self.market_data = MarketData()
 
     @classmethod
     async def create(cls, **kwargs):
         self = cls(**kwargs)
         return self
-    
+
     async def on_open(self):
         spot_args_plan = [self.subscription["args"][i : i + 10] for i in range(0, len(self.subscription["args"]), 10)]
         for spot_args in spot_args_plan:
@@ -218,6 +203,7 @@ class BybitPublicSpotWsClient(WsClient):
             )
             await self.market_data.update_kline_data("bybit", symbol, df)
 
+
 class BybitPrivateWsClient(WsClient):
     URI = "wss://stream.bybit.com/v5/private"
     SANDBOX_URI = "wss://stream-testnet.bybit.com/v5/private"
@@ -283,11 +269,12 @@ class BybitPrivateWsClient(WsClient):
                         client_oid=order.get("orderLinkId", ""),
                         order_type=order.get("orderType", ""),
                         status=self.map_order_status(order.get("orderStatus", "")),
-                        price=float(order.get("price", 0)),
-                        quantity=float(order.get("qty", 0)),
-                        filled_quantity=float(order.get("cumExecQty", 0)),
-                        deal_avg_price=float(order.get("avgPrice", 0)),
+                        price=safe_float(order.get("price")),
+                        quantity=safe_float(order.get("qty")),
+                        filled_quantity=safe_float(order.get("cumExecQty")),
+                        deal_avg_price=safe_float(order.get("avgPrice")),
                     )
+
                     await self.market_data.update_trade_status(Exchange.BYBIT, order["symbol"], trade_status)
                     logger.info(f"Updated TradeStatus: {trade_status}")
                 except Exception as e:

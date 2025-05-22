@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import polars as pl
 
 from krex.async_support.bybit.client import Client
-from krex.websocket.bybit import BybitPublicWsClient, BybitPrivateWsClient
+from krex.websocket.bybit import BybitPublicSpotWsClient, BybitPrivateWsClient
 from krex.websocket.data.market_data import MarketData
 from krex.websocket.bot.slack import Slack
 from krex.utils.common_dataframe import to_dataframe
@@ -43,7 +43,7 @@ async def initialize(shared_data: MarketData):
 
     await shared_data.update_kline_data("bybit", "ETH-USDT-SWAP", kline_df)
 
-    public_ws_client = await BybitPublicWsClient.create(
+    public_ws_client = await BybitPublicSpotWsClient.create(
         subscription={
             "op": "subscribe",
             "args": [
