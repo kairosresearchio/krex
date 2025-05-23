@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 
-class OrderStatus(Enum):
+class OrderStatus(str, Enum):
     OPEN = "open"
     FILLED = "filled"
     CANCELLED = "cancelled"
@@ -10,24 +10,24 @@ class OrderStatus(Enum):
     # REJECTED = "rejected"
 
 
-class OrderType(Enum):
+class OrderType(str, Enum):
     LIMIT = "limit"
     MARKET = "market"
 
 
-class OrderMode(Enum):
+class OrderMode(str, Enum):
     POST_ONLY = "post_only"
     IOC = "ioc"
     FOK = "fok"
     GTC = "gtc"
 
 
-class OrderSide(Enum):
+class OrderSide(str, Enum):
     BUY = "buy"
     SELL = "sell"
 
 
-class Exchange(Enum):
+class Exchange(str, Enum):
     OKX = "okx"
     BITMART = "bitmart"
     BYBIT = "bybit"

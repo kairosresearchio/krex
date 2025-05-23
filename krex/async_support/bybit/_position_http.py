@@ -60,21 +60,21 @@ class PositionHTTP(HTTPManager):
 
     async def switch_position_mode(
         self,
-        mode: str,
-        symbol: str = None,
+        mode: int,
+        product_symbol: str = None,
         coin: str = None,
     ):
         """
-        :param mode: str. 0: Merged Single. 3: Both Sides
-        :param symbol: str
+        :param mode: int. 0: Merged Single. 3: Both Sides
+        :param product_symbol: str
         :param coin: str
         """
         payload = {
             "category": "linear",
             "mode": mode,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
         if coin is not None:
             payload["coin"] = coin
 

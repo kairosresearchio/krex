@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 
-class PositionSide(Enum):
+class PositionSide(str, Enum):
     LONG = "long"
     SHORT = "short"
     NONE = "none"  # okx 轉入保證金後會產生pos為0的情況

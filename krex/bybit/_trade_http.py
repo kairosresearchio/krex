@@ -31,6 +31,7 @@ class TradeHTTP(HTTPManager):
         slLimitPrice: str = None,
         tpOrderType: str = None,
         slOrderType: str = None,
+        positionIdx: int = None,
     ):
         payload = {
             "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
@@ -79,6 +80,8 @@ class TradeHTTP(HTTPManager):
             payload["tpOrderType"] = tpOrderType
         if slOrderType is not None:
             payload["slOrderType"] = slOrderType
+        if positionIdx is not None:
+            payload["positionIdx"] = positionIdx
 
         return self._request(
             method="POST",
@@ -93,6 +96,7 @@ class TradeHTTP(HTTPManager):
         qty: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
+        positionIdx: int = None,
     ):
         return self.place_order(
             product_symbol=product_symbol,
@@ -101,6 +105,7 @@ class TradeHTTP(HTTPManager):
             qty=qty,
             reduceOnly=reduceOnly,
             isLeverage=isLeverage,
+            positionIdx=positionIdx,
         )
 
     def place_market_buy_order(
@@ -109,6 +114,7 @@ class TradeHTTP(HTTPManager):
         qty: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
+        positionIdx: int = None,
     ):
         return self.place_market_order(
             product_symbol=product_symbol,
@@ -116,6 +122,7 @@ class TradeHTTP(HTTPManager):
             qty=qty,
             reduceOnly=reduceOnly,
             isLeverage=isLeverage,
+            positionIdx=positionIdx,
         )
 
     def place_market_sell_order(
@@ -124,6 +131,7 @@ class TradeHTTP(HTTPManager):
         qty: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
+        positionIdx: int = None,
     ):
         return self.place_market_order(
             product_symbol=product_symbol,
@@ -131,6 +139,7 @@ class TradeHTTP(HTTPManager):
             qty=qty,
             reduceOnly=reduceOnly,
             isLeverage=isLeverage,
+            positionIdx=positionIdx,
         )
 
     def place_limit_order(
@@ -142,6 +151,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         timeInForce: str = None,
         isLeverage: int = None,
+        positionIdx: int = None,
     ):
         return self.place_order(
             product_symbol=product_symbol,
@@ -152,6 +162,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
             timeInForce=timeInForce,
             isLeverage=isLeverage,
+            positionIdx=positionIdx,
         )
 
     def place_limit_buy_order(
@@ -162,6 +173,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         timeInForce: str = None,
         isLeverage: int = None,
+        positionIdx: int = None,
     ):
         return self.place_limit_order(
             product_symbol=product_symbol,
@@ -171,6 +183,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
             timeInForce=timeInForce,
             isLeverage=isLeverage,
+            positionIdx=positionIdx,
         )
 
     def place_limit_sell_order(
@@ -181,6 +194,7 @@ class TradeHTTP(HTTPManager):
         reduceOnly: bool = None,
         timeInForce: str = None,
         isLeverage: int = None,
+        positionIdx: int = None,
     ):
         return self.place_limit_order(
             product_symbol=product_symbol,
@@ -190,6 +204,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
             timeInForce=timeInForce,
             isLeverage=isLeverage,
+            positionIdx=positionIdx,
         )
 
     def place_post_only_limit_order(
@@ -200,6 +215,7 @@ class TradeHTTP(HTTPManager):
         price: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
+        timeInForce: str = None,
     ):
         return self.place_limit_order(
             product_symbol=product_symbol,
@@ -209,6 +225,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
             timeInForce="PostOnly",
             isLeverage=isLeverage,
+            positionIdx=None,
         )
 
     def place_post_only_limit_buy_order(
@@ -218,6 +235,7 @@ class TradeHTTP(HTTPManager):
         price: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
+        positionIdx: int = None,
     ):
         return self.place_post_only_limit_order(
             product_symbol=product_symbol,
@@ -226,6 +244,7 @@ class TradeHTTP(HTTPManager):
             price=price,
             reduceOnly=reduceOnly,
             isLeverage=isLeverage,
+            positionIdx=positionIdx,
         )
 
     def place_post_only_limit_sell_order(
@@ -235,6 +254,7 @@ class TradeHTTP(HTTPManager):
         price: str,
         reduceOnly: bool = None,
         isLeverage: int = None,
+        positionIdx: int = None,
     ):
         return self.place_post_only_limit_order(
             product_symbol=product_symbol,
@@ -243,6 +263,7 @@ class TradeHTTP(HTTPManager):
             price=price,
             reduceOnly=reduceOnly,
             isLeverage=isLeverage,
+            positionIdx=positionIdx,
         )
 
     def amend_order(
@@ -379,6 +400,7 @@ class TradeHTTP(HTTPManager):
         self,
         category: str = "linear",
         product_symbol: str = None,
+        orderId: str = None,
         startTime: int = None,
         cursor: str = None,
         limit: int = None,
@@ -386,6 +408,7 @@ class TradeHTTP(HTTPManager):
         """
         :param category: str (linear, option, spot, inverse)
         :param symbol: str
+        :param orderId: str
         :param startTime: int
         :param cursor: str
         :param limit: int
@@ -396,6 +419,8 @@ class TradeHTTP(HTTPManager):
         if product_symbol is not None:
             payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
             payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+        if orderId is not None:
+            payload["orderId"] = orderId
         if startTime is not None:
             payload["startTime"] = startTime
         if cursor is not None:
