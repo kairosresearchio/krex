@@ -24,7 +24,15 @@ def round_qty(value: float, precision: float) -> str:
 
 
 class SpotHedgeStrategyBybit:
-    def __init__(self, product_symbol: str, qty: float, timeout_sec: int = 5, delivery_code: str = None):
+    def __init__(
+        self,
+        api_key: str,
+        api_secret: str,
+        product_symbol: str,
+        qty: float,
+        timeout_sec: int = 5,
+        delivery_code: str = None,
+    ):
         self.spot_symbol = product_symbol + "-SPOT"
         if delivery_code:
             delivery_base = product_symbol.replace("USDT", "USD")
@@ -44,8 +52,8 @@ class SpotHedgeStrategyBybit:
         self.min_hedge_qty = 0.001
         self.spot_precision = 0.001
 
-        self.api_key = os.getenv("BYBIT_APIKEY")
-        self.api_secret = os.getenv("BYBIT_APISECRET")
+        self.api_key = api_key
+        self.api_secret = api_secret
 
         self.client = Client(
             api_key=self.api_key,
@@ -207,6 +215,8 @@ async def main():
     delivery_code = "M25"
 
     strat = SpotHedgeStrategyBybit(
+        api_key=os.getenv("BYBIT_APIKEY"),
+        api_secret=os.getenv("BYBIT_APISECRET"),
         product_symbol=product_symbol,
         delivery_code=delivery_code,
         qty=0.01,
