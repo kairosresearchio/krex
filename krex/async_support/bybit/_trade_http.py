@@ -351,21 +351,20 @@ class TradeHTTP(HTTPManager):
 
     async def get_open_orders(
         self,
-        category: str,
-        symbol: str = None,
+        product_symbol: str = None,
         limit: int = 20,
     ):
         """
         :param category: str (linear, option, spot, inverse)
-        :param symbol: str
+        :param product_symbol: str
         :param limit: int
         """
         payload = {
-            "category": category,
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
             "limit": limit,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
 
         res = await self._request(
             method="GET",
@@ -373,6 +372,36 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
         return res
+
+    async def cancel_batch_orders(
+        self,
+        request: list,
+        category: str = "linear",
+    ):
+        """
+        :param category: str (linear, option, spot, inverse)
+        :param request: list
+            request=[
+                {
+                    "symbol": "BTCUSDT",
+                    "orderId": "1666800494330512128"
+                },
+                {
+                    "symbol": "ATOMUSDT",
+                    "orderLinkId": "1666800494330512129"
+                }
+            ]
+        """
+        payload = {
+            "category": category,
+            "request": request,
+        }
+
+        return await self._request(
+            method="POST",
+            path=Trade.CANCEL_BATCH_ORDERS,
+            query=payload,
+        )
 
     async def cancel_all_orders(
         self,
@@ -467,8 +496,8 @@ class TradeHTTP(HTTPManager):
 
     async def place_batch_order(
         self,
-        category: str,
         request: list,
+        category: str = "linear",
     ):
         """
         :param category: str (linear, option, spot, inverse)
@@ -499,8 +528,8 @@ class TradeHTTP(HTTPManager):
 
     async def amend_batch_order(
         self,
-        category: str,
         request: list,
+        category: str = "linear",
     ):
         """
         :param category: str (linear, option, spot, inverse)

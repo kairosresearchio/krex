@@ -24,3 +24,9 @@ result = client.get_funding_rate_history(
     product_symbol="BTC-USDT-SWAP",
 )
 print(result)
+
+result = client.get_public_trade_history(
+    product_symbol="BTC-USDT-SWAP",
+    limit=5,
+)
+print(result)

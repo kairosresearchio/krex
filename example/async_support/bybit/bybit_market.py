@@ -26,6 +26,12 @@ async def main():
         )
         print(result)
 
+        result = await client.get_public_trade_history(
+            product_symbol="BTC-USDT-SPOT",
+            limit=5,
+        )
+        print(result)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
