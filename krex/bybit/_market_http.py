@@ -7,15 +7,15 @@ from ..utils.timeframe_utils import bybit_convert_timeframe
 class MarketHTTP(HTTPManager):
     def get_instruments_info(
         self,
-        category: str,
-        symbol: str = None,
+        category: str = "linear",
+        product_symbol: str = None,
         status: str = None,
         baseCoin: str = None,
         limit: int = None,
     ):
         """
         :param category: str (spot, linear, inverse, option)
-        :param symbol: str
+        :param product_symbol: str
         :param status: str
         :param baseCoin: str
         :param limit: int
@@ -23,8 +23,8 @@ class MarketHTTP(HTTPManager):
         payload = {
             "category": category,
         }
-        if symbol is not None:
-            payload["symbol"] = symbol
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
         if status is not None:
             payload["status"] = status
         if baseCoin is not None:

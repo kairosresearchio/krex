@@ -4,7 +4,7 @@ from krex.async_support.bybit.client import Client
 
 async def main():
     async with Client() as client:
-        result = await client.get_instruments_info(category="spot")
+        result = await client.get_instruments_info()
         print(result)
 
         result = await client.get_kline(

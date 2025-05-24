@@ -3,7 +3,7 @@ from krex.bybit.client import Client
 
 client = Client()
 
-result = client.get_instruments_info(category="spot")
+result = client.get_instruments_info()
 print(result)
 
 result = client.get_kline(
