@@ -6,6 +6,7 @@ class Trade(str, Enum):
     AMEND_ORDER = "/v5/order/amend"
     CANCEL_ORDER = "/v5/order/cancel"
     GET_OPEN_ORDERS = "/v5/order/realtime"
+    CANCEL_BATCH_ORDERS = "/v5/order/cancel-batch"
     CANCEL_ALL_ORDERS = "/v5/order/cancel-all"
     GET_ORDER_HISTORY = "/v5/order/history"
     GET_EXECUTION_LIST = "/v5/execution/list"
