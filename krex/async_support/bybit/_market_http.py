@@ -153,3 +153,28 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
+    
+    async def get_public_trade_history(
+        self,
+        product_symbol: str,
+        limit: int = None,
+    ):
+        """
+        :param category: str (linear, spot)
+        :param symbol: str
+        :param limit: int
+        """
+        payload = {
+            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+        }
+        if limit is not None:
+            payload["limit"] = limit
+
+        res = await self._request(
+            method="GET",
+            path=Market.GET_PUBLIC_TRADE_HISTORY,
+            query=payload,
+            signed=False,
+        )
+        return res
