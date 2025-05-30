@@ -466,3 +466,62 @@ async def binance() -> pl.DataFrame:
 
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
+
+
+async def hyperliquid() -> pl.DataFrame:
+    from ..hyperliquid._market_http import MarketHTTP
+
+    market_http = MarketHTTP()
+
+    markets = []
+
+    res_prep = market_http.meta()
+    df_prep = to_dataframe(res_prep.get("universe", []))
+
+    for market in df_prep.iter_rows(named=True):
+        
+        coin = market["name"]
+        tick = str(reverse_decimal_places(market["szDecimals"]))
+        markets.append(
+            MarketInfo(
+                exchange=Common.HYPERLIQUID,
+                exchange_symbol=str(market["asset"]),
+                product_symbol=f"{coin}-USDC-SWAP",
+                product_type="perpetual",
+                base_currency=coin,
+                quote_currency="USDC", 
+                price_precision=tick,
+                size_precision=tick,
+                min_size=tick,
+                size_per_contract="1",
+            )
+        )
+
+    res_spot = market_http.spot_meta()
+    df_tokens = to_dataframe(res_spot.get("tokens", []))
+    df_spot = to_dataframe(res_spot.get("universe", []))
+
+    for market in df_spot.iter_rows(named=True):
+        #exchange_symbol = market["name"]
+        base_i, quote_i = market["tokens"]   
+
+        base  = df_tokens["name"][base_i]        # e.g. "PURR"
+        quote = df_tokens["name"][quote_i]       # e.g. "USDC"
+        tick = str(reverse_decimal_places(df_tokens["szDecimals"][base_i]))
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.HYPERLIQUID,
+                exchange_symbol=str(market["marketIndex"]) ,
+                product_symbol=f"{base}-{quote}-SPOT",
+                product_type="spot",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=tick,
+                size_precision=tick,
+                min_size=tick,
+            )
+        )
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
+
