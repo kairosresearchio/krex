@@ -1,8 +1,9 @@
 import asyncio
 from krex.async_support.hyperliquid.client import Client
 
+
 async def main():
-    async with Client(testnet= True) as client:
+    async with Client(testnet=True) as client:
         result = await client.meta()
         print(result)
 
@@ -20,15 +21,12 @@ async def main():
 
         result = await client.candle_snapshot(
             product_symbol="BTC-USDC-SWAP",
-            interval= "1m",
-            startTime= 1696128000000,
-            )
+            interval="1m",
+            startTime=1696128000000,
+        )
         print(result)
 
-        result = await client.funding_rate_history(
-            product_symbol="BTC-USDC-SWAP",
-            startTime=1696128000000
-            )
+        result = await client.funding_rate_history(product_symbol="BTC-USDC-SWAP", startTime=1696128000000)
         print(result)
 
 

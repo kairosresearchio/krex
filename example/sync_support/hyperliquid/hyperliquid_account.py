@@ -5,48 +5,29 @@ client = Client()
 
 wallet_address = ""
 
-result = client.clearinghouse_state(
-    user= wallet_address
-)
+result = client.clearinghouse_state(user=wallet_address)
 print(result)
 
-result = client.open_orders(
-    user= wallet_address
-)
+result = client.open_orders(user=wallet_address)
 print(result)
 
-result = client.user_fills(
-    user= wallet_address
-)
+result = client.user_fills(user=wallet_address)
 print(result)
 
-result = client.user_rate_limit(
-    user= wallet_address
-)
+result = client.user_rate_limit(user=wallet_address)
 print(result)
 
-result = client.order_status(
-    user= wallet_address,
-    oid= ""
-)
+result = client.order_status(user=wallet_address, oid="")
 print(result)
 
-result = client.historical_orders(
-    user= wallet_address
-)
+result = client.historical_orders(user=wallet_address)
 print(result)
 
-result = client.subaccounts(
-    user= wallet_address
-)
+result = client.subaccounts(user=wallet_address)
 print(result)
 
-result = client.user_role(
-    user= wallet_address
-)
+result = client.user_role(user=wallet_address)
 print(result)
 
-result = client.portfolio(
-    user= wallet_address
-)
+result = client.portfolio(user=wallet_address)
 print(result)

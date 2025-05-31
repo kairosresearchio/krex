@@ -154,7 +154,7 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def get_public_trade_history(
         self,
         product_symbol: str,

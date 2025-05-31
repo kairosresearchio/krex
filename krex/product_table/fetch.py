@@ -479,7 +479,6 @@ async def hyperliquid() -> pl.DataFrame:
     df_prep = to_dataframe(res_prep.get("universe", []))
 
     for market in df_prep.iter_rows(named=True):
-        
         coin = market["name"]
         tick = str(reverse_decimal_places(market["szDecimals"]))
         markets.append(
@@ -489,7 +488,7 @@ async def hyperliquid() -> pl.DataFrame:
                 product_symbol=f"{coin}-USDC-SWAP",
                 product_type="perpetual",
                 base_currency=coin,
-                quote_currency="USDC", 
+                quote_currency="USDC",
                 price_precision=tick,
                 size_precision=tick,
                 min_size=tick,
@@ -502,17 +501,17 @@ async def hyperliquid() -> pl.DataFrame:
     df_spot = to_dataframe(res_spot.get("universe", []))
 
     for market in df_spot.iter_rows(named=True):
-        #exchange_symbol = market["name"]
-        base_i, quote_i = market["tokens"]   
+        # exchange_symbol = market["name"]
+        base_i, quote_i = market["tokens"]
 
-        base  = df_tokens["name"][base_i]        # e.g. "PURR"
-        quote = df_tokens["name"][quote_i]       # e.g. "USDC"
+        base = df_tokens["name"][base_i]  # e.g. "PURR"
+        quote = df_tokens["name"][quote_i]  # e.g. "USDC"
         tick = str(reverse_decimal_places(df_tokens["szDecimals"][base_i]))
 
         markets.append(
             MarketInfo(
                 exchange=Common.HYPERLIQUID,
-                exchange_symbol=str(market["marketIndex"]) ,
+                exchange_symbol=str(market["marketIndex"]),
                 product_symbol=f"{base}-{quote}-SPOT",
                 product_type="spot",
                 base_currency=base,
@@ -524,4 +523,3 @@ async def hyperliquid() -> pl.DataFrame:
         )
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
-

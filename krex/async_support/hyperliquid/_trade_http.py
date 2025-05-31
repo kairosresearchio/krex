@@ -23,7 +23,7 @@ class TradeHTTP(HTTPManager):
         builder_address: str = None,
         fee_ten_bp: int = None,
         vaultAddress: str = None,
-        expireAfter: int = None
+        expireAfter: int = None,
     ):
         """
         :param product_symbol: str
@@ -46,16 +46,14 @@ class TradeHTTP(HTTPManager):
             "type": Trade.ORDER,
             "orders": [
                 {
-                    "a": json.loads(
-                        self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-                    )[1],
+                    "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
                     "b": isBuy,
                     "p": price,
                     "s": size,
                     "r": reduceOnly,
                 }
             ],
-            "grouping": grouping
+            "grouping": grouping,
         }
 
         if tif is not None or isMarket:
@@ -71,12 +69,12 @@ class TradeHTTP(HTTPManager):
             action["orders"][0]["t"] = t
 
         if cloid is not None:
-            action["orders"][0]['c'] = cloid
+            action["orders"][0]["c"] = cloid
         if builder_address is not None:
             action["builder"]["b"] = builder_address
         if fee_ten_bp is not None:
             action["feeTenBp"] = fee_ten_bp
-        
+
         payload = {
             "action": action,
             "nonce": "",
@@ -87,7 +85,7 @@ class TradeHTTP(HTTPManager):
             payload["vaultAddress"] = vaultAddress
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
-    
+
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -95,7 +93,7 @@ class TradeHTTP(HTTPManager):
             signed=True,
         )
         return res
-    
+
     async def place_future_market_order(
         self,
         product_symbol: str,
@@ -107,22 +105,20 @@ class TradeHTTP(HTTPManager):
         market_http = MarketHTTP()
         await market_http.async_init()
         result = await market_http.meta_and_asset_ctxs()
-        exchange_symbol = int(
-            self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-        )
+        exchange_symbol = int(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))
         price = result[1][exchange_symbol]["midPx"]
 
         return await self.place_order(
             product_symbol=product_symbol,
-            isBuy= isBuy,
-            price= price.split('.', 1)[0],
-            size= size,
-            reduceOnly= False,
-            isMarket= True,
-            triggerPx= triggerPx,
-            tpsl= tpsl,
+            isBuy=isBuy,
+            price=price.split(".", 1)[0],
+            size=size,
+            reduceOnly=False,
+            isMarket=True,
+            triggerPx=triggerPx,
+            tpsl=tpsl,
         )
-    
+
     async def place_future_market_buy_order(
         self,
         product_symbol: str,
@@ -132,10 +128,10 @@ class TradeHTTP(HTTPManager):
     ):
         return await self.place_future_market_order(
             product_symbol=product_symbol,
-            isBuy= True,
-            size= size,
-            triggerPx= triggerPx,
-            tpsl= tpsl,
+            isBuy=True,
+            size=size,
+            triggerPx=triggerPx,
+            tpsl=tpsl,
         )
 
     async def place_future_market_sell_order(
@@ -147,12 +143,12 @@ class TradeHTTP(HTTPManager):
     ):
         return await self.place_future_market_order(
             product_symbol=product_symbol,
-            isBuy= False,
-            size= size,
-            triggerPx= triggerPx,
-            tpsl= tpsl,
+            isBuy=False,
+            size=size,
+            triggerPx=triggerPx,
+            tpsl=tpsl,
         )
-    
+
     async def place_future_limit_order(
         self,
         product_symbol: str,
@@ -162,14 +158,9 @@ class TradeHTTP(HTTPManager):
         tif: str,
     ):
         return await self.place_order(
-            product_symbol=product_symbol,
-            isBuy= isBuy,
-            price= price,
-            size= size,
-            reduceOnly= False,
-            tif= tif
+            product_symbol=product_symbol, isBuy=isBuy, price=price, size=size, reduceOnly=False, tif=tif
         )
-    
+
     async def place_future_limit_buy_order(
         self,
         product_symbol: str,
@@ -178,14 +169,9 @@ class TradeHTTP(HTTPManager):
         tif: str,
     ):
         return await self.place_order(
-            product_symbol=product_symbol,
-            isBuy= True,
-            price= price,
-            size= size,
-            reduceOnly= False,
-            tif= tif
+            product_symbol=product_symbol, isBuy=True, price=price, size=size, reduceOnly=False, tif=tif
         )
-    
+
     async def place_future_limit_sell_order(
         self,
         product_symbol: str,
@@ -194,21 +180,10 @@ class TradeHTTP(HTTPManager):
         tif: str,
     ):
         return await self.place_order(
-            product_symbol=product_symbol,
-            isBuy= False,
-            price= price,
-            size= size,
-            reduceOnly= False,
-            tif= tif
+            product_symbol=product_symbol, isBuy=False, price=price, size=size, reduceOnly=False, tif=tif
         )
-    
-    async def cancel_order(
-            self,
-            product_symbol: str,
-            oid: int,
-            vaultAddress: str = None,
-            expireAfter: int = None
-    ):
+
+    async def cancel_order(self, product_symbol: str, oid: int, vaultAddress: str = None, expireAfter: int = None):
         """
         :param product_symbol: str
         :param oid: str
@@ -219,9 +194,7 @@ class TradeHTTP(HTTPManager):
             "type": Trade.CANCEL,
             "cancels": [
                 {
-                    "a": json.loads(
-                        self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-                    )[1],
+                    "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
                     "o": oid,
                 }
             ],
@@ -237,7 +210,6 @@ class TradeHTTP(HTTPManager):
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
 
-
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -245,13 +217,9 @@ class TradeHTTP(HTTPManager):
             signed=True,
         )
         return res
-    
+
     async def cancel_order_by_cloid(
-            self,
-            product_symbol: str,
-            cloid: str,
-            vaultAddress: str = None,
-            expireAfter: int = None
+        self, product_symbol: str, cloid: str, vaultAddress: str = None, expireAfter: int = None
     ):
         """
         :param product_symbol: str
@@ -263,9 +231,7 @@ class TradeHTTP(HTTPManager):
             "type": Trade.CANCELBYCLOID,
             "cancels": [
                 {
-                    "asset": json.loads(
-                        self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-                    )[1],
+                    "asset": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
                     "cloid": cloid,
                 }
             ],
@@ -281,7 +247,6 @@ class TradeHTTP(HTTPManager):
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
 
-
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -289,13 +254,8 @@ class TradeHTTP(HTTPManager):
             signed=True,
         )
         return res
-    
-    async def schedule_cancel(
-            self,
-            time: int = None,
-            vaultAddress: str = None,
-            expireAfter: int = None
-    ):
+
+    async def schedule_cancel(self, time: int = None, vaultAddress: str = None, expireAfter: int = None):
         """
         :param time: int
         :param vaultAddress: str
@@ -316,7 +276,6 @@ class TradeHTTP(HTTPManager):
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
 
-
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -324,7 +283,7 @@ class TradeHTTP(HTTPManager):
             signed=True,
         )
         return res
-    
+
     async def modify_order(
         self,
         oid: int,
@@ -339,7 +298,7 @@ class TradeHTTP(HTTPManager):
         tpsl: str = None,
         cloid: str = None,
         vaultAddress: str = None,
-        expireAfter: int = None
+        expireAfter: int = None,
     ):
         """
         :param oid: int
@@ -359,16 +318,13 @@ class TradeHTTP(HTTPManager):
         action = {
             "type": Trade.MODIFY,
             "oid": oid,
-            "order": 
-                {
-                    "a": json.loads(
-                        self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-                    )[1],
-                    "b": isBuy,
-                    "p": price,
-                    "s": size,
-                    "r": reduceOnly,
-                },
+            "order": {
+                "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+                "b": isBuy,
+                "p": price,
+                "s": size,
+                "r": reduceOnly,
+            },
         }
 
         if tif is not None or isMarket:
@@ -383,8 +339,8 @@ class TradeHTTP(HTTPManager):
                 }
             action["order"]["t"] = t
         if cloid is not None:
-            action["order"]['c'] = cloid
-        
+            action["order"]["c"] = cloid
+
         payload = {
             "action": action,
             "nonce": "",
@@ -395,7 +351,7 @@ class TradeHTTP(HTTPManager):
             payload["vaultAddress"] = vaultAddress
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
-    
+
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -403,22 +359,14 @@ class TradeHTTP(HTTPManager):
             signed=True,
         )
         return res
-    
-    async def modify_batch_orders(
-        self,
-        modifies: list,
-        vaultAddress: str = None,
-        expireAfter: int = None
-    ):
+
+    async def modify_batch_orders(self, modifies: list, vaultAddress: str = None, expireAfter: int = None):
         """
         :param modifies: list
         :param vaultAddress: str
         :param expireAfter: int
         """
-        action = {
-            "type": Trade.BATCHMODIFY,
-            "modifies": modifies
-        }
+        action = {"type": Trade.BATCHMODIFY, "modifies": modifies}
 
         payload = {
             "action": action,
@@ -430,7 +378,7 @@ class TradeHTTP(HTTPManager):
             payload["vaultAddress"] = vaultAddress
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
-    
+
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -440,12 +388,7 @@ class TradeHTTP(HTTPManager):
         return res
 
     async def update_leverage(
-            self,
-            product_symbol: str,
-            isCross: bool,
-            leverage: int,
-            vaultAddress: str = None,
-            expireAfter: int = None
+        self, product_symbol: str, isCross: bool, leverage: int, vaultAddress: str = None, expireAfter: int = None
     ):
         """
         :param product_symbol: str
@@ -456,9 +399,7 @@ class TradeHTTP(HTTPManager):
         """
         action = {
             "type": Trade.UPDATELEVERAGE,
-            "asset": json.loads(
-                self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-            )[1],
+            "asset": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
             "isCross": isCross,
             "leverage": leverage,
         }
@@ -473,7 +414,6 @@ class TradeHTTP(HTTPManager):
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
 
-
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -481,14 +421,9 @@ class TradeHTTP(HTTPManager):
             signed=True,
         )
         return res
-    
+
     async def update_isolate_margin(
-            self,
-            product_symbol: str,
-            isBuy: bool,
-            ntli: int,
-            vaultAddress: str = None,
-            expireAfter: int = None
+        self, product_symbol: str, isBuy: bool, ntli: int, vaultAddress: str = None, expireAfter: int = None
     ):
         """
         :param product_symbol: str
@@ -499,9 +434,7 @@ class TradeHTTP(HTTPManager):
         """
         action = {
             "type": Trade.UPDATEISOLATEMARGIN,
-            "asset": json.loads(
-                self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-            )[1],
+            "asset": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
             "isBuy": isBuy,
             "ntli": ntli,
         }
@@ -516,7 +449,6 @@ class TradeHTTP(HTTPManager):
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
 
-
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -524,7 +456,7 @@ class TradeHTTP(HTTPManager):
             signed=True,
         )
         return res
-    
+
     async def place_twap_order(
         self,
         product_symbol: str,
@@ -534,7 +466,7 @@ class TradeHTTP(HTTPManager):
         minutes: int,
         randomize: bool,
         vaultAddress: str = None,
-        expireAfter: int = None
+        expireAfter: int = None,
     ):
         """
         :param product_symbol: str
@@ -548,19 +480,16 @@ class TradeHTTP(HTTPManager):
         """
         action = {
             "type": Trade.TWAPORDER,
-            "twap": 
-                {
-                    "a": json.loads(
-                        self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-                    )[1],   
-                    "b": isBuy,
-                    "s": size,
-                    "r": reduceOnly,
-                    "m": minutes,
-                    "t": randomize,
-                },
+            "twap": {
+                "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+                "b": isBuy,
+                "s": size,
+                "r": reduceOnly,
+                "m": minutes,
+                "t": randomize,
+            },
         }
-        
+
         payload = {
             "action": action,
             "nonce": "",
@@ -571,7 +500,7 @@ class TradeHTTP(HTTPManager):
             payload["vaultAddress"] = vaultAddress
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
-    
+
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,
@@ -579,13 +508,9 @@ class TradeHTTP(HTTPManager):
             signed=True,
         )
         return res
-    
+
     async def cancel_twap_order(
-        self,
-        product_symbol: str,
-        twap_id: int,
-        vaultAddress: str = None,
-        expireAfter: int = None
+        self, product_symbol: str, twap_id: int, vaultAddress: str = None, expireAfter: int = None
     ):
         """
         :param product_symbol: str
@@ -595,13 +520,10 @@ class TradeHTTP(HTTPManager):
         """
         action = {
             "type": Trade.TWAPCANCEL,
-            "a": json.loads(
-                self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID)
-            )[1],
+            "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
             "t": twap_id,
-
         }
-        
+
         payload = {
             "action": action,
             "nonce": "",
@@ -612,7 +534,7 @@ class TradeHTTP(HTTPManager):
             payload["vaultAddress"] = vaultAddress
         if expireAfter is not None:
             payload["expireAfter"] = expireAfter
-    
+
         res = await self._request(
             method="POST",
             path=Path.EXCHANGE,

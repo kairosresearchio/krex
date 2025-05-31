@@ -2,6 +2,7 @@ from ._http_manager import HTTPManager
 from .endpoint.path import Path
 from .endpoint.account import Account
 
+
 class AccountHTTP(HTTPManager):
     async def clearinghouse_state(
         self,
@@ -16,7 +17,7 @@ class AccountHTTP(HTTPManager):
             "type": Account.CLEARINGHOUSESTATE,
             "user": user,
         }
-        
+
         if dex is not None:
             payload["dex"] = dex
 
@@ -27,7 +28,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     async def open_orders(
         self,
         user: str,
@@ -41,7 +42,7 @@ class AccountHTTP(HTTPManager):
             "type": Account.OPENORDERS,
             "user": user,
         }
-        
+
         if dex is not None:
             payload["dex"] = dex
 
@@ -52,7 +53,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     async def user_fills(
         self,
         user: str,
@@ -66,7 +67,7 @@ class AccountHTTP(HTTPManager):
             "type": Account.USERFILLS,
             "user": user,
         }
-        
+
         if aggregateByTime:
             payload["aggregateByTime"] = True
 
@@ -77,7 +78,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     async def user_rate_limit(
         self,
         user: str,
@@ -97,7 +98,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     async def order_status(
         self,
         user: str,
@@ -120,7 +121,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     async def historical_orders(
         self,
         user: str,
@@ -140,7 +141,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     async def subaccounts(
         self,
         user: str,
@@ -160,7 +161,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     async def user_role(
         self,
         user: str,
@@ -180,7 +181,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     async def portfolio(
         self,
         user: str,
@@ -200,7 +201,3 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-
-
-
-    

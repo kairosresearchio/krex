@@ -12,9 +12,8 @@ class Account(str, Enum):
     USERROLE = "userRole"
     PORTFOLIO = "portfolio"
 
-
     def __str__(self) -> str:
         return self.value
-    
+
     def __repr__(self) -> str:
         return repr(self.value)

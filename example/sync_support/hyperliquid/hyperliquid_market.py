@@ -20,17 +20,10 @@ print(result)
 
 result = client.candle_snapshot(
     product_symbol="BTC-USD-SWAP",
-    interval= "1m",
-    startTime= 1696128000000,
-    )
+    interval="1m",
+    startTime=1696128000000,
+)
 print(result)
 
-result = client.funding_rate_history(
-    product_symbol="BTC-USD-SWAP",
-    startTime=1696128000000)
+result = client.funding_rate_history(product_symbol="BTC-USD-SWAP", startTime=1696128000000)
 print(result)
-
-
-
-
-

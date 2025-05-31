@@ -2,6 +2,7 @@ from ._http_manager import HTTPManager
 from .endpoint.path import Path
 from .endpoint.asset import Asset
 
+
 class AssetHTTP(HTTPManager):
     async def user_vault_equities(
         self,

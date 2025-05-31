@@ -9,10 +9,11 @@ from ..utils.errors import FailedRequestError
 from ..utils.helpers import generate_timestamp
 
 HTTP_URL = "https://{SUBDOMAIN}.{DOMAIN}.{TLD}"
-SUBDOMAIN_MAIN= "api"
+SUBDOMAIN_MAIN = "api"
 DOMAIN_MAINNET = "hyperliquid"
 DOMAIN_TESTNET = "hyperliquid-testnet"
 TLD_MAIN = "xyz"
+
 
 def get_header_no_sign():
     return {"Content-Type": "application/json"}
@@ -42,7 +43,7 @@ class HTTPManager:
 
         domain = DOMAIN_TESTNET if self.testnet else DOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=self.subdomain, DOMAIN=domain, TLD=self.tld)
-        
+
         if self.preload_product_table:
             self.ptm = ProductTableManager.get_instance()
 

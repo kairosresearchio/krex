@@ -15,7 +15,7 @@ class MarketHTTP(HTTPManager):
         payload = {
             "type": Market.META,
         }
-        
+
         if dex is not None:
             payload["dex"] = dex
 
@@ -26,7 +26,7 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def spot_meta(
         self,
     ):
@@ -41,15 +41,14 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def meta_and_asset_ctxs(
         self,
     ):
-        
         payload = {
             "type": Market.METAANDASSETCTXS,
         }
-        
+
         res = self._request(
             method="POST",
             path=Path.INFO,
@@ -57,15 +56,14 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def spot_meta_and_asset_ctxs(
         self,
     ):
-        
         payload = {
             "type": Market.SPOTMETAANDASSETCTXS,
         }
-        
+
         res = self._request(
             method="POST",
             path=Path.INFO,
@@ -114,9 +112,9 @@ class MarketHTTP(HTTPManager):
                 "coin": self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID),
                 "interval": interval,
                 "startTime": startTime,
-            }
+            },
         }
-        
+
         if endTime is not None:
             payload["req"]["endTime"] = endTime
 
@@ -127,7 +125,7 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def funding_rate_history(
         self,
         product_symbol: str,
@@ -144,7 +142,7 @@ class MarketHTTP(HTTPManager):
             "coin": self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID),
             "startTime": startTime,
         }
-        
+
         if endTime is not None:
             payload["endTime"] = endTime
 

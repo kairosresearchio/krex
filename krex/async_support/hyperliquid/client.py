@@ -3,6 +3,7 @@ from ._account_http import AccountHTTP
 from ._asset_http import AssetHTTP
 from ._market_http import MarketHTTP
 
+
 class Client(
     TradeHTTP,
     AccountHTTP,

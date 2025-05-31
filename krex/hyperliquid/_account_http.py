@@ -17,7 +17,7 @@ class AccountHTTP(HTTPManager):
             "type": Account.CLEARINGHOUSESTATE,
             "user": user,
         }
-        
+
         if dex is not None:
             payload["dex"] = dex
 
@@ -28,7 +28,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def open_orders(
         self,
         user: str,
@@ -42,7 +42,7 @@ class AccountHTTP(HTTPManager):
             "type": Account.OPENORDERS,
             "user": user,
         }
-        
+
         if dex is not None:
             payload["dex"] = dex
 
@@ -53,7 +53,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def user_fills(
         self,
         user: str,
@@ -67,7 +67,7 @@ class AccountHTTP(HTTPManager):
             "type": Account.USERFILLS,
             "user": user,
         }
-        
+
         if aggregateByTime:
             payload["aggregateByTime"] = True
 
@@ -78,7 +78,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def user_rate_limit(
         self,
         user: str,
@@ -98,7 +98,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def order_status(
         self,
         user: str,
@@ -121,7 +121,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def historical_orders(
         self,
         user: str,
@@ -141,7 +141,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def subaccounts(
         self,
         user: str,
@@ -161,7 +161,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def user_role(
         self,
         user: str,
@@ -181,7 +181,7 @@ class AccountHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def portfolio(
         self,
         user: str,
