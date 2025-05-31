@@ -3,7 +3,7 @@ from krex.hyperliquid.client import Client
 
 client = Client()
 
-wallet_address = "0x8C41a1cB41bbEC8108E5E421007E17b8336E17dE"
+wallet_address = ""
 
 result = client.clearinghouse_state(
     user= wallet_address
