@@ -48,10 +48,10 @@ class ProductTableManager:
     _instance = None
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls, exchange_name=None):
         if cls._instance is None:
             cls._instance = cls()
-            asyncio.run(cls._instance._initialize())
+            asyncio.run(cls._instance._initialize(exchange_name=exchange_name))
         return cls._instance
 
     async def _initialize(self, exchange_name=None):
