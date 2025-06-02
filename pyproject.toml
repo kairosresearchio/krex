@@ -13,6 +13,8 @@ classifiers = [
 ]
 dependencies = [
   "httpx>=0.28.1",
+  "ipython>=9.3.0",
+  "nest-asyncio>=1.6.0",
   "polars>=1.27.1",
   "requests>=2.32.3",
   "websockets>=15.0.1",
