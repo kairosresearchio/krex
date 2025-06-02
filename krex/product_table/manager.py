@@ -45,14 +45,14 @@ class ProductTableManager:
     Use this mapping to correctly interpret product symbols and their attributes when integrating with multiple exchanges.
     """
 
-    _instance = None
+    _instance = {}
 
     @classmethod
     def get_instance(cls, exchange_name=None):
-        if cls._instance is None:
-            cls._instance = cls()
-            asyncio.run(cls._instance._initialize(exchange_name=exchange_name))
-        return cls._instance
+        if exchange_name not in cls._instance:
+            cls._instance[exchange_name] = cls()
+            asyncio.run(cls._instance[exchange_name]._initialize(exchange_name=exchange_name))
+        return cls._instance[exchange_name]
 
     async def _initialize(self, exchange_name=None):
         """Initialize the product table by fetching data from valid exchanges."""

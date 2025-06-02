@@ -45,22 +45,25 @@ class ProductTableManager:
     Use this mapping to correctly interpret product symbols and their attributes when integrating with multiple exchanges.
     """
 
-    _instance = None
+    _instance = {}
 
     @classmethod
-    async def get_instance(cls):
-        if cls._instance is None:
-            cls._instance = cls()
-            await cls._instance._initialize()
-        return cls._instance
+    async def get_instance(cls, exchange_name=None):
+        if exchange_name not in cls._instance:
+            cls._instance[exchange_name] = cls()
+            await cls._instance[exchange_name]._initialize(exchange_name=exchange_name)
+        return cls._instance[exchange_name]
 
-    async def _initialize(self):
+    async def _initialize(self, exchange_name=None):
         """Initialize the product table by fetching data from valid exchanges."""
-        self.product_table = await self._fetch_product_tables()
+        self.product_table = await self._fetch_product_tables(exchange_name)
 
-    async def _fetch_product_tables(self):
+    async def _fetch_product_tables(self, exchange_name=None):
         """Fetch product tables from all valid exchanges and combine them into a single DataFrame."""
-        product_tables = await asyncio.gather(*[func() for func in VALID_EXCHANGES])
+        if exchange_name is None:
+            product_tables = await asyncio.gather(*[func() for func in VALID_EXCHANGES])
+        else:
+            product_tables = await asyncio.gather(*[func() for func in VALID_EXCHANGES if func.__name__ == exchange_name])
         return pl.concat(product_tables, how="vertical")
 
     @asynccontextmanager
