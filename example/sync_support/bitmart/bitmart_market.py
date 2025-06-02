@@ -1,7 +1,7 @@
-from krex.bitmart.client import Client
+import krex
 from datetime import datetime, timedelta
 
-client = Client()
+client = krex.bitmart()
 
 
 # get account balance

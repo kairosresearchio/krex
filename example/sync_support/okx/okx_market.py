@@ -1,7 +1,7 @@
-from krex.okx.client import Client
+import krex
 
 
-client = Client()
+client = krex.okx()
 
 result = client.get_candles_ticks(product_symbol="BTC-USDT-SPOT")
 print(result)

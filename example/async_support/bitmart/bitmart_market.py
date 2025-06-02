@@ -1,10 +1,10 @@
 import asyncio
 from datetime import datetime, timedelta
-from krex.async_support.bitmart.client import Client
+import krex.async_support as krex
 
 
 async def main():
-    async with Client() as client:
+    async with krex.bitmart() as client:
         # 1. get_spot_currencies
         res = await client.get_spot_currencies()
         print("1. get_spot_currencies:", "\n", res, "\n")

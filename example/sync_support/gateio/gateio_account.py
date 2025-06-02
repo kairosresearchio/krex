@@ -1,11 +1,11 @@
 import os
+import krex
 from dotenv import load_dotenv
-from krex.gateio.client import Client
 
 load_dotenv()
 
 
-client = Client(
+client = krex.gateio(
     api_key=os.getenv("GATEIO_APIKEY"),
     api_secret=os.getenv("GATEIO_APISECRET"),
 )

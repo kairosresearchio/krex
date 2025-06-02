@@ -1,7 +1,7 @@
-from krex.binance.client import Client
+import krex
 
 
-client = Client()
+client = krex.binance()
 
 result = client.get_spot_exchange_info(product_symbol="BTC-USDT-SPOT")
 print(result)

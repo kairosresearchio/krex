@@ -1,9 +1,9 @@
 import asyncio
-from krex.async_support.gateio.client import Client
+import krex.async_support as krex
 
 
 async def main():
-    async with Client() as client:
+    async with krex.gateio() as client:
         result = await client.get_all_futures_contracts()
         print(result)
 

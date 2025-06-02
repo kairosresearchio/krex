@@ -1,7 +1,6 @@
-from krex.bybit.client import Client
+import krex
 
-
-client = Client()
+client = krex.bybit()
 
 result = client.get_instruments_info()
 print(result)

@@ -1,9 +1,9 @@
 import asyncio
-from krex.async_support.okx.client import Client
+import krex.async_support as krex
 
 
 async def main():
-    async with Client() as client:
+    async with krex.okx() as client:
         res = await client.get_public_instruments(instType="SPOT")
         print(res)
 

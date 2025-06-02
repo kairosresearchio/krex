@@ -1,9 +1,9 @@
 import asyncio
-from krex.async_support.binance.client import Client
+import krex.async_support as krex
 
 
 async def main():
-    async with Client() as client:
+    async with krex.binance() as client:
         result = await client.get_spot_exchange_info(product_symbol="BTC-USDT-SPOT")
         print(result)
 

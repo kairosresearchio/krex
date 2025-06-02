@@ -1,10 +1,10 @@
 import asyncio
-from krex.async_support.hyperliquid.client import Client
+import krex.async_support as krex
 
 
 async def main():
     wallet_address = ""
-    async with Client() as client:
+    async with krex.hyperliquid() as client:
         result = await client.user_vault_equities(user=wallet_address)
         print(result)
 

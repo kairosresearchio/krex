@@ -1,9 +1,9 @@
 import asyncio
-from krex.async_support.bybit.client import Client
+import krex.async_support as krex
 
 
 async def main():
-    async with Client() as client:
+    async with krex.bybit() as client:
         result = await client.get_instruments_info()
         print(result)
 

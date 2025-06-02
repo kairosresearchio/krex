@@ -1,13 +1,13 @@
 import os
 from dotenv import load_dotenv
 import asyncio
-from krex.async_support.gateio.client import Client
+import krex.async_support as krex
 
 load_dotenv()
 
 
 async def main():
-    async with Client(
+    async with krex.gateio(
         api_key=os.getenv("GATEIO_APIKEY"),
         api_secret=os.getenv("GATEIO_APISECRET"),
     ) as client:

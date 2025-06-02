@@ -1,10 +1,10 @@
 from dotenv import load_dotenv
-from krex.gateio.client import Client
+import krex
 
 load_dotenv()
 
 
-client = Client()
+client = krex.gateio()
 
 result = client.get_all_futures_contracts()
 print(result)

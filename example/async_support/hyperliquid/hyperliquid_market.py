@@ -1,9 +1,9 @@
 import asyncio
-from krex.async_support.hyperliquid.client import Client
+import krex.async_support as krex
 
 
 async def main():
-    async with Client(testnet=True) as client:
+    async with krex.hyperliquid(testnet=True) as client:
         result = await client.meta()
         print(result)
 

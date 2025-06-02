@@ -1,7 +1,7 @@
-from krex.hyperliquid.client import Client
+import krex
 
 
-client = Client()
+client = krex.hyperliquid()
 
 result = client.meta()
 print(result)

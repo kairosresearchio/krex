@@ -1,7 +1,7 @@
-from krex.hyperliquid.client import Client
+import krex
 
 
-client = Client(wallet_address="", private_key="")
+client = krex.hyperliquid(wallet_address="", private_key="")
 
 result = client.place_order(
     product_symbol="PURR-USDC-SPOT", isBuy=True, price="0.1", size="100", reduceOnly=False, tif="Gtc"

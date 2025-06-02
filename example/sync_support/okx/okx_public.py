@@ -1,7 +1,7 @@
-from krex.okx.client import Client
+import krex
 
 
-client = Client()
+client = krex.okx()
 
 result = client.get_public_instruments(instType="SPOT")
 print(result)
