@@ -10,6 +10,7 @@ from .endpoints.trade import FuturesTrade, SpotTrade
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
 from ...utils.helpers import generate_timestamp
+from ...utils.common import Common
 
 
 def sign_message(timestamp, memo, body, secret_key):
@@ -61,7 +62,7 @@ class HTTPManager:
         self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
-            self.ptm = await ProductTableManager.get_instance()
+            self.ptm = await ProductTableManager.get_instance(Common.BITMART)
         return self
 
     def _get_base_url(self, path):

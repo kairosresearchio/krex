@@ -501,7 +501,6 @@ async def hyperliquid() -> pl.DataFrame: # TODO: need to be checked
     df_spot = to_dataframe(res_spot.get("universe", []))
 
     for market in df_spot.iter_rows(named=True):
-        print(market)
         # exchange_symbol = market["name"]
         base_i, quote_i = market["tokens"]
 

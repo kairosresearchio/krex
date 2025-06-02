@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from ..product_table.manager import ProductTableManager
 from ..utils.errors import FailedRequestError
 from ..utils.helpers import generate_timestamp
+from ..utils.common import Common
 
 HTTP_URL = "https://{SUBDOMAIN}.{DOMAIN}.{TLD}"
 SUBDOMAIN_TESTNET = "api-testnet"
@@ -56,7 +57,7 @@ class HTTPManager:
         self.endpoint = HTTP_URL.format(SUBDOMAIN=subdomain, DOMAIN=self.domain, TLD=self.tld)
 
         if self.preload_product_table:
-            self.ptm = ProductTableManager.get_instance()
+            self.ptm = ProductTableManager.get_instance(Common.BYBIT)
 
     def _auth(self, payload, timestamp):
         param_str = f"{timestamp}{self.api_key}{self.recv_window}{payload}"

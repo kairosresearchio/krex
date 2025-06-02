@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
 from ...utils.helpers import generate_timestamp
+from ...utils.common import Common
 
 
 def _sign(message, secretKey):
@@ -68,7 +69,7 @@ class HTTPManager:
         self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
-            self.ptm = await ProductTableManager.get_instance()
+            self.ptm = await ProductTableManager.get_instance(Common.OKX)
         return self
 
     async def _request(

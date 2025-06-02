@@ -11,6 +11,7 @@ from .endpoints.account import FuturesAccount
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
 from ...utils.helpers import generate_timestamp
+from ...utils.common import Common
 
 
 @dataclass
@@ -38,7 +39,7 @@ class HTTPManager:
         self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
-            self.ptm = await ProductTableManager.get_instance()
+            self.ptm = await ProductTableManager.get_instance(Common.BINANCE)
         return self
 
     def _get_base_url(self, path):

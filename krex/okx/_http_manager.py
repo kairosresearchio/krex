@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from ..product_table.manager import ProductTableManager
 from ..utils.errors import FailedRequestError
 from ..utils.helpers import generate_timestamp
+from ..utils.common import Common
 
 
 def _sign(message, secretKey):
@@ -73,7 +74,7 @@ class HTTPManager:
             self._logger = self.logger
 
         if self.preload_product_table:
-            self.ptm = ProductTableManager.get_instance()
+            self.ptm = ProductTableManager.get_instance(Common.OKX)
 
     def _request(
         self,

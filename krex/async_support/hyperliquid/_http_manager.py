@@ -10,6 +10,7 @@ from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
 from ...utils.helpers import generate_timestamp
 from ...utils.address_utils import address_to_bytes
+from ...utils.common import Common
 
 HTTP_URL = "https://{SUBDOMAIN}.{DOMAIN}.{TLD}"
 SUBDOMAIN_MAIN = "api"
@@ -52,7 +53,7 @@ class HTTPManager:
         self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
-            self.ptm = await ProductTableManager.get_instance()
+            self.ptm = await ProductTableManager.get_instance(Common.HYPERLIQUID)
         domain = DOMAIN_TESTNET if self.testnet else DOMAIN_MAINNET
         self.endpoint = HTTP_URL.format(SUBDOMAIN=self.subdomain, DOMAIN=domain, TLD=self.tld)
         return self

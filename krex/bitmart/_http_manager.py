@@ -10,6 +10,7 @@ from .endpoints.trade import FuturesTrade, SpotTrade
 from ..product_table.manager import ProductTableManager
 from ..utils.errors import FailedRequestError
 from ..utils.helpers import generate_timestamp
+from ..utils.common import Common
 
 
 def sign_message(timestamp, memo, body, secret_key):
@@ -64,7 +65,7 @@ class HTTPManager:
             self._logger = self.logger
 
         if self.preload_product_table:
-            self.ptm = ProductTableManager.get_instance()
+            self.ptm = ProductTableManager.get_instance(Common.BITMART)
 
     def _get_base_url(self, path):
         for base_url, enums in self.api_map.items():

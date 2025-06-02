@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 from ..product_table.manager import ProductTableManager
 from ..utils.errors import FailedRequestError
+from ..utils.common import Common
 
 
 @dataclass
@@ -27,7 +28,7 @@ class HTTPManager:
             self._logger = self.logger
 
         if self.preload_product_table:
-            self.ptm = ProductTableManager.get_instance()
+            self.ptm = ProductTableManager.get_instance(Common.GATEIO)
 
     def _resolve_path(self, path_template, path_params: dict = None) -> str:
         if isinstance(path_template, Enum):

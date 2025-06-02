@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
+from ...utils.common import Common
 
 
 @dataclass
@@ -26,7 +27,7 @@ class HTTPManager:
         self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
-            self.ptm = await ProductTableManager.get_instance()
+            self.ptm = await ProductTableManager.get_instance(Common.GATEIO)
         return self
 
     def _resolve_path(self, path_template, path_params: dict = None) -> str:
