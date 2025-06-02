@@ -468,23 +468,23 @@ async def binance() -> pl.DataFrame:
     return pl.DataFrame(markets)
 
 
-async def hyperliquid() -> pl.DataFrame:
+async def hyperliquid() -> pl.DataFrame: # TODO: need to be checked
     from ..hyperliquid._market_http import MarketHTTP
 
     market_http = MarketHTTP()
 
     markets = []
 
-    res_prep = market_http.meta()
-    df_prep = to_dataframe(res_prep.get("universe", []))
+    res_perpetual = market_http.meta()
+    df_perpetual = to_dataframe(res_perpetual.get("universe", []))
 
-    for market in df_prep.iter_rows(named=True):
+    for market in df_perpetual.iter_rows(named=True):
         coin = market["name"]
         tick = str(reverse_decimal_places(market["szDecimals"]))
         markets.append(
             MarketInfo(
                 exchange=Common.HYPERLIQUID,
-                exchange_symbol=str(market["asset"]),
+                exchange_symbol=coin,
                 product_symbol=f"{coin}-USDC-SWAP",
                 product_type="perpetual",
                 base_currency=coin,
@@ -501,6 +501,7 @@ async def hyperliquid() -> pl.DataFrame:
     df_spot = to_dataframe(res_spot.get("universe", []))
 
     for market in df_spot.iter_rows(named=True):
+        print(market)
         # exchange_symbol = market["name"]
         base_i, quote_i = market["tokens"]
 
@@ -511,7 +512,7 @@ async def hyperliquid() -> pl.DataFrame:
         markets.append(
             MarketInfo(
                 exchange=Common.HYPERLIQUID,
-                exchange_symbol=str(market["marketIndex"]),
+                exchange_symbol=str(market["name"]),
                 product_symbol=f"{base}-{quote}-SPOT",
                 product_type="spot",
                 base_currency=base,
