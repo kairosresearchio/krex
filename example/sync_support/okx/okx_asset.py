@@ -1,8 +1,8 @@
 import krex
 
-OKX_API_KEY = "afef1997-a90a-4dd2-bc2e-c74b500bbb03"
-OKX_API_SECRET = "186529BB2AAD75A6B88E63A7EC1D3179"
-OKX_PASSPHRASE = "Aras1234@"
+OKX_API_KEY = ""
+OKX_API_SECRET = ""
+OKX_PASSPHRASE = ""
 
 client = krex.okx(
     api_key=OKX_API_KEY,

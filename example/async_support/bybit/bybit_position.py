@@ -1,8 +1,8 @@
 import asyncio
 import krex.async_support as krex
 
-BYBIT_API_KEY = "VLOpq0qMKPNWhMbKVH"
-BYBIT_API_SECRET = "Q3OKhzHiVSOYE2tF8ns2My4mQU7B8d5MnbOt"
+BYBIT_API_KEY = ""
+BYBIT_API_SECRET = ""
 
 
 async def main():

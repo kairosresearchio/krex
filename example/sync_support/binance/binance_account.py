@@ -1,7 +1,7 @@
 import krex
 
-BINANCE_APIKEY = "ovqxr2nXR50oeKo47CVKZTZ7ZmaCY3y1q7iAEOfsDXliAv52koJIcHEtlHDH30AU"
-BINANCE_APISECRET = "sZ4nwX3owfZNDu4qBu0Y4H8zbic4E6FLtkbbNytV5Z6S77ZTiCgGxgYxHVitq4GQ"
+BINANCE_APIKEY = ""
+BINANCE_APISECRET = ""
 
 client = krex.binance(
     api_key=BINANCE_APIKEY,
