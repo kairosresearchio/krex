@@ -17,8 +17,6 @@ from .gateio.client import Client as GateioClient
 from .hyperliquid.client import Client as HyperliquidClient
 
 
-VERSION = "0.0.0"
-
 # 在導入時自動應用（如果需要的話）
 auto_apply_nest_asyncio(verbose=False)
 
@@ -49,8 +47,6 @@ def hyperliquid(**kwargs):
     return HyperliquidClient(**kwargs)
 
 
-__version__ = VERSION
 __all__ = [
-    "VERSION", "__version__", 
     "bybit", "binance", "okx", "bitmart", "gateio", "hyperliquid",
 ]
