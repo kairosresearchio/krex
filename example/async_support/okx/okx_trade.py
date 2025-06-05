@@ -7,11 +7,13 @@ OKX_PASSPHRASE = ""
 
 
 async def main():
-    async with krex.okx(
+    client = await krex.okx(
         api_key=OKX_API_KEY,
         api_secret=OKX_API_SECRET,
         passphrase=OKX_PASSPHRASE,
-    ) as client:
+    )
+
+    try:
         res = await client.get_order_list(
             product_symbol="BTC-USDT-SPOT",
         )
@@ -37,6 +39,9 @@ async def main():
 
         res = await client.get_account_rate_limit()
         print(res)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

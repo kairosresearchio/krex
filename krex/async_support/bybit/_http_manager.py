@@ -67,6 +67,9 @@ class HTTPManager:
         query: dict = None,
         signed: bool = True,
     ):
+        if not self.session:
+            await self.async_init()
+
         if query is None:
             query = {}
 

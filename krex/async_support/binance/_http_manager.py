@@ -56,6 +56,9 @@ class HTTPManager:
         return {"X-MBX-APIKEY": self.api_key} if self.api_key else {}
 
     async def _request(self, method, path, query: dict = None, signed: bool = True):
+        if not self.session:
+            await self.async_init()
+
         if query is None:
             query = {}
 

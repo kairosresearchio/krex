@@ -7,10 +7,12 @@ load_dotenv()
 
 
 async def main():
-    async with krex.gateio(
+    client = await krex.gateio(
         api_key=os.getenv("GATEIO_APIKEY"),
         api_secret=os.getenv("GATEIO_APISECRET"),
-    ) as client:
+    )
+
+    try:
         result = await client.get_futures_account()
         print(result)
 
@@ -28,6 +30,9 @@ async def main():
 
         result = await client.get_spot_account_book()
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

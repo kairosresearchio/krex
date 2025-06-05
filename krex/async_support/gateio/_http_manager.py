@@ -58,6 +58,9 @@ class HTTPManager:
         body: Optional[dict] = None,
         signed: bool = True,
     ):
+        if not self.session:
+            await self.async_init()
+
         query = query or {}
         body = body or {}
 

@@ -3,7 +3,9 @@ import krex.async_support as krex
 
 
 async def main():
-    async with krex.okx() as client:
+    client = await krex.okx()
+
+    try:
         res = await client.get_public_instruments(instType="SPOT")
         print(res)
 
@@ -12,6 +14,9 @@ async def main():
 
         res = await client.get_funding_rate_history(product_symbol="BTC-USDT-SWAP")
         print(res)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

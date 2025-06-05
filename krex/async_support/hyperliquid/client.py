@@ -18,4 +18,10 @@ class Client(
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.session.aclose()
+        await self.close()
+
+    async def close(self):
+        """Close the client and clean up resources."""
+        if hasattr(self, 'session') and self.session is not None:
+            await self.session.aclose()
+            self.session = None

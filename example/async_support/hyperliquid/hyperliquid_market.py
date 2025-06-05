@@ -3,7 +3,9 @@ import krex.async_support as krex
 
 
 async def main():
-    async with krex.hyperliquid(testnet=True) as client:
+    client = await krex.hyperliquid(testnet=True)
+
+    try:
         result = await client.meta()
         print(result)
 
@@ -28,6 +30,9 @@ async def main():
 
         result = await client.funding_rate_history(product_symbol="BTC-USDC-SWAP", startTime=1696128000000)
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

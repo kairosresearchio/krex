@@ -4,10 +4,12 @@ import krex.async_support as krex
 
 async def main():
     wallet_address = ""
-    async with krex.hyperliquid(
+    client = await krex.hyperliquid(
         wallet_address=wallet_address,
         private_key="",  # Replace with your private key
-    ) as client:
+    )
+
+    try:
         result = await client.place_order(
             product_symbol="BTC-USD-SWAP",
             isBuy=True,
@@ -92,6 +94,9 @@ async def main():
 
         result = await client.cancel_twap_order(product_symbol="MELANIA-USDC-SWAP", twap_id=6249)
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

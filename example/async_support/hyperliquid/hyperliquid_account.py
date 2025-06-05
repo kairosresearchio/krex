@@ -4,7 +4,9 @@ import krex.async_support as krex
 
 async def main():
     wallet_address = ""
-    async with krex.hyperliquid(testnet=True) as client:
+    client = await krex.hyperliquid(testnet=True)
+
+    try:
         result = await client.clearinghouse_state(user=wallet_address)
         print(result)
 
@@ -31,6 +33,9 @@ async def main():
 
         result = await client.portfolio(user=wallet_address)
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

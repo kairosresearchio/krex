@@ -7,11 +7,13 @@ MEMO = ""
 
 
 async def main():
-    async with krex.bitmart(
+    client = await krex.bitmart(
         api_key=BITMART_API_KEY,
         api_secret=BITMART_API_SECRET,
         memo=MEMO,
-    ) as client:
+    )
+
+    try:
         res = await client.get_account_balance()
         print("1. get_account_balance:", "\n", res, "\n")
 
@@ -35,6 +37,9 @@ async def main():
 
         res = await client.get_contract_assets()
         print("8. get_contract_assets:", "\n", res, "\n")
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

@@ -3,7 +3,9 @@ import krex.async_support as krex
 
 
 async def main():
-    async with krex.bybit() as client:
+    client = await krex.bybit()
+
+    try:
         result = await client.get_instruments_info()
         print(result)
 
@@ -31,6 +33,9 @@ async def main():
             limit=5,
         )
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

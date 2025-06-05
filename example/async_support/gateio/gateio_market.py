@@ -3,7 +3,9 @@ import krex.async_support as krex
 
 
 async def main():
-    async with krex.gateio() as client:
+    client = await krex.gateio()
+
+    try:
         result = await client.get_all_futures_contracts()
         print(result)
 
@@ -42,6 +44,9 @@ async def main():
 
         result = await client.get_spot_list_tickers(product_symbol="BTC-USDT-SPOT")
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":
