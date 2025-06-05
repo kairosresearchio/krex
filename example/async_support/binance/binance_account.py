@@ -6,15 +6,20 @@ BINANCE_APISECRET = ""
 
 
 async def main():
-    async with krex.binance(
+    client = await krex.binance(
         api_key=BINANCE_APIKEY,
         api_secret=BINANCE_APISECRET,
-    ) as client:
+    )
+
+    try:
         result = await client.get_account_balance()
         print(result)
 
         result = await client.get_income_history()
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

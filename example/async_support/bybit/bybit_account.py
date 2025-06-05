@@ -6,10 +6,12 @@ BYBIT_API_SECRET = ""
 
 
 async def main():
-    async with krex.bybit(
+    client = await krex.bybit(
         api_key=BYBIT_API_KEY,
         api_secret=BYBIT_API_SECRET,
-    ) as client:
+    )
+
+    try:
         result = await client.get_wallet_balance()
         print(result)
 
@@ -39,6 +41,9 @@ async def main():
 
         # result = await client.set_margin_mode("PORTFOLIO_MARGIN")
         # print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

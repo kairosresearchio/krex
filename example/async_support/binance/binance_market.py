@@ -3,7 +3,9 @@ import krex.async_support as krex
 
 
 async def main():
-    async with krex.binance() as client:
+    client = await krex.binance()
+
+    try:
         result = await client.get_spot_exchange_info(product_symbol="BTC-USDT-SPOT")
         print(result)
 
@@ -21,6 +23,9 @@ async def main():
 
         result = await client.get_futures_funding_rate(product_symbol="BTC-USDT-SWAP")
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

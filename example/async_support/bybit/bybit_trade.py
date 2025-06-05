@@ -6,10 +6,12 @@ BYBIT_API_SECRET = ""
 
 
 async def main():
-    async with krex.bybit(
+    client = await krex.bybit(
         api_key=BYBIT_API_KEY,
         api_secret=BYBIT_API_SECRET,
-    ) as client:
+    )
+
+    try:
         result = await client.get_open_orders(category="spot")
         print(result)
 
@@ -33,6 +35,9 @@ async def main():
 
         result = await client.get_status_and_leverage()
         print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

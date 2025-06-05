@@ -4,7 +4,9 @@ import krex.async_support as krex
 
 
 async def main():
-    async with krex.bitmart() as client:
+    client = await krex.bitmart()
+
+    try:
         # 1. get_spot_currencies
         res = await client.get_spot_currencies()
         print("1. get_spot_currencies:", "\n", res, "\n")
@@ -41,6 +43,9 @@ async def main():
             int(datetime.now().timestamp()),
         )
         print("8. get_contract_kline:", "\n", res, "\n")
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

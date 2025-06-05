@@ -6,10 +6,12 @@ BINANCE_APISECRET = ""
 
 
 async def main():
-    async with krex.binance(
+    client = await krex.binance(
         api_key=BINANCE_APIKEY,
         api_secret=BINANCE_APISECRET,
-    ) as client:
+    )
+
+    try:
         result = await client.set_leverage(
             product_symbol="BTC-USDT-SWAP",
             leverage=3,
@@ -93,6 +95,9 @@ async def main():
         #     product_symbol="XRP-USDT-SWAP",
         # )
         # print(result)
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

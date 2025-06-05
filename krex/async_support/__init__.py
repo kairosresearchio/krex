@@ -7,30 +7,41 @@ from .gateio.client import Client as GateioClient
 from .hyperliquid.client import Client as HyperliquidClient
 
 
-# Create callable functions for each exchange
-def bybit(**kwargs):
-    """Create a Bybit client instance."""
-    return BybitClient(**kwargs)
+async def bybit(**kwargs):
+    """Create and initialize a Bybit client instance."""
+    client = BybitClient(**kwargs)
+    await client.async_init()
+    return client
 
-def binance(**kwargs):
-    """Create a Binance client instance."""
-    return BinanceClient(**kwargs)
+async def binance(**kwargs):
+    """Create and initialize a Binance client instance."""
+    client = BinanceClient(**kwargs)
+    await client.async_init()
+    return client
 
-def okx(**kwargs):
-    """Create an OKX client instance."""
-    return OKXClient(**kwargs)
+async def okx(**kwargs):
+    """Create and initialize an OKX client instance."""
+    client = OKXClient(**kwargs)
+    await client.async_init()
+    return client
 
-def bitmart(**kwargs):
-    """Create a BitMart client instance."""
-    return BitmartClient(**kwargs)
+async def bitmart(**kwargs):
+    """Create and initialize a BitMart client instance."""
+    client = BitmartClient(**kwargs)
+    await client.async_init()
+    return client
 
-def gateio(**kwargs):
-    """Create a Gate.io client instance."""
-    return GateioClient(**kwargs)
+async def gateio(**kwargs):
+    """Create and initialize a Gate.io client instance."""
+    client = GateioClient(**kwargs)
+    await client.async_init()
+    return client
 
-def hyperliquid(**kwargs):
-    """Create a Hyperliquid client instance."""
-    return HyperliquidClient(**kwargs)
+async def hyperliquid(**kwargs):
+    """Create and initialize a Hyperliquid client instance."""
+    client = HyperliquidClient(**kwargs)
+    await client.async_init()
+    return client
 
 __all__ = [
     "bybit", "binance", "okx", "bitmart", "gateio", "hyperliquid",
