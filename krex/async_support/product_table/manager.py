@@ -132,5 +132,5 @@ class ProductTableManager:
             "size_per_contract": self.get("size_per_contract", product_symbol, exchange),
         }
 
-    def get_symbols(self, exchange):
-        return self.product_table.filter(pl.col("exchange") == exchange).select("product_symbol").to_series().to_list()
+    def get_exchange_symbols(self, exchange):
+        return self.product_table.filter(pl.col("exchange") == exchange).select("exchange_symbol").to_series().to_list()
