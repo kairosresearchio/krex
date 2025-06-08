@@ -1,15 +1,32 @@
+from typing import List
 from ._http_manager import HTTPManager
 from .endpoints.account import Account
 from ..utils.common import Common
 
 
 class AccountHTTP(HTTPManager):
-    def get_wallet_balance(self):
+    
+    # ------- Common functions -------
+    
+    def get_balance(
+        self,
+        account_type: str = "UNIFIED",
+    ):
         """
-        default UNIFIED account and ensure the account is upgraded to unified account before trading
+        Obtain wallet balance, query asset information of each currency. By default, currency information with assets or liabilities of 0 is not returned.
+        Normally, you should use the UNIFIED account.
+
+        Parameters
+        ----------
+        account_type : str[UNIFIED, CONTRACT, SPOT]
+            The type of the account. If not specified, the default is UNIFIED.
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/wallet-balance
         """
         payload = {
-            "accountType": "UNIFIED",
+            "accountType": account_type,
         }
 
         res = self._request(
@@ -18,13 +35,98 @@ class AccountHTTP(HTTPManager):
             query=payload,
         )
         return res
+    
+    def get_fee_rates(
+        self,
+        product_symbol: str = None,
+        category: str = None,
+    ):
+        """
+        Get the trading fee rate.
+
+        Parameters
+        ----------
+        product_symbol : str
+            The product symbol of the trading fee rate. If not specified, the default is all linear products.
+        category : str[spot, linear, inverse, option]
+            The category of the trading fee rate. If you specify the product_symbol, the category can be ignored.
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/fee-rate
+        """
+        payload = {}
+        if product_symbol is not None:
+            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+
+        if category is not None:
+            payload["category"] = category
+
+        res = self._request(
+            method="GET",
+            path=Account.GET_FEE_RATE,
+            query=payload,
+        )
+        return res
+    
+    def get_capital_flow(
+        self,
+        category: str = None,
+        coin: str = None,
+        startTime: int = None,
+        limit: int = 20,
+    ):
+        """
+        Fetches the capital flow of the account. Such as deposit, withdraw, transfer, trade, etc.
+
+        Parameters
+        ----------
+        category : str[spot, linear, inverse, option]
+            The category of the instrument that the capital flow belongs to.
+        coin : str
+            The coin of the capital flow belongs to.
+        startTime : int
+            The start time of the capital flow. If not specified, the default is 24 hours ago.
+        limit : int
+            The maximum number of capital flow to retrieve on each page. If not specified, the default is 20.
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/transaction-log
+        """
+        payload = {
+            "limit": limit,
+        }
+        if category is not None:
+            payload["category"] = category
+        if coin is not None:
+            payload["currency"] = coin
+        if startTime is not None:
+            payload["startTime"] = startTime
+
+        res = self._request(
+            method="GET",
+            path=Account.GET_TRANSACTION_LOG,
+            query=payload,
+        )
+        return res
 
     def get_transferable_amount(
         self,
-        coins: list,
+        coins: List[str],
     ):
         """
-        :param coins: list
+        Query the available amount to transfer of a specific coin in the Unified wallet.
+
+        Parameters
+        ----------
+        coins : list
+            Coin name, uppercase only. Supports up to 20 coins per request
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/unified-trans-amnt
         """
         payload = {}
         if coins is not None:
@@ -40,7 +142,16 @@ class AccountHTTP(HTTPManager):
         )
         return res
 
-    def upgrade_to_unified_trading_account(self):
+    # ------- Exchange Specific functions -------
+    
+    def upgrade_to_unified_account(self):
+        """
+        Upgrade to Unified account.
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/upgrade-unified-account
+        """
         res = self._request(
             method="POST",
             path=Account.UPGRADE_TO_UNIFIED_ACCOUNT,
@@ -55,9 +166,20 @@ class AccountHTTP(HTTPManager):
         limit: int = 20,
     ):
         """
-        :param coin: str
-        :param startTime: int
-        :param limit: int
+        Get interest records, sorted in reverse order of creation time.
+
+        Parameters
+        ----------
+        coin : str
+            USDC, USDT, BTC, ETH etc, uppercase only
+        startTime : int
+            The start time of the borrowing history. If not specified, the default is 24 hours ago.
+        limit : int
+            The maximum number of interest records to retrieve on each page. If not specified, the default is 20.
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/borrow-history
         """
         payload = {
             "limit": limit,
@@ -79,7 +201,18 @@ class AccountHTTP(HTTPManager):
         coin: str = None,
     ):
         """
-        :param coin: str
+        You can manually repay the liabilities of Unified account.
+
+        Parameters
+        ----------
+        coin : str
+            The coin with liability, uppercase only
+            Input the specific coin: repay the liability of this coin in particular
+            No coin specified: repay the liability of all coins
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/repay-liability
         """
         payload = {}
         if coin is not None:
@@ -99,7 +232,16 @@ class AccountHTTP(HTTPManager):
         coin: str = None,
     ):
         """
-        :param coin: str
+        Get the collateral information of the current unified margin account, including loan interest rate, loanable amount, collateral conversion rate, whether it can be mortgaged as margin, etc.
+
+        Parameters
+        ----------
+        coin : str
+            Asset currency of all current collateral, uppercase only
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/collateral-info
         """
         payload = {}
         if coin is not None:
@@ -120,8 +262,17 @@ class AccountHTTP(HTTPManager):
         switch: str,
     ):
         """
-        :param coin: str
-        :param switch: str "ON" or "OFF"
+        Set the collateral coin switch.
+
+        Parameters
+        ----------
+        coin : str
+            The coin of the collateral.
+        switch : str "ON" or "OFF"
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/set-collateral
         """
         payload = {
             "coin": coin,
@@ -135,77 +286,21 @@ class AccountHTTP(HTTPManager):
         )
         return res
 
-    def get_fee_rates(
-        self,
-        product_symbol: str = None,
-        category: str = None,
-    ):
-        """
-        Get the trading fee rate
-        if product_symbol is not specified, pls specify the category
-
-        :param product_symbol: str
-        :param category: str Product type. spot, linear, inverse, option
-        """
-        payload = {}
-        if product_symbol is not None:
-            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-
-        if category is not None:
-            payload["category"] = category
-
-        res = self._request(
-            method="GET",
-            path=Account.GET_FEE_RATE,
-            query=payload,
-        )
-        return res
-
-    def get_account_info(self):
-        res = self._request(
-            method="GET",
-            path=Account.GET_ACCOUNT_INFO,
-            query=None,
-        )
-        return res
-
-    def get_transaction_log(
-        self,
-        category: str = None,
-        coin: str = None,
-        startTime: int = None,
-        limit: int = 20,
-    ):
-        """
-        :param category: str
-        :param coin: str
-        :param startTime: int
-        :param limit: int
-        """
-        payload = {
-            "limit": limit,
-        }
-        if category is not None:
-            payload["category"] = category
-        if coin is not None:
-            payload["currency"] = coin
-        if startTime is not None:
-            payload["startTime"] = startTime
-
-        res = self._request(
-            method="GET",
-            path=Account.GET_TRANSACTION_LOG,
-            query=payload,
-        )
-        return res
-
     def set_margin_mode(
         self,
         margin_mode: str,
     ):
         """
-        :param margin_mode: str ISOLATED_MARGIN, REGULAR_MARGIN(i.e. Cross margin), PORTFOLIO_MARGIN
+        Set the margin mode.
+
+        Parameters
+        ----------
+        margin_mode : str[ISOLATED_MARGIN, REGULAR_MARGIN, PORTFOLIO_MARGIN]
+            The margin mode to set.
+
+        Returns
+        -------
+        Please refer to the official documentation for more details: https://bybit-exchange.github.io/docs/v5/account/set-margin-mode
         """
         payload = {
             "setMarginMode": margin_mode,

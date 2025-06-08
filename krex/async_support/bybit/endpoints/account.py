@@ -10,7 +10,6 @@ class Account(str, Enum):
     GET_COLLATERAL_INFO = "/v5/account/collateral-info"
     SET_COLLATERAL_COIN = "/v5/account/set-collateral-switch"
     GET_FEE_RATE = "/v5/account/fee-rate"
-    GET_ACCOUNT_INFO = "/v5/account/info"
     GET_TRANSACTION_LOG = "/v5/account/transaction-log"
     SET_MARGIN_MODE = "/v5/account/set-margin-mode"
 
