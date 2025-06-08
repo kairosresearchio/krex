@@ -137,3 +137,9 @@ class ProductTableManager:
             return self.product_table.filter(pl.col("exchange") == exchange).select("exchange_symbol").to_series().to_list()
         else:
             return self.product_table.filter(pl.col("exchange") == exchange).filter(pl.col("product_type") == product_type).select("exchange_symbol").to_series().to_list()
+
+    def get_product_symbols(self, exchange, product_type=None):
+        if product_type is None:
+            return self.product_table.filter(pl.col("exchange") == exchange).select("product_symbol").to_series().to_list()
+        else:
+            return self.product_table.filter(pl.col("exchange") == exchange).filter(pl.col("product_type") == product_type).select("product_symbol").to_series().to_list()
