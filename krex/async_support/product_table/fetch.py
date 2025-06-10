@@ -13,6 +13,7 @@ class MarketInfo:
     exchange_symbol: str
     product_symbol: str
     product_type: str
+    exchange_type: str
     price_precision: str
     size_precision: str
     min_size: str
@@ -87,12 +88,17 @@ async def bybit() -> pl.DataFrame:
     res_linear = await market_http.get_instruments_info(category="linear")
     df_linear = to_dataframe(res_linear["result"]["list"]) if "list" in res_linear.get("result", {}) else pl.DataFrame()
     for market in df_linear.iter_rows(named=True):
+        if market["contractType"] == "LinearFutures":
+            product_type = "futures"
+        else:
+            product_type = "swap"
         markets.append(
             MarketInfo(
                 exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
                 product_symbol=format_product_symbol(strip_number(market["symbol"])),
-                product_type="linear",
+                product_type=product_type,
+                exchange_type="linear",
                 base_currency=strip_number(market["baseCoin"]),
                 quote_currency=market["quoteCoin"],
                 price_precision=market["priceFilter"]["tickSize"],
@@ -107,12 +113,17 @@ async def bybit() -> pl.DataFrame:
         to_dataframe(res_inverse["result"]["list"]) if "list" in res_inverse.get("result", {}) else pl.DataFrame()
     )
     for market in df_inverse.iter_rows(named=True):
+        if market["contractType"] == "InverseFutures":
+            product_type = "futures"
+        else:
+            product_type = "swap"
         markets.append(
             MarketInfo(
                 exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
                 product_symbol=format_product_symbol(market["symbol"]),
-                product_type="inverse",
+                product_type=product_type,
+                exchange_type="inverse",
                 base_currency=strip_number(market["baseCoin"]),
                 quote_currency=market["quoteCoin"],
                 price_precision=market["priceFilter"]["tickSize"],
@@ -132,6 +143,7 @@ async def bybit() -> pl.DataFrame:
                 exchange_symbol=market["symbol"],
                 product_symbol=f"{market['symbol'][:-4]}-{market['symbol'][-4:]}-SPOT",
                 product_type="spot",
+                exchange_type="spot",
                 base_currency=strip_number(market["baseCoin"]),
                 quote_currency=market["quoteCoin"],
                 price_precision=market["priceFilter"]["tickSize"],
@@ -168,7 +180,8 @@ async def okx() -> pl.DataFrame:
                 exchange=Common.OKX,
                 exchange_symbol=market["instId"],
                 product_symbol=strip_number(market["instId"]),
-                product_type=market["instType"],
+                product_type="swap",
+                exchange_type=market["instType"],
                 base_currency=base,
                 quote_currency=quote,
                 price_precision=market["tickSz"],
@@ -189,6 +202,7 @@ async def okx() -> pl.DataFrame:
                 exchange_symbol=market["instId"],
                 product_symbol=market["instId"] + "-SPOT",
                 product_type=market["instType"],
+                exchange_type="spot",
                 base_currency=strip_number(market["baseCcy"]),
                 quote_currency=market["quoteCcy"],
                 price_precision=market["tickSz"],
@@ -213,7 +227,8 @@ async def okx() -> pl.DataFrame:
                 exchange=Common.OKX,
                 exchange_symbol=market["instId"],
                 product_symbol=strip_number(market["instId"]),
-                product_type=market["instType"],
+                product_type="futures",
+                exchange_type=market["instType"],
                 base_currency=base,
                 quote_currency=quote,
                 price_precision=market["tickSz"],
@@ -254,7 +269,8 @@ async def bitmart() -> pl.DataFrame:
                 exchange=Common.BITMART,
                 exchange_symbol=market["symbol"],
                 product_symbol=product_symbol,
-                product_type="SWAP",
+                product_type="swap",
+                exchange_type="swap",
                 base_currency=strip_number(market["base_currency"]),
                 quote_currency=market["quote_currency"],
                 price_precision=market["price_precision"],
@@ -286,7 +302,8 @@ async def bitmart() -> pl.DataFrame:
                 exchange=Common.BITMART,
                 exchange_symbol=market["symbol"],
                 product_symbol=product_symbol,
-                product_type="SPOT",
+                product_type="spot",
+                exchange_type="spot",
                 base_currency=strip_number(market["base_currency"]),
                 quote_currency=market["quote_currency"],
                 price_precision=reverse_decimal_places(market["price_max_precision"]),
@@ -332,7 +349,8 @@ async def gateio() -> pl.DataFrame:
                 exchange=Common.GATEIO,
                 exchange_symbol=market["name"],
                 product_symbol=product_symbol,
-                product_type="futures",
+                product_type="swap",
+                exchange_type="futures",
                 base_currency=base,
                 quote_currency=quote,
                 price_precision=market["order_price_round"],
@@ -365,7 +383,8 @@ async def gateio() -> pl.DataFrame:
                 exchange=Common.GATEIO,
                 exchange_symbol=market["name"],
                 product_symbol=product_symbol,
-                product_type="delivery",
+                product_type="futures",
+                exchange_type="delivery",
                 base_currency=base,
                 quote_currency=quote,
                 price_precision=market["order_price_round"],
@@ -386,6 +405,7 @@ async def gateio() -> pl.DataFrame:
                 exchange_symbol=market["id"],
                 product_symbol=f"{market['base']}-{market['quote']}-SPOT",
                 product_type="spot",
+                exchange_type="spot",
                 base_currency=market["base"],
                 quote_currency=market["quote"],
                 price_precision=reverse_decimal_places(market["precision"]),
@@ -431,6 +451,7 @@ async def binance() -> pl.DataFrame:
                 exchange_symbol=market["symbol"],
                 product_symbol=product_symbol,
                 product_type="spot",
+                exchange_type="spot",
                 base_currency=market["baseAsset"],
                 quote_currency=market["quoteAsset"],
                 price_precision=price_filter.get("tickSize", "0"),
@@ -459,7 +480,8 @@ async def binance() -> pl.DataFrame:
                 exchange=Common.BINANCE,
                 exchange_symbol=market["symbol"],
                 product_symbol=product_symbol,
-                product_type="futures",
+                product_type="swap",
+                exchange_type=market["contractType"],
                 base_currency=base,
                 quote_currency=quote,
                 price_precision=price_filter.get("tickSize", "0"),
@@ -492,7 +514,8 @@ async def hyperliquid() -> pl.DataFrame:
                 exchange=Common.HYPERLIQUID,
                 exchange_symbol=f'["{coin}", {idx}]',
                 product_symbol=f"{coin}-USD-SWAP",
-                product_type="perpetual",
+                product_type="swap",
+                exchange_type="perpetual",
                 base_currency=coin,
                 quote_currency="USD",
                 price_precision=tick,
@@ -520,6 +543,7 @@ async def hyperliquid() -> pl.DataFrame:
                 exchange_symbol='["{}", {}]'.format(market["name"], 10000 + idx),
                 product_symbol=f"{base}-{quote}-SPOT",
                 product_type="spot",
+                exchange_type="spot",
                 base_currency=base,
                 quote_currency=quote,
                 price_precision=tick,
