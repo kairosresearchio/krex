@@ -43,10 +43,10 @@ def format_product_symbol(symbol: str) -> str:
     - AAVEUSD → AAVE-USD
     - ETHUSDH25 → ETH-USD-H25
     """
-    match = re.match(r"([A-Z]+)(USD[T]?)-(\d+[A-Z]{3}\d{2})$", symbol)
+    match = re.match(r"([A-Z]+)(USD[T]?)\-([0-9]{2}[A-Z]{3}[0-9]{2})$", symbol)
     if match:
         base, quote, date = match.groups()
-        return f"{base}-{quote}-{date}-SWAP"
+        return f"{base}-{quote}-{date}-FUTURES"
 
     # ETH-25APR25 --> ETH-25APR25-SWAP
     match = re.match(r"([A-Z]+)-(\d+[A-Z]{3}\d{2})$", symbol)
