@@ -22,7 +22,7 @@ class PositionHTTP(HTTPManager):
         }
         if product_symbol is not None:
             payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
         if settleCoin is not None:
             payload["settleCoin"] = settleCoin
 
@@ -45,7 +45,7 @@ class PositionHTTP(HTTPManager):
         :param sellLeverage: str
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             "buyLeverage": leverage,
             "sellLeverage": leverage,
@@ -104,7 +104,7 @@ class PositionHTTP(HTTPManager):
         }
         if product_symbol is not None:
             payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
         if startTime is not None:
             payload["startTime"] = startTime
 

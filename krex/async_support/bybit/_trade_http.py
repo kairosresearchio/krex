@@ -34,7 +34,7 @@ class TradeHTTP(HTTPManager):
         positionIdx: int = None,
     ):
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
             "side": side,
             "orderType": orderType,
@@ -288,7 +288,7 @@ class TradeHTTP(HTTPManager):
         :param category: str (linear, option, spot, inverse)
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
         }
         if orderId is not None:
@@ -337,7 +337,7 @@ class TradeHTTP(HTTPManager):
         :param orderId: str
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
             "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
         }
         if orderId is not None:
@@ -360,7 +360,7 @@ class TradeHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": self.ptm.get_product_type(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
             "limit": limit,
         }
         if product_symbol is not None:
@@ -417,7 +417,7 @@ class TradeHTTP(HTTPManager):
         }
         if product_symbol is not None:
             payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
 
         return await self._request(
             method="POST",
@@ -447,7 +447,7 @@ class TradeHTTP(HTTPManager):
         }
         if product_symbol is not None:
             payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
         if orderId is not None:
             payload["orderId"] = orderId
         if startTime is not None:
@@ -483,7 +483,7 @@ class TradeHTTP(HTTPManager):
         }
         if product_symbol is not None:
             payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
         if startTime is not None:
             payload["startTime"] = startTime
 

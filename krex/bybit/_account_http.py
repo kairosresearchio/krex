@@ -149,7 +149,7 @@ class AccountHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["category"] = self.ptm.get_product_type(product_symbol, Common.BYBIT)
+            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
             payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
 
         if category is not None:
