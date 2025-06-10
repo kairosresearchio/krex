@@ -81,6 +81,7 @@ class ProductTableManager:
         product_symbol=None,
         exchange=None,
         product_type=None,
+        exchange_type=None,
         exchange_symbol=None,
     ):
         """
@@ -94,6 +95,8 @@ class ProductTableManager:
             data = data.filter(pl.col("exchange") == exchange)
         if product_type is not None:
             data = data.filter(pl.col("product_type") == product_type)
+        if exchange_type is not None:
+            data = data.filter(pl.col("exchange_type") == exchange_type)
         if exchange_symbol is not None:
             data = data.filter(pl.col("exchange_symbol") == exchange_symbol)
 
