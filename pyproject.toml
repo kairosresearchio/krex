@@ -27,7 +27,7 @@ license = {text = "MIT"}
 name = "krex"
 readme = "README.md"
 requires-python = ">=3.11"
-version = "0.1.11"
+version = "0.1.12"
 
 [project.urls]
 Repository = "https://github.com/kairos-research-ltd/krex"
