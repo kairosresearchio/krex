@@ -38,8 +38,9 @@ def clean_symbol(symbol: str) -> str:
 
 def format_product_symbol(symbol: str) -> str:
     """
-    - BTCUSDT-04APR25 → BTC-USDT-04APR25-SWAP
-    - ETH-25APR25 → ETH-25APR25-SWAP
+    - BTCUSDT → BTC-USDT-SWAP
+    - BTCUSDT-04APR25 → BTC-USDT-04APR25-FUTURES
+    - ETH-25APR25 → ETH-25APR25-FUTURES
     - AAVEUSD → AAVE-USD
     - ETHUSDH25 → ETH-USD-H25
     """
@@ -48,17 +49,17 @@ def format_product_symbol(symbol: str) -> str:
         base, quote, date = match.groups()
         return f"{base}-{quote}-{date}-FUTURES"
 
-    # ETH-25APR25 --> ETH-25APR25-SWAP
+    # ETH-25APR25 --> ETH-25APR25-FUTURES
     match = re.match(r"([A-Z]+)-(\d+[A-Z]{3}\d{2})$", symbol)
     if match:
         base, date = match.groups()
-        return f"{base}-{date}-SWAP"
+        return f"{base}-{date}-FUTURES"
 
-    # ETHUSDH25 --> ETH-USD-H25-SWAP
-    match = re.match(r"([A-Z]+)(USD[T]?)([HMU]\d{2})$", symbol)
+    # ETHUSDH25 --> ETH-USD-H25-FUTURES
+    match = re.match(r"([A-Z]+)(USD[T]?)([HMUZ]\d{2})$", symbol)
     if match:
         base, quote, date = match.groups()
-        return f"{base}-{quote}-{date}-SWAP"
+        return f"{base}-{quote}-{date}-FUTURES"
 
     # AAVEUSD --> AAVE-USD-SWAP
     match = re.match(r"([A-Z]+)(USD[T]?)$", symbol)

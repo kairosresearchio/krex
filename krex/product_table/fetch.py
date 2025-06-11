@@ -49,14 +49,14 @@ def format_product_symbol(symbol: str) -> str:
         base, quote, date = match.groups()
         return f"{base}-{quote}-{date}-FUTURES"
 
-    # ETH-25APR25 --> ETH-25APR25-SWAP
+    # ETH-25APR25 --> ETH-25APR25-FUTURES
     match = re.match(r"([A-Z]+)-(\d+[A-Z]{3}\d{2})$", symbol)
     if match:
         base, date = match.groups()
         return f"{base}-{date}-FUTURES"
 
-    # ETHUSDH25 --> ETH-USD-H25-SWAP
-    match = re.match(r"([A-Z]+)(USD[T]?)([HMU]\d{2})$", symbol)
+    # ETHUSDH25 --> ETH-USD-H25-FUTURES
+    match = re.match(r"([A-Z]+)(USD[T]?)([HMUZ]\d{2})$", symbol)
     if match:
         base, quote, date = match.groups()
         return f"{base}-{quote}-{date}-FUTURES"
