@@ -20,6 +20,7 @@ class MarketInfo:
     base_currency: str = ""
     quote_currency: str = ""
     min_notional: str = "0"
+    multiplier: str = "1"
 
     # contract
     size_per_contract: str = "1"
@@ -202,8 +203,8 @@ async def okx() -> pl.DataFrame:
                 exchange=Common.OKX,
                 exchange_symbol=market["instId"],
                 product_symbol=market["instId"] + "-SPOT",
-                product_type=market["instType"],
-                exchange_type="spot",
+                product_type="spot",
+                exchange_type=market["instType"],
                 base_currency=strip_number(market["baseCcy"]),
                 quote_currency=market["quoteCcy"],
                 price_precision=market["tickSz"],
