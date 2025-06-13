@@ -46,7 +46,7 @@ class TradeHTTP(HTTPManager):
             "type": Trade.ORDER,
             "orders": [
                 {
-                    "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+                    "a": json.loads(self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol))[1],
                     "b": isBuy,
                     "p": price,
                     "s": size,
@@ -194,7 +194,7 @@ class TradeHTTP(HTTPManager):
             "type": Trade.CANCEL,
             "cancels": [
                 {
-                    "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+                    "a": json.loads(self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol))[1],
                     "o": oid,
                 }
             ],
@@ -231,7 +231,7 @@ class TradeHTTP(HTTPManager):
             "type": Trade.CANCELBYCLOID,
             "cancels": [
                 {
-                    "asset": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+                    "asset": json.loads(self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol))[1],
                     "cloid": cloid,
                 }
             ],
@@ -319,7 +319,7 @@ class TradeHTTP(HTTPManager):
             "type": Trade.MODIFY,
             "oid": oid,
             "order": {
-                "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+                "a": json.loads(self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol))[1],
                 "b": isBuy,
                 "p": price,
                 "s": size,
@@ -399,7 +399,7 @@ class TradeHTTP(HTTPManager):
         """
         action = {
             "type": Trade.UPDATELEVERAGE,
-            "asset": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+            "asset": json.loads(self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol))[1],
             "isCross": isCross,
             "leverage": leverage,
         }
@@ -434,7 +434,7 @@ class TradeHTTP(HTTPManager):
         """
         action = {
             "type": Trade.UPDATEISOLATEMARGIN,
-            "asset": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+            "asset": json.loads(self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol))[1],
             "isBuy": isBuy,
             "ntli": ntli,
         }
@@ -481,7 +481,7 @@ class TradeHTTP(HTTPManager):
         action = {
             "type": Trade.TWAPORDER,
             "twap": {
-                "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+                "a": json.loads(self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol))[1],
                 "b": isBuy,
                 "s": size,
                 "r": reduceOnly,
@@ -520,7 +520,7 @@ class TradeHTTP(HTTPManager):
         """
         action = {
             "type": Trade.TWAPCANCEL,
-            "a": json.loads(self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID))[1],
+            "a": json.loads(self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol))[1],
             "t": twap_id,
         }
 

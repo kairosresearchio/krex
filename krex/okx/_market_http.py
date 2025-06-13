@@ -20,7 +20,7 @@ class MarketHTTP(HTTPManager):
         :param limit: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
         }
         if bar is not None:
             payload["bar"] = bar
@@ -49,7 +49,7 @@ class MarketHTTP(HTTPManager):
         :param sz: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
         }
         if sz is not None:
             payload["sz"] = sz

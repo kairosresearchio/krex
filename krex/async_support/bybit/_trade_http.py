@@ -34,8 +34,8 @@ class TradeHTTP(HTTPManager):
         positionIdx: int = None,
     ):
         payload = {
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
             "side": side,
             "orderType": orderType,
             "qty": qty,
@@ -288,8 +288,8 @@ class TradeHTTP(HTTPManager):
         :param category: str (linear, option, spot, inverse)
         """
         payload = {
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -337,8 +337,8 @@ class TradeHTTP(HTTPManager):
         :param orderId: str
         """
         payload = {
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -360,11 +360,11 @@ class TradeHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
             "limit": limit,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
 
         res = await self._request(
             method="GET",
@@ -416,8 +416,8 @@ class TradeHTTP(HTTPManager):
             "category": category,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
+            payload["category"] = self.ptm.get_exchange_type(Common.BYBIT, product_symbol)
 
         return await self._request(
             method="POST",
@@ -446,8 +446,8 @@ class TradeHTTP(HTTPManager):
             "category": category,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
+            payload["category"] = self.ptm.get_exchange_type(Common.BYBIT, product_symbol)
         if orderId is not None:
             payload["orderId"] = orderId
         if startTime is not None:
@@ -482,8 +482,8 @@ class TradeHTTP(HTTPManager):
             "limit": limit,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
+            payload["category"] = self.ptm.get_exchange_type(Common.BYBIT, product_symbol)
         if startTime is not None:
             payload["startTime"] = startTime
 
@@ -565,7 +565,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {
             "category": "spot",
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
             "side": side,
         }
 

@@ -24,7 +24,7 @@ class TradeHTTP(HTTPManager):
         :param clientOrderId: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
             "side": side,
             "type": type,
         }
@@ -192,7 +192,7 @@ class TradeHTTP(HTTPManager):
         :param client_order_id: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
         }
         if order_id is not None:
             payload["order_id"] = order_id
@@ -216,7 +216,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMART, product_symbol)
         if side is not None:
             payload["side"] = side
 
@@ -245,7 +245,7 @@ class TradeHTTP(HTTPManager):
         :param clientOrderId: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
             "side": side,
             "type": type,
         }
@@ -327,7 +327,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMART, product_symbol)
         if orderMode is not None:
             payload["orderMode"] = orderMode
         if startTime is not None:
@@ -362,7 +362,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMART, product_symbol)
         if orderMode is not None:
             payload["orderMode"] = orderMode
         if startTime is not None:
@@ -397,7 +397,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMART, product_symbol)
         if orderMode is not None:
             payload["orderMode"] = orderMode
         if startTime is not None:
@@ -468,7 +468,7 @@ class TradeHTTP(HTTPManager):
         :param stp_mode: int (1: cancel_maker(async default), 2: cancel_taker, 3: cancel_both)
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
             "side": side,
             "size": size,
         }

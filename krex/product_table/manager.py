@@ -108,10 +108,10 @@ class ProductTableManager:
 
         return data.select(key).item()
 
-    def get_exchange_symbol(self, product_symbol, exchange):
+    def get_exchange_symbol(self, exchange, product_symbol):
         return self.get("exchange_symbol", product_symbol, exchange)
 
-    def get_product_symbol(self, exchange_symbol, exchange, product_type=None, exchange_type=None):
+    def get_product_symbol(self, exchange, exchange_symbol, product_type=None, exchange_type=None):
         if product_type is not None and exchange_type is None:
             return self.get("product_symbol", exchange_symbol=exchange_symbol, exchange=exchange, product_type=product_type)
         elif product_type is None and exchange_type is not None:
@@ -137,13 +137,13 @@ class ProductTableManager:
         else:
             raise ProductTableError("You must specify either product_symbol or exchange_symbol")
 
-    def get_base_currency(self, product_symbol, exchange):
+    def get_base_currency(self, exchange, product_symbol):
         return self.get("base_currency", product_symbol, exchange)
 
-    def get_quote_currency(self, product_symbol, exchange):
+    def get_quote_currency(self, exchange, product_symbol):
         return self.get("quote_currency", product_symbol, exchange)
 
-    def get_trading_details(self, product_symbol, exchange):
+    def get_trading_details(self, exchange, product_symbol):
         return {
             "price_precision": self.get("price_precision", product_symbol, exchange),
             "size_precision": self.get("size_precision", product_symbol, exchange),

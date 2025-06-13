@@ -25,7 +25,7 @@ class PublicHTTP(HTTPManager):
         if instFamily is not None:
             payload["instFamily"] = instFamily
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
 
         res = await self._request(
             method="GET",
@@ -43,7 +43,7 @@ class PublicHTTP(HTTPManager):
         :param product_symbol: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
         }
 
         res = await self._request(
@@ -68,7 +68,7 @@ class PublicHTTP(HTTPManager):
         :param limit: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
         }
         if before is not None:
             payload["before"] = before

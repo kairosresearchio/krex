@@ -21,8 +21,8 @@ class PositionHTTP(HTTPManager):
             "limit": limit,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
+            payload["category"] = self.ptm.get_exchange_type(Common.BYBIT, product_symbol)
         if settleCoin is not None:
             payload["settleCoin"] = settleCoin
 
@@ -45,8 +45,8 @@ class PositionHTTP(HTTPManager):
         :param sellLeverage: str
         """
         payload = {
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
             "buyLeverage": leverage,
             "sellLeverage": leverage,
         }
@@ -74,7 +74,7 @@ class PositionHTTP(HTTPManager):
             "mode": mode,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
         if coin is not None:
             payload["coin"] = coin
 
@@ -103,8 +103,8 @@ class PositionHTTP(HTTPManager):
             "limit": limit,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
+            payload["category"] = self.ptm.get_exchange_type(Common.BYBIT, product_symbol)
         if startTime is not None:
             payload["startTime"] = startTime
 

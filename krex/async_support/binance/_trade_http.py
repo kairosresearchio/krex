@@ -14,7 +14,7 @@ class TradeHTTP(HTTPManager):
         :param leverage: int
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
             "leverage": leverage,
         }
 
@@ -69,7 +69,7 @@ class TradeHTTP(HTTPManager):
         :param goodTillDate: int
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
             "side": side,
             "type": type_,
         }
@@ -287,7 +287,7 @@ class TradeHTTP(HTTPManager):
 
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -314,7 +314,7 @@ class TradeHTTP(HTTPManager):
 
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -337,7 +337,7 @@ class TradeHTTP(HTTPManager):
 
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
         }
 
         res = await self._request(
@@ -363,7 +363,7 @@ class TradeHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -395,7 +395,7 @@ class TradeHTTP(HTTPManager):
         :param origClientOrderId: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -417,7 +417,7 @@ class TradeHTTP(HTTPManager):
         :param product_symbol: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
         }
 
         res = await self._request(
@@ -435,7 +435,7 @@ class TradeHTTP(HTTPManager):
         :param product_symbol: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
         }
 
         res = await self._request(

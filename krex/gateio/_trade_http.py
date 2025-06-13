@@ -49,7 +49,7 @@ class TradeHTTP(HTTPManager):
         """
         path_params = {
             "settle": ccy,
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         if path == "futures":
@@ -81,7 +81,7 @@ class TradeHTTP(HTTPManager):
         """
         path_params = {
             "settle": ccy,
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         payload = {
@@ -159,7 +159,7 @@ class TradeHTTP(HTTPManager):
         }
 
         body = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
             "size": size,
         }
 
@@ -354,7 +354,7 @@ class TradeHTTP(HTTPManager):
 
         for order in orders:
             if "contract" not in order and "product_symbol" in order:
-                order["contract"] = self.ptm.get_exchange_symbol(order["product_symbol"], Common.GATEIO)
+                order["contract"] = self.ptm.get_exchange_symbol(Common.GATEIO, order["product_symbol"])
                 del order["product_symbol"]
 
         path_params = {
@@ -398,7 +398,7 @@ class TradeHTTP(HTTPManager):
             "status": status,
         }
         if product_symbol is not None:
-            payload["contract"] = self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO)
+            payload["contract"] = self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol)
         if limit is not None:
             payload["limit"] = limit
         if offset is not None:
@@ -442,7 +442,7 @@ class TradeHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if side is not None:
             payload["side"] = side
@@ -592,7 +592,7 @@ class TradeHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         if order is not None:
@@ -648,7 +648,7 @@ class TradeHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         if limit is not None:
@@ -690,7 +690,7 @@ class TradeHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         if limit is not None:
@@ -737,7 +737,7 @@ class TradeHTTP(HTTPManager):
         """
         path_params = {
             "settle": ccy,
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         payload = {
@@ -768,7 +768,7 @@ class TradeHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         if limit is not None:
@@ -815,7 +815,7 @@ class TradeHTTP(HTTPManager):
         """
 
         body = {
-            "currency_pair": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "currency_pair": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
             "side": side,
             "amount": amount,
         }
@@ -1018,7 +1018,7 @@ class TradeHTTP(HTTPManager):
         """
 
         payload = {
-            "currency_pair": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "currency_pair": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
             "status": status,
         }
 
@@ -1057,7 +1057,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["currency_pair"] = self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO)
+            payload["currency_pair"] = self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol)
         if side is not None:
             payload["side"] = side
         if account is not None:
@@ -1088,7 +1088,7 @@ class TradeHTTP(HTTPManager):
         }
 
         payload = {
-            "currency_pair": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "currency_pair": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if account is not None:
             payload["account"] = account
@@ -1119,7 +1119,7 @@ class TradeHTTP(HTTPManager):
         }
 
         payload = {
-            "currency_pair": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "currency_pair": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if account is not None:
             payload["account"] = account
@@ -1159,7 +1159,7 @@ class TradeHTTP(HTTPManager):
 
         body = {}
         if product_symbol is not None:
-            body["currency_pair"] = self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO)
+            body["currency_pair"] = self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol)
         if account is not None:
             body["account"] = account
         if amount is not None:
@@ -1200,7 +1200,7 @@ class TradeHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["currency_pair"] = self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO)
+            payload["currency_pair"] = self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol)
         if limit is not None:
             payload["limit"] = limit
         if page is not None:

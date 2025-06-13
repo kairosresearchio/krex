@@ -17,9 +17,9 @@ class MarketHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol)
         if product_symbols is not None:
-            formatted_symbols = [self.ptm.get_exchange_symbol(symbol, Common.BINANCE) for symbol in product_symbols]
+            formatted_symbols = [self.ptm.get_exchange_symbol(Common.BINANCE, symbol) for symbol in product_symbols]
             payload["symbols"] = str(formatted_symbols).replace("'", '"')
         if symbolStatus is not None:
             payload["symbolStatus"] = symbolStatus
@@ -75,7 +75,7 @@ class MarketHTTP(HTTPManager):
         :param limit: int (Default 500; max 1500.
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE),
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
             "interval": interval,
         }
         if startTime is not None:
@@ -99,7 +99,7 @@ class MarketHTTP(HTTPManager):
     ):
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol)
 
         res = self._request(
             method="GET",
@@ -118,7 +118,7 @@ class MarketHTTP(HTTPManager):
     ):
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol)
         if startTime is not None:
             payload["startTime"] = startTime
         if endTime is not None:

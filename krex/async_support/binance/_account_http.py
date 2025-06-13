@@ -33,7 +33,7 @@ class AccountHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol)
         if incomeType is not None:
             payload["incomeType"] = incomeType
         if startTime is not None:

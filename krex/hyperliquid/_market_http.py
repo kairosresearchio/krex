@@ -82,7 +82,7 @@ class MarketHTTP(HTTPManager):
 
         payload = {
             "type": Market.L2BOOK,
-            "coin": self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID),
+            "coin": self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol),
         }
 
         res = self._request(
@@ -109,7 +109,7 @@ class MarketHTTP(HTTPManager):
         payload = {
             "type": Market.CANDLESNAPSHOT,
             "req": {
-                "coin": self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID),
+                "coin": self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol),
                 "interval": interval,
                 "startTime": startTime,
             },
@@ -139,7 +139,7 @@ class MarketHTTP(HTTPManager):
         """
         payload = {
             "type": Market.FUNDINGHISTORY,
-            "coin": self.ptm.get_exchange_symbol(product_symbol, Common.HYPERLIQUID),
+            "coin": self.ptm.get_exchange_symbol(Common.HYPERLIQUID, product_symbol),
             "startTime": startTime,
         }
 

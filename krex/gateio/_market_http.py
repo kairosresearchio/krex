@@ -45,7 +45,7 @@ class MarketHTTP(HTTPManager):
         """
         path_params = {
             "settle": ccy,
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         res = self._request(
@@ -78,7 +78,7 @@ class MarketHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if interval:
             payload["interval"] = interval
@@ -127,7 +127,7 @@ class MarketHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if from_timestamp:
             payload["from"] = from_timestamp
@@ -170,7 +170,7 @@ class MarketHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
 
         if path == "futures":
@@ -209,7 +209,7 @@ class MarketHTTP(HTTPManager):
         }
 
         payload = {
-            "contract": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "contract": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if limit:
             payload["limit"] = limit
@@ -262,7 +262,7 @@ class MarketHTTP(HTTPManager):
         :param with_id: bool
         """
         payload = {
-            "currency_pair": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "currency_pair": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if interval:
             payload["interval"] = interval
@@ -295,7 +295,7 @@ class MarketHTTP(HTTPManager):
         :param interval: str
         """
         payload = {
-            "currency_pair": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "currency_pair": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if from_timestamp:
             payload["from"] = from_timestamp
@@ -325,7 +325,7 @@ class MarketHTTP(HTTPManager):
         """
 
         payload = {
-            "currency_pair": self.ptm.get_exchange_symbol(product_symbol, Common.GATEIO),
+            "currency_pair": self.ptm.get_exchange_symbol(Common.GATEIO, product_symbol),
         }
         if timezone:
             payload["timezone"] = timezone

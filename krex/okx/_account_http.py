@@ -21,7 +21,7 @@ class AccountHTTP(HTTPManager):
             "instType": instType,
         }
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if instFamily is not None:
             payload["instFamily"] = instFamily
         if uly is not None:
@@ -68,7 +68,7 @@ class AccountHTTP(HTTPManager):
         if instType is not None:
             payload["instType"] = instType
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
 
         res = self._request(
             method="GET",
@@ -100,7 +100,7 @@ class AccountHTTP(HTTPManager):
         if instType is not None:
             payload["instType"] = instType
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if mgnMode is not None:
             payload["mgnMode"] = mgnMode
         if type is not None:
@@ -166,7 +166,7 @@ class AccountHTTP(HTTPManager):
         if instType is not None:
             payload["instType"] = instType
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ccy is not None:
             payload["ccy"] = ccy
         if mgnMode is not None:
@@ -220,7 +220,7 @@ class AccountHTTP(HTTPManager):
         if instType is not None:
             payload["instType"] = instType
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ccy is not None:
             payload["ccy"] = ccy
         if mgnMode is not None:
@@ -330,7 +330,7 @@ class AccountHTTP(HTTPManager):
             "mgnMode": mgnMode,
         }
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ccy is not None:
             payload["ccy"] = ccy
         if posSide is not None:
@@ -359,7 +359,7 @@ class AccountHTTP(HTTPManager):
         :param leverage: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
             "tdMode": tdMode,
         }
         if ccy is not None:
@@ -392,7 +392,7 @@ class AccountHTTP(HTTPManager):
         :param px: str Only applicable to reduceOnly MARGIN.
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
             "tdMode": tdMode,
         }
         if ccy is not None:
@@ -424,7 +424,7 @@ class AccountHTTP(HTTPManager):
             "mgnMode": mgnMode,
         }
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ccy is not None:
             payload["ccy"] = ccy
 
@@ -458,7 +458,7 @@ class AccountHTTP(HTTPManager):
             "lever": lever,
         }
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ccy is not None:
             payload["ccy"] = ccy
         if posSide is not None:
@@ -488,7 +488,7 @@ class AccountHTTP(HTTPManager):
             "mgnMode": mgnMode,
         }
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ccy is not None:
             payload["ccy"] = ccy
         if mgnCcy is not None:
@@ -520,7 +520,7 @@ class AccountHTTP(HTTPManager):
             "instType": instType,
         }
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if uly is not None:
             payload["uly"] = uly
         if instFamily is not None:
@@ -556,7 +556,7 @@ class AccountHTTP(HTTPManager):
         if ccy is not None:
             payload["ccy"] = ccy
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if mgnMode is not None:
             payload["mgnMode"] = mgnMode
         if after is not None:

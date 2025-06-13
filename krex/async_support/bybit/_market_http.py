@@ -24,8 +24,8 @@ class MarketHTTP(HTTPManager):
             "category": category,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
+            payload["category"] = self.ptm.get_exchange_type(Common.BYBIT, product_symbol)
         if status is not None:
             payload["status"] = status
         if baseCoin is not None:
@@ -56,8 +56,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
             "interval": bybit_convert_timeframe(interval),
         }
         if startTime is not None:
@@ -84,8 +84,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
         }
         if limit is not None:
             payload["limit"] = limit
@@ -113,8 +113,8 @@ class MarketHTTP(HTTPManager):
             "category": category,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT)
-            payload["category"] = self.ptm.get_exchange_type(product_symbol, Common.BYBIT)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
+            payload["category"] = self.ptm.get_exchange_type(Common.BYBIT, product_symbol)
         if baseCoin is not None:
             payload["baseCoin"] = baseCoin
 
@@ -139,8 +139,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
         }
         if startTime is not None:
             payload["startTime"] = startTime
@@ -166,8 +166,8 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "category": self.ptm.get_exchange_type(product_symbol, Common.BYBIT),
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BYBIT),
+            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
         }
         if limit is not None:
             payload["limit"] = limit

@@ -49,7 +49,7 @@ class MarketHTTP(HTTPManager):
         :param product_symbol: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
         }
 
         res = await self._request(
@@ -74,7 +74,7 @@ class MarketHTTP(HTTPManager):
         :param after: int
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
         }
         if interval is not None:
             payload["step"] = bitmart_convert_timeframe(interval)
@@ -102,7 +102,7 @@ class MarketHTTP(HTTPManager):
         """
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BITMART)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMART, product_symbol)
 
         res = await self._request(
             method="GET",
@@ -120,7 +120,7 @@ class MarketHTTP(HTTPManager):
         :param product_symbol: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
         }
 
         res = await self._request(
@@ -144,7 +144,7 @@ class MarketHTTP(HTTPManager):
         :param endTime: int
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
             "step": bitmart_convert_timeframe(interval),
             "start_time": start_time,
             "end_time": end_time,
@@ -166,7 +166,7 @@ class MarketHTTP(HTTPManager):
         :param product_symbol: str
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
         }
 
         res = await self._request(
@@ -187,7 +187,7 @@ class MarketHTTP(HTTPManager):
         :param limit: int
         """
         payload = {
-            "symbol": self.ptm.get_exchange_symbol(product_symbol, Common.BITMART),
+            "symbol": self.ptm.get_exchange_symbol(Common.BITMART, product_symbol),
         }
         if limit is not None:
             payload["limit"] = limit

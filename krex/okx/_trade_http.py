@@ -46,7 +46,7 @@ class TradeHTTP(HTTPManager):
         :param stpMode: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
             "tdMode": tdMode,
             "side": side,
             "ordType": ordType,
@@ -268,7 +268,7 @@ class TradeHTTP(HTTPManager):
         :param clOrdId: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -345,7 +345,7 @@ class TradeHTTP(HTTPManager):
         :param reqId: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -394,7 +394,7 @@ class TradeHTTP(HTTPManager):
         :param reqId: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -459,7 +459,7 @@ class TradeHTTP(HTTPManager):
         :param clOrdId: str
         """
         payload = {
-            "instId": self.ptm.get_exchange_symbol(product_symbol, Common.OKX),
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
         }
         if ordId is not None:
             payload["ordId"] = ordId
@@ -500,7 +500,7 @@ class TradeHTTP(HTTPManager):
         if instFamily is not None:
             payload["instFamily"] = instFamily
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ordType is not None:
             payload["ordType"] = ordType
         if state is not None:
@@ -548,7 +548,7 @@ class TradeHTTP(HTTPManager):
         if instFamily is not None:
             payload["instFamily"] = instFamily
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ordType is not None:
             payload["ordType"] = ordType
         if state is not None:
@@ -602,7 +602,7 @@ class TradeHTTP(HTTPManager):
         if instFamily is not None:
             payload["instFamily"] = instFamily
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ordType is not None:
             payload["ordType"] = ordType
         if state is not None:
@@ -654,7 +654,7 @@ class TradeHTTP(HTTPManager):
         if instFamily is not None:
             payload["instFamily"] = instFamily
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ordId is not None:
             payload["ordId"] = ordId
         if subType is not None:
@@ -704,7 +704,7 @@ class TradeHTTP(HTTPManager):
         if instFamily is not None:
             payload["instFamily"] = instFamily
         if product_symbol is not None:
-            payload["instId"] = self.ptm.get_exchange_symbol(product_symbol, Common.OKX)
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol)
         if ordId is not None:
             payload["ordId"] = ordId
         if subType is not None:
