@@ -124,11 +124,21 @@ class ProductTableManager:
         else:
             raise ProductTableError("You must specify either product_type or exchange_type")
 
-    def get_product_type(self, product_symbol, exchange):
-        return self.get("product_type", product_symbol, exchange)
+    def get_product_type(self, exchange, product_symbol=None, exchange_symbol=None):
+        if product_symbol is not None:
+            return self.get("product_type", product_symbol=product_symbol, exchange=exchange)
+        elif exchange_symbol is not None:
+            return self.get("product_type", exchange_symbol=exchange_symbol, exchange=exchange)
+        else:
+            raise ProductTableError("You must specify either product_symbol or exchange_symbol")
     
-    def get_exchange_type(self, product_symbol, exchange):
-        return self.get("exchange_type", product_symbol, exchange)
+    def get_exchange_type(self, exchange, product_symbol=None, exchange_symbol=None):
+        if product_symbol is not None:
+            return self.get("exchange_type", product_symbol=product_symbol, exchange=exchange)
+        elif exchange_symbol is not None:
+            return self.get("exchange_type", exchange_symbol=exchange_symbol, exchange=exchange)
+        else:
+            raise ProductTableError("You must specify either product_symbol or exchange_symbol")
 
     def get_base_currency(self, product_symbol, exchange):
         return self.get("base_currency", product_symbol, exchange)
