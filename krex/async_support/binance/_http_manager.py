@@ -31,7 +31,7 @@ class HTTPManager:
             FuturesMarket,
             FuturesAccount,
         },
-        "https://api.binance.com" if not testnet else "https://testnet.binance.vision/api": {
+        "https://api.binance.com" if not testnet else "https://testnet.binance.vision": {
             SpotMarket,
             SpotTrade,
         },
