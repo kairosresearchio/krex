@@ -3,6 +3,9 @@ from enum import Enum
 
 class SpotMarket(str, Enum):
     EXCHANGE_INFO = "/api/v3/exchangeInfo"
+    ORDERBOOK = "/api/v3/depth"
+    TRADES = "/api/v3/trades"
+    KLINE = "/api/v3/klines"
 
     def __str__(self) -> str:
         return self.value

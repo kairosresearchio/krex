@@ -1,6 +1,10 @@
 from enum import Enum
 
 
+class SpotTrade(str, Enum):
+    PLACE_CANCEL_QUERY_ORDER = "/api/v3/order"
+    CANCEL_ALL_ORDERS = "/api/v3/openOrders"
+
 class FuturesTrade(str, Enum):
     SET_LEVERAGE = "/fapi/v1/leverage"
     PLACE_CANCEL_QUERY_ORDER = "/fapi/v1/order"

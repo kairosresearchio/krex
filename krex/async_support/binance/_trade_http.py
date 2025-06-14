@@ -1,5 +1,6 @@
-from .endpoints.trade import FuturesTrade
+from .endpoints.trade import FuturesTrade, SpotTrade
 from ._http_manager import HTTPManager
+from .enums import BinanceExchangeType
 from ...utils.common import Common
 
 
@@ -25,7 +26,7 @@ class TradeHTTP(HTTPManager):
         )
         return res
 
-    async def place_future_order(
+    async def place_order(
         self,
         product_symbol: str,
         side: str,
@@ -109,12 +110,12 @@ class TradeHTTP(HTTPManager):
 
         res = await self._request(
             method="POST",
-            path=FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
+            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
             query=payload,
         )
         return res
 
-    async def place_future_market_order(
+    async def place_market_order(
         self,
         product_symbol: str,
         side: str,
@@ -122,7 +123,7 @@ class TradeHTTP(HTTPManager):
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_order(
+        return await self.place_order(
             product_symbol=product_symbol,
             side=side,
             type_="MARKET",
@@ -131,14 +132,14 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def place_future_market_buy_order(
+    async def place_market_buy_order(
         self,
         product_symbol: str,
         quantity: str,
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_market_order(
+        return await self.place_market_order(
             product_symbol=product_symbol,
             side="BUY",
             quantity=quantity,
@@ -146,14 +147,14 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def place_future_market_sell_order(
+    async def place_market_sell_order(
         self,
         product_symbol: str,
         quantity: str,
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_market_order(
+        return await self.place_market_order(
             product_symbol=product_symbol,
             side="SELL",
             quantity=quantity,
@@ -161,7 +162,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def place_future_limit_order(
+    async def place_limit_order(
         self,
         product_symbol: str,
         side: str,
@@ -171,7 +172,7 @@ class TradeHTTP(HTTPManager):
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_order(
+        return await self.place_order(
             product_symbol=product_symbol,
             side=side,
             type_="LIMIT",
@@ -182,7 +183,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def place_future_limit_buy_order(
+    async def place_limit_buy_order(
         self,
         product_symbol: str,
         quantity: str,
@@ -191,7 +192,7 @@ class TradeHTTP(HTTPManager):
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_limit_order(
+        return await self.place_limit_order(
             product_symbol=product_symbol,
             side="BUY",
             quantity=quantity,
@@ -201,7 +202,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def place_future_limit_sell_order(
+    async def place_limit_sell_order(
         self,
         product_symbol: str,
         quantity: str,
@@ -210,7 +211,7 @@ class TradeHTTP(HTTPManager):
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_limit_order(
+        return await self.place_limit_order(
             product_symbol=product_symbol,
             side="SELL",
             quantity=quantity,
@@ -220,7 +221,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def place_future_post_only_limit_order(
+    async def place_post_only_limit_order(
         self,
         product_symbol: str,
         side: str,
@@ -229,7 +230,7 @@ class TradeHTTP(HTTPManager):
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_order(
+        return await self.place_order(
             product_symbol=product_symbol,
             side=side,
             type_="LIMIT",
@@ -240,7 +241,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def place_future_post_only_limit_buy_order(
+    async def place_post_only_limit_buy_order(
         self,
         product_symbol: str,
         quantity: str,
@@ -248,7 +249,7 @@ class TradeHTTP(HTTPManager):
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_post_only_limit_order(
+        return await self.place_post_only_limit_order(
             product_symbol=product_symbol,
             side="BUY",
             quantity=quantity,
@@ -257,7 +258,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def place_future_post_only_limit_sell_order(
+    async def place_post_only_limit_sell_order(
         self,
         product_symbol: str,
         quantity: str,
@@ -265,7 +266,7 @@ class TradeHTTP(HTTPManager):
         positionSide: str = None,
         reduceOnly: str = None,
     ):
-        return await self.place_future_post_only_limit_order(
+        return await self.place_post_only_limit_order(
             product_symbol=product_symbol,
             side="SELL",
             quantity=quantity,
@@ -274,7 +275,7 @@ class TradeHTTP(HTTPManager):
             reduceOnly=reduceOnly,
         )
 
-    async def cancel_future_order(
+    async def cancel_order(
         self,
         product_symbol: str,
         orderId: int = None,
@@ -296,12 +297,12 @@ class TradeHTTP(HTTPManager):
 
         res = await self._request(
             method="DELETE",
-            path=FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
+            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
             query=payload,
         )
         return res
 
-    async def get_future_order(
+    async def get_order(
         self,
         product_symbol: str,
         orderId: int = None,
@@ -323,12 +324,12 @@ class TradeHTTP(HTTPManager):
 
         res = await self._request(
             method="GET",
-            path=FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
+            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
             query=payload,
         )
         return res
 
-    async def cancel_all_future_open_order(
+    async def cancel_all_open_orders(
         self,
         product_symbol: str,
     ):
@@ -342,7 +343,7 @@ class TradeHTTP(HTTPManager):
 
         res = await self._request(
             method="DELETE",
-            path=FuturesTrade.CANCEL_ALL_OPEN_ORDERS,
+            path=SpotTrade.CANCEL_ALL_ORDERS if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.CANCEL_ALL_OPEN_ORDERS,
             query=payload,
         )
         return res

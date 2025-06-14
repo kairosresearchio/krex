@@ -1,5 +1,6 @@
 from ._http_manager import HTTPManager
 from .endpoints.market import SpotMarket, FuturesMarket
+from .enums import BinanceExchangeType
 from ..utils.common import Common
 
 
@@ -39,6 +40,49 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=FuturesMarket.EXCHANGE_INFO,
             query=None,
+            signed=False,
+        )
+        return res
+    
+    def get_spot_orderbook(
+        self,
+        product_symbol: str,
+        limit: int = None,
+    ):
+        payload = {
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
+        }
+        if limit is not None:
+            payload["limit"] = limit
+            
+        res = self._request(
+            method="GET",
+            path=SpotMarket.ORDERBOOK,
+            query=payload,
+            signed=False,
+        )
+        return res
+    
+    def get_kline(
+        self,
+        product_symbol: str,
+        interval: str,
+        start_time: int = None,
+        limit: int = None,
+    ):
+        payload = {
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
+            "interval": interval,
+        }
+        if start_time is not None:
+            payload["startTime"] = start_time
+        if limit is not None:
+            payload["limit"] = limit
+            
+        res = self._request(
+            method="GET",
+            path=SpotMarket.KLINE if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesMarket.KLINE,
+            query=payload,
             signed=False,
         )
         return res
