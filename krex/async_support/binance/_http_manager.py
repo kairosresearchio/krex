@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from urllib.parse import urlencode
 from .endpoints.market import FuturesMarket, SpotMarket
-from .endpoints.trade import FuturesTrade
+from .endpoints.trade import FuturesTrade, SpotTrade
 from .endpoints.account import FuturesAccount
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
@@ -23,6 +23,7 @@ class HTTPManager:
     session: httpx.AsyncClient = field(default=None, init=False)
     ptm: ProductTableManager = field(init=False)
     preload_product_table: bool = field(default=True)
+    testnet: bool = field(default=False)
 
     api_map = {
         "https://fapi.binance.com": {
@@ -30,8 +31,9 @@ class HTTPManager:
             FuturesMarket,
             FuturesAccount,
         },
-        "https://api.binance.com": {
+        "https://api.binance.com" if not testnet else "https://testnet.binance.vision/api": {
             SpotMarket,
+            SpotTrade,
         },
     }
 
