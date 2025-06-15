@@ -328,6 +328,22 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
         return res
+    
+    async def get_open_orders(
+        self,
+        product_symbol: str = None,
+    ):
+        payload = {}
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol)
+        
+        res = await self._request(
+            method="GET",
+            path=SpotTrade.QUERY_OPEN_ORDER if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.QUERY_OPEN_ORDER,
+            query=payload,
+        )
+        return res
+        
 
     async def cancel_all_open_orders(
         self,
