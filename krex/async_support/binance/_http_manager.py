@@ -23,7 +23,6 @@ class HTTPManager:
     session: httpx.AsyncClient = field(default=None, init=False)
     ptm: ProductTableManager = field(init=False)
     preload_product_table: bool = field(default=True)
-    testnet: bool = field(default=False)
 
     api_map = {
         "https://fapi.binance.com": {
@@ -31,7 +30,7 @@ class HTTPManager:
             FuturesMarket,
             FuturesAccount,
         },
-        "https://api.binance.com" if not testnet else "https://testnet.binance.vision": {
+        "https://api.binance.com": {
             SpotMarket,
             SpotTrade,
         },
