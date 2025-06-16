@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from urllib.parse import urlencode
 from .endpoints.market import FuturesMarket, SpotMarket
-from .endpoints.trade import FuturesTrade
+from .endpoints.trade import FuturesTrade, SpotTrade
 from .endpoints.account import FuturesAccount
 from ..product_table.manager import ProductTableManager
 from ..utils.errors import FailedRequestError
@@ -32,6 +32,7 @@ class HTTPManager:
         },
         "https://api.binance.com": {
             SpotMarket,
+            SpotTrade,
         },
     }
 

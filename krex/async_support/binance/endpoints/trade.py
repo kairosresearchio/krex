@@ -21,3 +21,9 @@ class FuturesTrade(str, Enum):
 
     def __str__(self) -> str:
         return self.value
+
+class SpotTrade(str, Enum):
+    PLACE_SPOT_ORDER = "/api/v3/order"
+
+    def __str__(self) -> str:
+        return self.value

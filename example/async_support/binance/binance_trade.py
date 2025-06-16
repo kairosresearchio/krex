@@ -17,9 +17,25 @@ async def main():
     )
 
     try:
-        result = await client.set_leverage(
-            product_symbol="BTC-USDT-SWAP",
-            leverage=3,
+        # place_spot_limit_buy_order
+        # result = await client.place_spot_limit_buy_order(
+        #     product_symbol="USDC-USDT-SPOT",
+        #     quantity=10,
+        #     price=0.95,
+        # )
+        # print(result)
+
+        # place_spot_market_buy_order
+        # result = await client.place_spot_market_buy_order(
+        #     product_symbol="USDC-USDT-SPOT",
+        #     quantity=10,
+        # )
+        # print(result)
+
+        # place_spot_market_sell_order
+        result = await client.place_spot_market_sell_order(
+            product_symbol="USDC-USDT-SPOT",
+            quantity=10,
         )
         print(result)
 
