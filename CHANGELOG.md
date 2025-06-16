@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/kairosresearchio/krex/compare/v0.4.1...v0.4.2) (2025-06-16)
+
+
+### Bug Fixes
+
+* **async-binance-get-kline:** get_exchange_type add product symbol param ([43a2d32](https://github.com/kairosresearchio/krex/commit/43a2d326b6ecb2d600d1cd1878e4f75e0d54a05b))
+
 ## [0.4.1](https://github.com/kairosresearchio/krex/compare/v0.4.0...v0.4.1) (2025-06-16)
 
 
