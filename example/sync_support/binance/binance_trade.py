@@ -1,11 +1,17 @@
 import krex
+import os
+from dotenv import load_dotenv
 
-BINANCE_APIKEY = ""
-BINANCE_APISECRET = ""
+load_dotenv()
+
+
+BINANCE_API_KEY = os.getenv("BINANCE_API_KEY")
+BINANCE_API_SECRET = os.getenv("BINANCE_API_SECRET")
+
 
 client = krex.binance(
-    api_key=BINANCE_APIKEY,
-    api_secret=BINANCE_APISECRET,
+    api_key=BINANCE_API_KEY,
+    api_secret=BINANCE_API_SECRET,
 )
 
 result = client.set_leverage(

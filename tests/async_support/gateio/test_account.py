@@ -11,8 +11,8 @@ load_dotenv()
 @pytest_asyncio.fixture
 async def client():
     async with Client(
-        api_key=os.getenv("GATEIO_APIKEY"),
-        api_secret=os.getenv("GATEIO_APISECRET"),
+        api_key=os.getenv("GATEIO_API_KEY"),
+        api_secret=os.getenv("GATEIO_API_SECRET"),
     ) as client_instance:
         yield client_instance
 

@@ -8,8 +8,8 @@ load_dotenv()
 
 async def main():
     client = await krex.gateio(
-        api_key=os.getenv("GATEIO_APIKEY"),
-        api_secret=os.getenv("GATEIO_APISECRET"),
+        api_key=os.getenv("GATEIO_API_KEY"),
+        api_secret=os.getenv("GATEIO_API_SECRET"),
     )
 
     try:

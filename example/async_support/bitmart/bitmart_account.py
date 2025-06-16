@@ -1,9 +1,13 @@
 import asyncio
 import krex.async_support as krex
+import os
+from dotenv import load_dotenv
 
-BITMART_API_KEY = ""
-BITMART_API_SECRET = ""
-MEMO = ""
+load_dotenv()
+
+BITMART_API_KEY = os.getenv("BITMART_API_KEY")
+BITMART_API_SECRET = os.getenv("BITMART_API_SECRET")
+MEMO = os.getenv("BITMART_MEMO")
 
 
 async def main():

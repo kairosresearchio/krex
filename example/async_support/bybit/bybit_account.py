@@ -1,8 +1,12 @@
 import asyncio
 import krex.async_support as krex
+import os
+from dotenv import load_dotenv
 
-BYBIT_API_KEY = ""
-BYBIT_API_SECRET = ""
+load_dotenv()
+
+BYBIT_API_KEY = os.getenv("BYBIT_API_KEY")
+BYBIT_API_SECRET = os.getenv("BYBIT_API_SECRET")
 
 
 async def main():

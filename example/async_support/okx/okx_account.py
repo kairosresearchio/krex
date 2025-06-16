@@ -1,9 +1,13 @@
 import asyncio
 import krex.async_support as krex
+import os
+from dotenv import load_dotenv
 
-OKX_API_KEY = ""
-OKX_API_SECRET = ""
-OKX_PASSPHRASE = ""
+load_dotenv()
+
+OKX_API_KEY = os.getenv("OKX_API_KEY")
+OKX_API_SECRET = os.getenv("OKX_API_SECRET")
+OKX_PASSPHRASE = os.getenv("OKX_PASSPHRASE")
 
 
 async def main():

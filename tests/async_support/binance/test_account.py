@@ -1,16 +1,21 @@
 import pytest
 import pytest_asyncio
 from krex.async_support.binance.client import Client
+import os
+from dotenv import load_dotenv
 
-BINANCE_APIKEY = "ovqxr2nXR50oeKo47CVKZTZ7ZmaCY3y1q7iAEOfsDXliAv52koJIcHEtlHDH30AU"
-BINANCE_APISECRET = "sZ4nwX3owfZNDu4qBu0Y4H8zbic4E6FLtkbbNytV5Z6S77ZTiCgGxgYxHVitq4GQ"
+load_dotenv()
+
+
+BINANCE_API_KEY = os.getenv("BINANCE_API_KEY")
+BINANCE_API_SECRET = os.getenv("BINANCE_API_SECRET")
 
 
 @pytest_asyncio.fixture
 async def client():
     async with Client(
-        api_key=BINANCE_APIKEY,
-        api_secret=BINANCE_APISECRET,
+        api_key=BINANCE_API_KEY,
+        api_secret=BINANCE_API_SECRET,
     ) as client_instance:
         yield client_instance
 

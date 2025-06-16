@@ -5,8 +5,8 @@ from krex.gateio.client import Client
 load_dotenv()
 
 client = Client(
-    api_key=os.getenv("GATEIO_APIKEY"),
-    api_secret=os.getenv("GATEIO_APISECRET"),
+    api_key=os.getenv("GATEIO_API_KEY"),
+    api_secret=os.getenv("GATEIO_API_SECRET"),
 )
 
 

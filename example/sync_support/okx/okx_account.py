@@ -1,8 +1,13 @@
 import krex
+import os
+from dotenv import load_dotenv
 
-OKX_API_KEY = ""
-OKX_API_SECRET = ""
-OKX_PASSPHRASE = ""
+load_dotenv()
+
+OKX_API_KEY = os.getenv("OKX_API_KEY")
+OKX_API_SECRET = os.getenv("OKX_API_SECRET")
+OKX_PASSPHRASE = os.getenv("OKX_PASSPHRASE")
+
 
 client = krex.okx(
     api_key=OKX_API_KEY,

@@ -1,7 +1,11 @@
 import krex
+import os
+from dotenv import load_dotenv
 
-BYBIT_API_KEY = ""
-BYBIT_API_SECRET = ""
+load_dotenv()
+
+BYBIT_API_KEY = os.getenv("BYBIT_API_KEY")
+BYBIT_API_SECRET = os.getenv("BYBIT_API_SECRET")
 
 client = krex.bybit(
     api_key=BYBIT_API_KEY,
