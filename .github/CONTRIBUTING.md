@@ -52,9 +52,21 @@ Commit Type : `build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test`
 
 **Examples**
 
-- feat: create a new feature.
-- fix: resolve a bug.
-- style: apply code style changes (e.g., formatting).
+- `feat:` create a new feature.
+- `fix:` resolve a bug.
+- `style:` apply code style changes (e.g., formatting).
+
+**Version bump behavior (Semantic Versioning)**
+
+When using `release-please`, commit types determine version bumping:
+
+| Commit Type                    | Effect on Version                          |
+| ------------------------------ | ------------------------------------------ |
+| `fix:`                         | 🩹 Patch — `0.1.26` → `0.1.27`             |
+| `feat:`                        | 🌟 Minor — `0.1.26` → `0.2.0`              |
+| `feat!:` or `BREAKING CHANGE:` | 🚨 Major — `0.1.x` → `1.0.0` (once ≥1.0.0) |
+
+> 💡 For 0.x versions, `feat:` will still bump the minor version (`0.1.x → 0.2.0`) unless you configure `bump-minor-pre-major: false` in `.release-please-config.json`.
 
 ### Using Commitizen
 
