@@ -1,5 +1,15 @@
 {
   "release-type": "python",
   "package-name": "krex",
-  "version-file": "pyproject.toml"
+  "version-file": "pyproject.toml",
+  "changelogSections": {
+    "chore": {
+      "section": "Chores",
+      "hidden": false
+    },
+    "refactor": {
+      "section": "Refactoring",
+      "hidden": false
+    }
+  }
 }

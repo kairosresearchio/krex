@@ -29,7 +29,15 @@ Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in
    uv run ooo.py
    ```
 
-6. Run pre commit checks on all files:
+6. Install git hooks:
+
+   ```sh
+   pre-commit install
+   pre-commit install --hook-type commit-msg
+
+   ```
+
+7. Run pre commit checks on all files:
    ```sh
    pre-commit run --all-files
    ```
@@ -40,11 +48,43 @@ Consider following the below format for the commit message:
 
 Commit Type : `build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test`
 
+> 🔔 **Note**: To trigger automatic releases via GitHub Actions, use `feat:`, `fix:`, or other release-related types. `chore:` commits will be ignored by default.
+
 **Examples**
 
-- feat: when create new feature.
-- style: when styling a this application.
-- fix: when fixing a bug.
+- feat: create a new feature.
+- fix: resolve a bug.
+- style: apply code style changes (e.g., formatting).
+
+### Using Commitizen
+
+This project uses [Commitizen](https://commitizen-tools.github.io/commitizen/) to standardize commit messages and enable automated versioning and changelog generation.
+
+Instead of manually typing commit messages, you can run:
+
+```sh
+cz commit
+```
+
+This will guide you through an interactive prompt to compose a conventional commit message, ensuring compatibility with our release automation system.
+
+> 💡 **Reminder**: Commit messages using `feat:`, `fix:`, or `perf:` will trigger automatic version bumps and changelog generation via GitHub Actions (`release-please`).
+
+If you prefer to write your own commit messages, please follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format:
+
+```
+<type>(optional-scope): description
+```
+
+**Examples:**
+
+- `feat(auth): add OAuth2 login support`
+- `fix(api): handle timeout edge case`
+- `refactor: simplify data parser logic`
+
+Releases are handled automatically via GitHub Actions and [release-please](https://github.com/googleapis/release-please), based on your commit history.
+
+> 💡 You do not need to run `cz bump` manually — versioning and changelogs are managed automatically.
 
 ## Issues and feature requests
 

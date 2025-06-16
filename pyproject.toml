@@ -39,4 +39,13 @@ dev = [
   "asyncio>=3.4.3",
   "python-dotenv>=1.1.0",
   "pytest-asyncio>=0.26.0",
+  "commitizen>=4.8.3",
 ]
+
+[tool.commitizen]
+major_version_zero = true
+name = "cz_conventional_commits"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version_provider = "pyproject"
+version_scheme = "pep440"
