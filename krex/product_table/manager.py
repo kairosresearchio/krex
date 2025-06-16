@@ -63,7 +63,9 @@ class ProductTableManager:
         if exchange_name is None:
             product_tables = await asyncio.gather(*[func() for func in VALID_EXCHANGES])
         else:
-            product_tables = await asyncio.gather(*[func() for func in VALID_EXCHANGES if func.__name__ == exchange_name])
+            product_tables = await asyncio.gather(
+                *[func() for func in VALID_EXCHANGES if func.__name__ == exchange_name]
+            )
         return pl.concat(product_tables, how="vertical")
 
     @asynccontextmanager
@@ -113,11 +115,21 @@ class ProductTableManager:
 
     def get_product_symbol(self, exchange, exchange_symbol, product_type=None, exchange_type=None):
         if product_type is not None and exchange_type is None:
-            return self.get("product_symbol", exchange_symbol=exchange_symbol, exchange=exchange, product_type=product_type)
+            return self.get(
+                "product_symbol", exchange_symbol=exchange_symbol, exchange=exchange, product_type=product_type
+            )
         elif product_type is None and exchange_type is not None:
-            return self.get("product_symbol", exchange_symbol=exchange_symbol, exchange=exchange, exchange_type=exchange_type)
+            return self.get(
+                "product_symbol", exchange_symbol=exchange_symbol, exchange=exchange, exchange_type=exchange_type
+            )
         elif product_type is not None and exchange_type is not None:
-            return self.get("product_symbol", exchange_symbol=exchange_symbol, exchange=exchange, product_type=product_type, exchange_type=exchange_type)
+            return self.get(
+                "product_symbol",
+                exchange_symbol=exchange_symbol,
+                exchange=exchange,
+                product_type=product_type,
+                exchange_type=exchange_type,
+            )
         else:
             raise ProductTableError("You must specify either product_type or exchange_type")
 
@@ -154,12 +166,31 @@ class ProductTableManager:
 
     def get_exchange_symbols(self, exchange, product_type=None):
         if product_type is None:
-            return self.product_table.filter(pl.col("exchange") == exchange).select("exchange_symbol").to_series().to_list()
+            return (
+                self.product_table.filter(pl.col("exchange") == exchange)
+                .select("exchange_symbol")
+                .to_series()
+                .to_list()
+            )
         else:
-            return self.product_table.filter(pl.col("exchange") == exchange).filter(pl.col("product_type") == product_type).select("exchange_symbol").to_series().to_list()
+            return (
+                self.product_table.filter(pl.col("exchange") == exchange)
+                .filter(pl.col("product_type") == product_type)
+                .select("exchange_symbol")
+                .to_series()
+                .to_list()
+            )
 
     def get_product_symbols(self, exchange, product_type=None):
         if product_type is None:
-            return self.product_table.filter(pl.col("exchange") == exchange).select("product_symbol").to_series().to_list()
+            return (
+                self.product_table.filter(pl.col("exchange") == exchange).select("product_symbol").to_series().to_list()
+            )
         else:
-            return self.product_table.filter(pl.col("exchange") == exchange).filter(pl.col("product_type") == product_type).select("product_symbol").to_series().to_list()
+            return (
+                self.product_table.filter(pl.col("exchange") == exchange)
+                .filter(pl.col("product_type") == product_type)
+                .select("product_symbol")
+                .to_series()
+                .to_list()
+            )

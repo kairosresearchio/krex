@@ -489,7 +489,7 @@ async def binance() -> pl.DataFrame:
     return pl.DataFrame(markets)
 
 
-async def hyperliquid() -> pl.DataFrame: # TODO: need to be checked
+async def hyperliquid() -> pl.DataFrame:  # TODO: need to be checked
     from ..hyperliquid._market_http import MarketHTTP
 
     market_http = MarketHTTP()

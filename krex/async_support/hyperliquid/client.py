@@ -22,6 +22,6 @@ class Client(
 
     async def close(self):
         """Close the client and clean up resources."""
-        if hasattr(self, 'session') and self.session is not None:
+        if hasattr(self, "session") and self.session is not None:
             await self.session.aclose()
             self.session = None

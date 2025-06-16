@@ -26,21 +26,26 @@ def bybit(**kwargs):
     """Create a Bybit client instance."""
     return BybitClient(**kwargs)
 
+
 def binance(**kwargs):
     """Create a Binance client instance."""
     return BinanceClient(**kwargs)
+
 
 def okx(**kwargs):
     """Create an OKX client instance."""
     return OKXClient(**kwargs)
 
+
 def bitmart(**kwargs):
     """Create a BitMart client instance."""
     return BitmartClient(**kwargs)
 
+
 def gateio(**kwargs):
     """Create a Gate.io client instance."""
     return GateioClient(**kwargs)
+
 
 def hyperliquid(**kwargs):
     """Create a Hyperliquid client instance."""
@@ -48,5 +53,10 @@ def hyperliquid(**kwargs):
 
 
 __all__ = [
-    "bybit", "binance", "okx", "bitmart", "gateio", "hyperliquid",
+    "bybit",
+    "binance",
+    "okx",
+    "bitmart",
+    "gateio",
+    "hyperliquid",
 ]

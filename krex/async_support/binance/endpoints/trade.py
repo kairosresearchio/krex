@@ -5,10 +5,10 @@ class SpotTrade(str, Enum):
     PLACE_CANCEL_QUERY_ORDER = "/api/v3/order"
     CANCEL_ALL_ORDERS = "/api/v3/openOrders"
     QUERY_OPEN_ORDER = "/api/v3/openOrders"
-    
+
     def __str__(self) -> str:
         return self.value
-    
+
 
 class FuturesTrade(str, Enum):
     SET_LEVERAGE = "/fapi/v1/leverage"

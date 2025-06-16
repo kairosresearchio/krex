@@ -43,7 +43,7 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def get_spot_orderbook(
         self,
         product_symbol: str,
@@ -54,7 +54,7 @@ class MarketHTTP(HTTPManager):
         }
         if limit is not None:
             payload["limit"] = limit
-            
+
         res = self._request(
             method="GET",
             path=SpotMarket.ORDERBOOK,
@@ -62,7 +62,7 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
-    
+
     def get_kline(
         self,
         product_symbol: str,
@@ -78,10 +78,12 @@ class MarketHTTP(HTTPManager):
             payload["startTime"] = start_time
         if limit is not None:
             payload["limit"] = limit
-            
+
         res = self._request(
             method="GET",
-            path=SpotMarket.KLINE if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesMarket.KLINE,
+            path=SpotMarket.KLINE
+            if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT
+            else FuturesMarket.KLINE,
             query=payload,
             signed=False,
         )

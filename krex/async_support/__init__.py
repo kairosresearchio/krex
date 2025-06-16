@@ -13,11 +13,13 @@ async def bybit(**kwargs):
     await client.async_init()
     return client
 
+
 async def binance(**kwargs):
     """Create and initialize a Binance client instance."""
     client = BinanceClient(**kwargs)
     await client.async_init()
     return client
+
 
 async def okx(**kwargs):
     """Create and initialize an OKX client instance."""
@@ -25,11 +27,13 @@ async def okx(**kwargs):
     await client.async_init()
     return client
 
+
 async def bitmart(**kwargs):
     """Create and initialize a BitMart client instance."""
     client = BitmartClient(**kwargs)
     await client.async_init()
     return client
+
 
 async def gateio(**kwargs):
     """Create and initialize a Gate.io client instance."""
@@ -37,12 +41,19 @@ async def gateio(**kwargs):
     await client.async_init()
     return client
 
+
 async def hyperliquid(**kwargs):
     """Create and initialize a Hyperliquid client instance."""
     client = HyperliquidClient(**kwargs)
     await client.async_init()
     return client
 
+
 __all__ = [
-    "bybit", "binance", "okx", "bitmart", "gateio", "hyperliquid",
+    "bybit",
+    "binance",
+    "okx",
+    "bitmart",
+    "gateio",
+    "hyperliquid",
 ]

@@ -11,7 +11,9 @@ class AccountHTTP(HTTPManager):
     ):
         res = await self._request(
             method="GET",
-            path=SpotAccount.ACCOUNT_BALANCE if market_type == BinanceExchangeType.SPOT else FuturesAccount.ACCOUNT_BALANCE,
+            path=SpotAccount.ACCOUNT_BALANCE
+            if market_type == BinanceExchangeType.SPOT
+            else FuturesAccount.ACCOUNT_BALANCE,
             query=None,
         )
         return res
