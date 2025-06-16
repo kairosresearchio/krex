@@ -110,7 +110,7 @@ class TradeHTTP(HTTPManager):
 
         res = await self._request(
             method="POST",
-            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
+            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE, product_symbol=product_symbol) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
             query=payload,
         )
         return res
@@ -297,7 +297,7 @@ class TradeHTTP(HTTPManager):
 
         res = await self._request(
             method="DELETE",
-            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
+            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE, product_symbol=product_symbol) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
             query=payload,
         )
         return res
@@ -324,14 +324,14 @@ class TradeHTTP(HTTPManager):
 
         res = await self._request(
             method="GET",
-            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
+            path=SpotTrade.PLACE_CANCEL_QUERY_ORDER if self.ptm.get_exchange_type(Common.BINANCE, product_symbol=product_symbol) == BinanceExchangeType.SPOT else FuturesTrade.PLACE_CANCEL_QUERY_ORDER,
             query=payload,
         )
         return res
     
     async def get_open_orders(
         self,
-        product_symbol: str = None,
+        product_symbol: str,
     ):
         payload = {}
         if product_symbol is not None:
@@ -339,7 +339,7 @@ class TradeHTTP(HTTPManager):
         
         res = await self._request(
             method="GET",
-            path=SpotTrade.QUERY_OPEN_ORDER if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.QUERY_OPEN_ORDER,
+            path=SpotTrade.QUERY_OPEN_ORDER if self.ptm.get_exchange_type(Common.BINANCE, product_symbol=product_symbol) == BinanceExchangeType.SPOT else FuturesTrade.QUERY_OPEN_ORDER,
             query=payload,
         )
         return res
@@ -359,7 +359,7 @@ class TradeHTTP(HTTPManager):
 
         res = await self._request(
             method="DELETE",
-            path=SpotTrade.CANCEL_ALL_ORDERS if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT else FuturesTrade.CANCEL_ALL_OPEN_ORDERS,
+            path=SpotTrade.CANCEL_ALL_ORDERS if self.ptm.get_exchange_type(Common.BINANCE, product_symbol=product_symbol) == BinanceExchangeType.SPOT else FuturesTrade.CANCEL_ALL_OPEN_ORDERS,
             query=payload,
         )
         return res
