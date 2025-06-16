@@ -1,4 +1,4 @@
-from .endpoints.trade import FuturesTrade
+from .endpoints.trade import FuturesTrade, SpotTrade
 from ._http_manager import HTTPManager
 from ..utils.common import Common
 import time
@@ -783,3 +783,65 @@ class TradeHTTP(HTTPManager):
             newClientOrderId=newClientOrderId,
             newOrderRespType=newOrderRespType,
         )
+    
+    def cancel_spot_order(
+        self,
+        product_symbol: str,
+        orderId: int = None,
+        origClientOrderId: str = None,
+        timestamp: int = int(time.time() * 1000)
+    ):
+        """
+        Cancel an active spot order on Binance.
+
+        :param product_symbol: str - Trading pair symbol, e.g., 'BTCUSDT'
+        :param orderId: int - Binance internal order ID (preferred for performance)
+        :param origClientOrderId: str - The client order ID used when placing the order
+        :param newClientOrderId: str - Unique ID for this cancel request (optional)
+        :param cancelRestrictions: str - 'ONLY_NEW' or 'ONLY_PARTIALLY_FILLED' (optional)
+        :param recvWindow: int - Optional timeout window in ms (max: 60000)
+        :return: Binance API response
+        """
+        payload = {
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
+            "timestamp": timestamp
+        }
+
+        # 至少要提供 orderId 或 origClientOrderId 其中之一
+        if orderId is not None:
+            payload["orderId"] = orderId
+        elif origClientOrderId is not None:
+            payload["origClientOrderId"] = origClientOrderId
+        else:
+            raise ValueError("Must provide either orderId or origClientOrderId to cancel an order.")
+
+        # 發送 DELETE 請求
+        res = self._request(
+            method="DELETE",
+            path=SpotTrade.PLACE_SPOT_ORDER,
+            query=payload
+        )
+        return res
+    
+    def cancel_all_spot_orders(
+        self,
+        product_symbol: str,
+        timestamp: int = int(time.time() * 1000)
+    ):
+        """
+        Cancel all active spot orders for a symbol on Binance.
+
+        :param product_symbol: str - Trading pair symbol (e.g., "BTCUSDT")
+        :param timestamp: int - Optional request timeout (max 60000)
+        """
+        payload = {
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
+            "timestamp": timestamp
+        }
+
+        res = self._request(
+            method="DELETE",
+            path=SpotTrade.CANCEL_ALL_SPOT_ORDERS,
+            query=payload,
+        )
+        return res

@@ -18,12 +18,20 @@ async def main():
 
     try:
         # place_spot_limit_buy_order
-        # result = await client.place_spot_limit_buy_order(
-        #     product_symbol="USDC-USDT-SPOT",
-        #     quantity=10,
-        #     price=0.95,
-        # )
-        # print(result)
+        result = await client.place_spot_limit_buy_order(
+            product_symbol="USDC-USDT-SPOT",
+            quantity=10,
+            price=0.95,
+        )
+        print(result)
+
+        await asyncio.sleep(5)
+
+        # cancel_all_spot_orders
+        result = await client.cancel_all_spot_orders(
+            product_symbol="USDC-USDT-SPOT",
+        )
+        print(result)
 
         # place_spot_market_buy_order
         # result = await client.place_spot_market_buy_order(
@@ -33,11 +41,11 @@ async def main():
         # print(result)
 
         # place_spot_market_sell_order
-        result = await client.place_spot_market_sell_order(
-            product_symbol="USDC-USDT-SPOT",
-            quantity=10,
-        )
-        print(result)
+        # result = await client.place_spot_market_sell_order(
+        #     product_symbol="USDC-USDT-SPOT",
+        #     quantity=10,
+        # )
+        # print(result)
 
         # result = await client.place_future_market_buy_order(
         #     product_symbol="XRP-USDT-SWAP",

@@ -15,6 +15,7 @@ class FuturesTrade(str, Enum):
 
 class SpotTrade(str, Enum):
     PLACE_SPOT_ORDER = "/api/v3/order"
+    CANCEL_ALL_SPOT_ORDERS = "/api/v3/openOrders"
 
     def __str__(self) -> str:
         return self.value
