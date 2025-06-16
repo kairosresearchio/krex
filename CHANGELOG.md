@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/kairosresearchio/krex/compare/v0.3.0...v0.4.0) (2025-06-16)
+
+
+### Features
+
+* **add-binance-cancel-order:** add binance add cancel order and cancel all ([35a590e](https://github.com/kairosresearchio/krex/commit/35a590e801f31dff1f5fda3e8e3499eb956c5950))
+
 ## [0.3.0](https://github.com/kairosresearchio/krex/compare/v0.2.2...v0.3.0) (2025-06-16)
 
 
