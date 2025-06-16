@@ -1,0 +1,69 @@
+name: "Feature Request"
+description: "Submit a suggestion to help us improve the krex trading package."
+title: "feat: "
+labels: ["feat", "enhancement"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to submit this feature request! Your feedback is valuable in helping us improve the krex trading package.
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: "Describe the Feature"
+      description: "A clear and concise description of what you want to happen. If applicable, add mockups or code examples to help illustrate your idea."
+    validations:
+      required: true
+  - type: textarea
+    id: use_case
+    attributes:
+      label: "Use Case"
+      description: "Describe the trading scenario or use case where this feature would be valuable."
+      placeholder: "When trading on [exchange], I need to..."
+    validations:
+      required: true
+  - type: textarea
+    id: benefit
+    attributes:
+      label: "Benefits"
+      description: "Explain the benefits this feature would provide."
+      value: |
+        1. Accelerate the development and integration of trading acceleration modules.
+        2. Improve efficiency in supporting multiple exchanges.
+        3. Enhance flexibility for automation and strategy development.
+    validations:
+      required: true
+  - type: dropdown
+    id: exchange
+    attributes:
+      label: "Related Exchange"
+      description: "Which exchange module would this feature primarily affect?"
+      options:
+        - "N/A"
+        - "Binance"
+        - "Bybit"
+        - "Bitmart"
+        - "Other (please specify in description)"
+    validations:
+      required: true
+  - type: input
+    id: context
+    attributes:
+      label: "Additional Context"
+      description: "Any additional context or information about the environment where the feature would be useful?"
+      placeholder: "e.g., In high-frequency trading scenarios..."
+    validations:
+      required: false
+  - type: checkboxes
+    id: agreements
+    attributes:
+      label: "Confirmations"
+      description: "Before submitting the request, please confirm the following:"
+      options:
+        - label: "I have followed the [Code of Conduct](https://github.com/kairosresearchio/krex/blob/main/.github/CODE_OF_CONDUCT.md)"
+          required: true
+        - label: "I have checked that there isn't [already a similar feature request](https://github.com/kairosresearchio/krex/issues) to avoid creating a duplicate."
+          required: true
+        - label: "I understand that this is a feature request and not a commitment that it will be implemented"
+          required: true

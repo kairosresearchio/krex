@@ -1,0 +1,76 @@
+name: "Bug report"
+description: "Create a report to help us improve the krex trading package."
+title: "bug: "
+labels: ["bug", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to fill out this bug report! This will help us improve the krex trading package.
+  - type: textarea
+    id: describe
+    attributes:
+      label: "Describe the Bug"
+      description: "Please provide a clear and concise description of the issue you encountered. If possible, attach screenshots or error logs to help us understand the problem."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Please list the steps to reproduce the issue:"
+      value: |
+        1. Install/Import krex package ...
+        2. Set up exchange connection ...
+        3. Try to execute ...
+        4. See the error
+    validations:
+      required: true
+  - type: textarea
+    id: code
+    attributes:
+      label: "Code Example"
+      description: "Please provide a minimal code example that reproduces the error"
+      value: |
+        ```python
+        # Your code example
+        import krex
+
+        # Steps that show the error
+        ```
+    validations:
+      required: false
+  - type: input
+    id: environment
+    attributes:
+      label: "Environment Information"
+      description: "Please provide your Python version, operating system, and krex version"
+      placeholder: "e.g., Python 3.11, Windows 11, krex v0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: exchange
+    attributes:
+      label: "Related Exchange"
+      description: "Which exchange module is this issue related to?"
+      options:
+        - "N/A"
+        - "Binance"
+        - "Bybit"
+        - "Bitmart"
+        - "Other (please specify in description)"
+    validations:
+      required: true
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: "Submission Checklist"
+      description: "Before submitting this issue, please ensure you have completed the following:"
+      options:
+        - label: "Follow our [Code of Conduct](https://github.com/kairosresearchio/krex/blob/main/.github/CODE_OF_CONDUCT.md)"
+          required: true
+        - label: "Check that there isn't [already an issue](https://github.com/kairosresearchio/krex/issues) reporting the same bug to avoid duplicates."
+          required: true
+        - label: "I have updated to the latest version of krex and confirmed the issue still exists"
+          required: true
