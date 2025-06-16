@@ -46,7 +46,8 @@ Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in
 
 Consider following the below format for the commit message:
 
-Commit Type : `build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test`
+Commit Type:
+`build | chore | ci | docs | feat | fix | perf | refactor | revert | style | test`
 
 > 🔔 **Note**: To trigger automatic releases via GitHub Actions, use `feat:`, `fix:`, or other release-related types. `chore:` commits will be ignored by default.
 
@@ -55,18 +56,26 @@ Commit Type : `build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test`
 - `feat:` create a new feature.
 - `fix:` resolve a bug.
 - `style:` apply code style changes (e.g., formatting).
+- `docs:` update documentation only.
+- `refactor:` restructure code without changing behavior.
+- `test:` add or update tests.
+- `ci:` update CI configuration.
+- `chore:` routine maintenance or dependency updates.
+
+---
 
 **Version bump behavior (Semantic Versioning)**
 
-When using `release-please`, commit types determine version bumping:
+When using `release-please`, commit types determine how the next version is bumped:
 
-| Commit Type                    | Effect on Version                          |
-| ------------------------------ | ------------------------------------------ |
-| `fix:`                         | 🩹 Patch — `0.1.26` → `0.1.27`             |
-| `feat:`                        | 🌟 Minor — `0.1.26` → `0.2.0`              |
-| `feat!:` or `BREAKING CHANGE:` | 🚨 Major — `0.1.x` → `1.0.0` (once ≥1.0.0) |
+| Commit Type                                               | Version Bump           | Example             |
+| --------------------------------------------------------- | ---------------------- | ------------------- |
+| `chore`                                                   | ❌ Ignored for release | No version bump     |
+| `fix`, `docs`, `style`, `refactor`, `test`, `ci`, `build` | 🩹 Patch               | `0.1.26` → `0.1.27` |
+| `feat`                                                    | 🌟 Minor               | `0.1.26` → `0.2.0`  |
+| `feat!` or `BREAKING CHANGE:`                             | 🚨 Major (≥1.0.0)      | `1.0.0` → `2.0.0`   |
 
-> 💡 For 0.x versions, `feat:` will still bump the minor version (`0.1.x → 0.2.0`) unless you configure `bump-minor-pre-major: false` in `.release-please-config.json`.
+> 💡 For versions under `0.x`, `feat:` still triggers a **minor** bump (`0.1.0` → `0.2.0`). To change this behavior, set `"bump-minor-pre-major": false` in `.release-please-config.json`.
 
 ### Using Commitizen
 
