@@ -89,7 +89,7 @@ class MarketHTTP(HTTPManager):
         res = await self._request(
             method="GET",
             path=SpotMarket.KLINE
-            if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT
+            if self.ptm.get_exchange_type(Common.BINANCE, product_symbol=product_symbol) == BinanceExchangeType.SPOT
             else FuturesMarket.KLINE,
             query=payload,
             signed=False,
