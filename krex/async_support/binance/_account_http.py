@@ -1,15 +1,17 @@
 from ._http_manager import HTTPManager
-from .endpoints.account import FuturesAccount
+from .endpoints.account import FuturesAccount, SpotAccount
+from .enums import BinanceExchangeType
 from ...utils.common import Common
 
 
 class AccountHTTP(HTTPManager):
     async def get_account_balance(
         self,
+        market_type: str,
     ):
         res = await self._request(
             method="GET",
-            path=FuturesAccount.ACCOUNT_BALANCE,
+            path=SpotAccount.ACCOUNT_BALANCE if market_type == BinanceExchangeType.SPOT else FuturesAccount.ACCOUNT_BALANCE,
             query=None,
         )
         return res
