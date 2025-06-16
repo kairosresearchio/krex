@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/kairosresearchio/krex/compare/v0.2.2...v0.3.0) (2025-06-16)
+
+
+### Features
+
+* **binance-spot-trade:** add binance place spot order ([893ca7a](https://github.com/kairosresearchio/krex/commit/893ca7a64b27b794ed91a8b8c03d4d0416a84ba3))
+
 ## [0.2.2](https://github.com/kairosresearchio/krex/compare/v0.2.1...v0.2.2) (2025-06-16)
 
 
