@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/kairosresearchio/krex/compare/v0.4.0...v0.4.1) (2025-06-16)
+
+
+### Bug Fixes
+
+* trade path for async binance ([ba9e23c](https://github.com/kairosresearchio/krex/commit/ba9e23cba3fca10d68ee5c0a43c55a842d4ae448))
+
 ## [0.4.0](https://github.com/kairosresearchio/krex/compare/v0.3.0...v0.4.0) (2025-06-16)
 
 
