@@ -33,13 +33,18 @@ Please note we have a [code of conduct](CODE_OF_CONDUCT.md), please follow it in
 
    ```sh
    pre-commit install
-   pre-commit install --hook-type commit-msg
-
    ```
 
 7. Run pre commit checks on all files:
+
    ```sh
    pre-commit run --all-files
+   ```
+
+8. commit your changes:
+   ```sh
+   git add .
+   cz commit
    ```
 
 ### Commit message rules
