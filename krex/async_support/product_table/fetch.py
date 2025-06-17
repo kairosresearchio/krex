@@ -445,7 +445,7 @@ async def binance() -> pl.DataFrame:
 
         price_filter = next((f for f in market["filters"] if f["filterType"] == "PRICE_FILTER"), {})
         lot_size_filter = next((f for f in market["filters"] if f["filterType"] == "LOT_SIZE"), {})
-        min_notional_filter = next((f for f in market["filters"] if f["filterType"] == "MIN_NOTIONAL"), {})
+        min_notional_filter = next((f for f in market["filters"] if f["filterType"] == "NOTIONAL"), {})
 
         markets.append(
             MarketInfo(
@@ -459,7 +459,7 @@ async def binance() -> pl.DataFrame:
                 price_precision=price_filter.get("tickSize", "0"),
                 size_precision=lot_size_filter.get("stepSize", "0"),
                 min_size=lot_size_filter.get("minQty", "0"),
-                min_notional=min_notional_filter.get("notional", "0"),
+                min_notional=str(float(min_notional_filter.get("minNotional", "0"))),
             )
         )
 
