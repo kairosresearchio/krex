@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/kairosresearchio/krex/compare/v0.4.3...v0.4.4) (2025-06-17)
+
+
+### Documentation
+
+* update contribution guide ([7e84cf8](https://github.com/kairosresearchio/krex/commit/7e84cf8e40ade0fc6ea92e438f0f49089bdd9c62))
+
 ## [0.4.3](https://github.com/kairosresearchio/krex/compare/v0.4.2...v0.4.3) (2025-06-17)
 
 
