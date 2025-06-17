@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/kairosresearchio/krex/compare/v0.4.2...v0.4.3) (2025-06-17)
+
+
+### Bug Fixes
+
+* add min notional in binance product table ([5d39feb](https://github.com/kairosresearchio/krex/commit/5d39feb05c8be7cac7c1cca948748eb7a768ba9e))
+
 ## [0.4.2](https://github.com/kairosresearchio/krex/compare/v0.4.1...v0.4.2) (2025-06-16)
 
 
