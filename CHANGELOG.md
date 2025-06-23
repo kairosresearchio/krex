@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.5](https://github.com/kairosresearchio/krex/compare/v0.4.4...v0.4.5) (2025-06-23)
+
+
+### Documentation
+
+* update commit message guidelines in CONTRIBUTING.md ([9bd38b2](https://github.com/kairosresearchio/krex/commit/9bd38b2321875ab8bc78508ddac410516564457f))
+
 ## [0.4.4](https://github.com/kairosresearchio/krex/compare/v0.4.3...v0.4.4) (2025-06-17)
 
 
