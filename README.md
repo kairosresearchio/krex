@@ -124,24 +124,6 @@ btcusdt_product_symbol = binance.ptm.get_product_symbol(
 print(btcusdt_product_symbol)
 ```
 
-## 📊 Notice on Data Handling
-
-KREX uses [Polars DataFrames](https://docs.pola.rs/) for blazing-fast data processing, there is some difference between pandas and polars, but it is quite easy to get used to it.
-
-```python
-# Get kline data as DataFrame
-klines_df = client.get_klines(symbol="BTCUSDT", interval="1h")
-
-# Data manipulation with Polars
-filtered_data = klines_df.filter(
-    (klines_df["close"] > klines_df["open"])  # Green candles only
-)
-
-# Export to different formats
-klines_df.write_csv("btc_data.csv")
-klines_df.write_parquet("btc_data.parquet")
-```
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](.github/CONTRIBUTING.md) for details.
