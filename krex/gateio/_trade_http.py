@@ -848,7 +848,7 @@ class TradeHTTP(HTTPManager):
         )
         return res
 
-    def place_market_order(
+    def place_spot_market_order(
         self,
         product_symbol: str,
         side: str,
@@ -862,29 +862,29 @@ class TradeHTTP(HTTPManager):
             amount=amount,
         )
 
-    def place_market_buy_order(
+    def place_spot_market_buy_order(
         self,
         product_symbol: str,
         amount: str,
     ):
-        return self.place_market_order(
+        return self.place_spot_market_order(
             product_symbol=product_symbol,
             side="buy",
             amount=amount,
         )
 
-    def place_market_sell_order(
+    def place_spot_market_sell_order(
         self,
         product_symbol: str,
         amount: str,
     ):
-        return self.place_market_order(
+        return self.place_spot_market_order(
             product_symbol=product_symbol,
             side="sell",
             amount=amount,
         )
 
-    def place_limit_order(
+    def place_spot_limit_order(
         self,
         product_symbol: str,
         side: str,
@@ -899,33 +899,33 @@ class TradeHTTP(HTTPManager):
             price=price,
         )
 
-    def place_limit_buy_order(
+    def place_spot_limit_buy_order(
         self,
         product_symbol: str,
         amount: str,
         price: str,
     ):
-        return self.place_limit_order(
+        return self.place_spot_limit_order(
             product_symbol=product_symbol,
             side="buy",
             amount=amount,
             price=price,
         )
 
-    def place_limit_sell_order(
+    def place_spot_limit_sell_order(
         self,
         product_symbol: str,
         amount: str,
         price: str,
     ):
-        return self.place_limit_order(
+        return self.place_spot_limit_order(
             product_symbol=product_symbol,
             side="sell",
             amount=amount,
             price=price,
         )
 
-    def place_post_only_limit_order(
+    def place_spot_post_only_limit_order(
         self,
         product_symbol: str,
         side: str,
@@ -941,26 +941,26 @@ class TradeHTTP(HTTPManager):
             price=price,
         )
 
-    def place_post_only_limit_buy_order(
+    def place_spot_post_only_limit_buy_order(
         self,
         product_symbol: str,
         amount: str,
         price: str,
     ):
-        return self.place_post_only_limit_order(
+        return self.place_spot_post_only_limit_order(
             product_symbol=product_symbol,
             side="buy",
             amount=amount,
             price=price,
         )
 
-    def place_post_only_limit_sell_order(
+    def place_spot_post_only_limit_sell_order(
         self,
         product_symbol: str,
         amount: str,
         price: str,
     ):
-        return self.place_post_only_limit_order(
+        return self.place_spot_post_only_limit_order(
             product_symbol=product_symbol,
             side="sell",
             amount=amount,

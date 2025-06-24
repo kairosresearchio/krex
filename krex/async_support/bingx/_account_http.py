@@ -6,8 +6,7 @@ class AccountHTTP(HTTPManager):
     async def get_listen_key(self):
         """
         Get listen key for WebSocket user data stream
-
-        :return: dict - Contains listenKey for WebSocket connection
+        :return: str - listenKey for WebSocket connection
         """
         if not self.session:
             await self.async_init()
@@ -15,7 +14,7 @@ class AccountHTTP(HTTPManager):
         headers = {"X-BX-APIKEY": self.api_key}
         response = await self.session.post(url, headers=headers)
         data = response.json()
-        return data
+        return data.get("listenKey")
 
     async def keep_alive_listen_key(self, listen_key: str):
         """
