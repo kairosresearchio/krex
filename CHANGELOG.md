@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0](https://github.com/kairosresearchio/krex/compare/v0.4.5...v0.5.0) (2025-06-24)
+
+
+### Features
+
+* add partial BingX support for Airflow and WebSocket ([1b50e19](https://github.com/kairosresearchio/krex/commit/1b50e1956e97c9ad25f5ff0d3e3b34319b80f11a))
+* add partial BingX support for Airflow and WebSocket ([b38aab9](https://github.com/kairosresearchio/krex/commit/b38aab9629c7f341843b6f0f067f5850997a85b7))
+* **bingx:** add bingx endpoints ([fb8045d](https://github.com/kairosresearchio/krex/commit/fb8045d7846c924e15726632016c15b3c478f9a2))
+
+
+### Bug Fixes
+
+* correct version number to 0.4.5 ([60044f1](https://github.com/kairosresearchio/krex/commit/60044f15e017dc5a80389726e1fc15cceb64bd28))
+
+
+### Documentation
+
+* **readme:** add a more informative readme ([618b8cc](https://github.com/kairosresearchio/krex/commit/618b8cca63df8d555d1a246bc9af32331ca06b73))
+* **readme:** fix readme in data manupilation ([43d8c6c](https://github.com/kairosresearchio/krex/commit/43d8c6ce08d7f17a58f5114a8b325ec3a9ff07e7))
+
 ## [0.4.5](https://github.com/kairosresearchio/krex/compare/v0.4.4...v0.4.5) (2025-06-23)
 
 
