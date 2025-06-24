@@ -523,7 +523,6 @@ async def hyperliquid() -> pl.DataFrame:
                 price_precision=tick,
                 size_precision=tick,
                 min_size=tick,
-                size_per_contract="1",
             )
         )
 
@@ -553,5 +552,68 @@ async def hyperliquid() -> pl.DataFrame:
                 min_size=tick,
             )
         )
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
+
+
+async def bingx() -> pl.DataFrame:
+    from ..bingx._market_http import MarketHTTP
+
+    market_http = MarketHTTP()
+    await market_http.async_init()
+
+    markets = []
+
+    res = await market_http.get_swap_instrument_info()
+    df = to_dataframe(res.get("data", []))
+
+    for market in df.iter_rows(named=True):
+        symbol = market["symbol"]
+        if not symbol.endswith(("USDT", "USDC", "USD")):
+            continue
+
+        # 用 - 分割
+        if "-" in symbol:
+            base, quote = symbol.rsplit("-", 1)
+        else:
+            # fallback，保險用
+            if symbol.endswith("USDT"):
+                base = symbol[:-4]
+                quote = "USDT"
+            elif symbol.endswith("USDC"):
+                base = symbol[:-4]
+                quote = "USDC"
+            elif symbol.endswith("USD"):
+                base = symbol[:-3]
+                quote = "USD"
+            else:
+                continue
+
+        product_symbol = f"{base}-{quote}-SWAP"
+
+        price_precision_val = int(market.get("pricePrecision", 0))
+        quantity_precision_val = int(market.get("quantityPrecision", 0))
+
+        price_precision = str(10 ** (-price_precision_val)) if price_precision_val > 0 else "1"
+        size_precision = str(10 ** (-quantity_precision_val)) if quantity_precision_val > 0 else "1"
+        min_size = size_precision
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.BINGX,
+                exchange_symbol=symbol,
+                product_symbol=product_symbol,
+                product_type="swap",
+                exchange_type="perpetual",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=price_precision,
+                size_precision=size_precision,
+                min_size=min_size,
+                min_notional=str(market.get("tradeMinUSDT", "0")),
+                size_per_contract=str(market.get("size", "1")),
+            )
+        )
+
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
