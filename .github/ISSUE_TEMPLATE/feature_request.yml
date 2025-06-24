@@ -44,6 +44,11 @@ body:
         - "Binance"
         - "Bybit"
         - "Bitmart"
+        - "BingX"
+        - "Hyperliquid"
+        - "AscendEX"
+        - "OKX"
+        - "Gate"
         - "Other (please specify in description)"
     validations:
       required: true
