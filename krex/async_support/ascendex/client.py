@@ -1,0 +1,21 @@
+from ._account_http import AccountHTTP
+
+
+class Client(
+    AccountHTTP,
+):
+    def __init__(self, **args):
+        super().__init__(**args)
+
+    async def __aenter__(self):
+        await self.async_init()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
+
+    async def close(self):
+        """Close the client and clean up resources."""
+        if hasattr(self, "session") and self.session is not None:
+            await self.session.aclose()
+            self.session = None 
