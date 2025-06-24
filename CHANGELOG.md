@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0](https://github.com/kairosresearchio/krex/compare/v0.5.0...v0.6.0) (2025-06-24)
+
+
+### Features
+
+* add async BingX swap ([ac814df](https://github.com/kairosresearchio/krex/commit/ac814df4fae7e4c3e18fb628de23acd1495dd05c))
+* add async BingX swap ([5aff2c5](https://github.com/kairosresearchio/krex/commit/5aff2c5cda8bbf625c6becb5ef2afccc13841af6))
+
+
+### Documentation
+
+* **issue-template:** add exchange dropdown selector ([610e1db](https://github.com/kairosresearchio/krex/commit/610e1db4056d3340acd74e37716af93cb6ea3843))
+
 ## [0.5.0](https://github.com/kairosresearchio/krex/compare/v0.4.5...v0.5.0) (2025-06-24)
 
 
