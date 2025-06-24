@@ -18,6 +18,7 @@ async def main():
 
     try:
         listen_key = await client.get_listen_key()
+        print(listen_key)
 
         if listen_key:
             keep_alive_response = await client.keep_alive_listen_key(listen_key)
