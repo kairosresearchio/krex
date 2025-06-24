@@ -21,7 +21,7 @@ dependencies = [
   "polars>=1.27.1",
   "requests>=2.32.3",
 ]
-description = "A lightweight Python package providing minimal trading functions for selected exchanges, organized by exchange-specific modules."
+description = "A Lightweight Python Package for Low-Latency and Cross-Exchange Trading."
 license = {text = "MIT"}
 name = "krex"
 readme = "README.md"

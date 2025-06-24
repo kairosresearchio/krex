@@ -2,25 +2,35 @@ import hmac
 import hashlib
 import logging
 import httpx
+import time
 from dataclasses import dataclass, field
-from urllib.parse import urlencode
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
-from ...utils.helpers import generate_timestamp
 from ...utils.common import Common
 
 
-def get_header(api_key, signature, timestamp):
+def get_header(api_key):
     return {
-        "Content-Type": "application/json",
         "X-BX-APIKEY": api_key,
-        "X-BX-SIGNATURE": signature,
-        "X-BX-TIMESTAMP": str(timestamp),
     }
 
 
 def get_header_no_sign():
     return {"Content-Type": "application/json"}
+
+
+def get_sign(api_secret, payload):
+    signature = hmac.new(api_secret.encode("utf-8"), payload.encode("utf-8"), digestmod=hashlib.sha256).hexdigest()
+    return signature
+
+
+def parse_param(params_map):
+    sorted_keys = sorted(params_map)
+    params_str = "&".join(["%s=%s" % (x, params_map[x]) for x in sorted_keys])
+    if params_str != "":
+        return params_str + "&timestamp=" + str(int(time.time() * 1000))
+    else:
+        return "timestamp=" + str(int(time.time() * 1000))
 
 
 @dataclass
@@ -43,12 +53,6 @@ class HTTPManager:
             self.ptm = await ProductTableManager.get_instance(Common.BINGX)
         return self
 
-    def _sign(self, params: dict) -> str:
-        signing_params = {k: v for k, v in params.items() if k != "signature" and v is not None and v != ""}
-        sorted_params = dict(sorted(signing_params.items()))
-        query_string = urlencode(sorted_params)
-        return hmac.new(self.api_secret.encode(), query_string.encode(), hashlib.sha256).hexdigest()
-
     async def _request(
         self,
         method: str,
@@ -62,32 +66,35 @@ class HTTPManager:
         if query is None:
             query = {}
 
-        timestamp = generate_timestamp()
-
         if signed:
             if not (self.api_key and self.api_secret):
                 raise ValueError("Signed request requires API Key and Secret.")
-            query["apiKey"] = self.api_key
-            query["timestamp"] = timestamp
-            query["signature"] = self._sign(query)
-            headers = get_header(self.api_key, query["signature"], timestamp)
+
+            urlpa = parse_param(query)
+            url = "%s%s?%s&signature=%s" % (self.base_url, path, urlpa, get_sign(self.api_secret, urlpa))
+            headers = get_header(self.api_key)
         else:
             headers = get_header_no_sign()
-
-        url = self.base_url + path
+            url = self.base_url + path
+            if query:
+                sorted_query = "&".join(f"{k}={v}" for k, v in sorted(query.items()) if v is not None)
+                url += "?" + sorted_query if sorted_query else ""
 
         try:
             if method.upper() == "GET":
-                if query:
-                    sorted_query = "&".join(f"{k}={v}" for k, v in sorted(query.items()) if v)
-                    url += "?" + sorted_query if sorted_query else ""
                 response = await self.session.get(url, headers=headers)
             elif method.upper() == "POST":
-                response = await self.session.post(url, headers=headers, json=query if query else {})
+                if signed:
+                    response = await self.session.post(url, headers=headers)
+                else:
+                    response = await self.session.post(url, headers=headers, json=query if query else {})
             elif method.upper() == "PUT":
-                response = await self.session.put(url, headers=headers, json=query if query else {})
+                if signed:
+                    response = await self.session.put(url, headers=headers)
+                else:
+                    response = await self.session.put(url, headers=headers, json=query if query else {})
             elif method.upper() == "DELETE":
-                response = await self.session.delete(url, headers=headers, json=query if query else {})
+                response = await self.session.delete(url, headers=headers)
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -103,7 +110,7 @@ class HTTPManager:
                     request=f"{method.upper()} {url} | Body: {query}",
                     message=f"BingX API Error: [{code}] {error_message}",
                     status_code=response.status_code,
-                    time=timestamp,
+                    time=int(time.time() * 1000),
                     resp_headers=response.headers,
                 )
 
@@ -112,7 +119,7 @@ class HTTPManager:
                     request=f"{method.upper()} {url} | Body: {query}",
                     message=f"HTTP Error {response.status_code}: {response.text}",
                     status_code=response.status_code,
-                    time=timestamp,
+                    time=int(time.time() * 1000),
                     resp_headers=response.headers,
                 )
 
@@ -123,6 +130,6 @@ class HTTPManager:
                 request=f"{method.upper()} {url} | Body: {query}",
                 message=f"Request failed: {str(e)}",
                 status_code=getattr(e.response, "status_code", "Unknown"),
-                time=timestamp,
+                time=int(time.time() * 1000),
                 resp_headers=getattr(e.response, "headers", None),
             )

@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class SwapMarket(str, Enum):
     INSTRUMENT_INFO = "/openApi/swap/v2/quote/contracts"
     ORDERBOOK = "/openApi/swap/v2/quote/depth"
