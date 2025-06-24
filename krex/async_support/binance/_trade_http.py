@@ -5,7 +5,6 @@ from ...utils.common import Common
 import time
 
 
-
 class TradeHTTP(HTTPManager):
     async def set_leverage(
         self,
@@ -473,11 +472,10 @@ class TradeHTTP(HTTPManager):
         )
         return res
 
-
     """
     ---------------------------------------------------------
     """
-    
+
     async def place_spot_order(
         self,
         product_symbol: str,
@@ -496,7 +494,7 @@ class TradeHTTP(HTTPManager):
         newOrderRespType: str = None,
         selfTradePreventionMode: str = None,
         recvWindow: int = None,
-        timestamp: int = int(time.time() * 1000)
+        timestamp: int = int(time.time() * 1000),
     ):
         """
         Place a spot order on Binance
@@ -571,7 +569,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a market order
-        
+
         :param product_symbol: str - Trading pair symbol
         :param side: str - BUY or SELL
         :param quantity: float - Amount of base asset to buy/sell
@@ -599,7 +597,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a market buy order
-        
+
         :param product_symbol: str - Trading pair symbol
         :param quantity: str - Amount of base asset to buy
         :param quoteOrderQty: str - Amount of quote asset to spend
@@ -625,7 +623,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a market sell order
-        
+
         :param product_symbol: str - Trading pair symbol
         :param quantity: str - Amount of base asset to sell
         :param newClientOrderId: str - Unique order ID
@@ -652,7 +650,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a limit order
-        
+
         :param product_symbol: str - Trading pair symbol
         :param side: str - BUY or SELL
         :param quantity: str - Amount of base asset to buy/sell
@@ -683,7 +681,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a limit buy order
-        
+
         :param product_symbol: str - Trading pair symbol
         :param quantity: str - Amount of base asset to buy
         :param price: str - Order price
@@ -712,7 +710,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a limit sell order
-        
+
         :param product_symbol: str - Trading pair symbol
         :param quantity: str - Amount of base asset to sell
         :param price: str - Order price
@@ -741,7 +739,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a post-only limit order (LIMIT_MAKER)
-        
+
         :param product_symbol: str - Trading pair symbol
         :param side: str - BUY or SELL
         :param quantity: str - Amount of base asset to buy/sell
@@ -769,7 +767,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a post-only limit buy order
-        
+
         :param product_symbol: str - Trading pair symbol
         :param quantity: str - Amount of base asset to buy
         :param price: str - Order price
@@ -796,7 +794,7 @@ class TradeHTTP(HTTPManager):
     ):
         """
         Place a post-only limit sell order
-        
+
         :param product_symbol: str - Trading pair symbol
         :param quantity: str - Amount of base asset to sell
         :param price: str - Order price
@@ -811,13 +809,13 @@ class TradeHTTP(HTTPManager):
             newClientOrderId=newClientOrderId,
             newOrderRespType=newOrderRespType,
         )
-    
+
     async def cancel_spot_order(
         self,
         product_symbol: str,
         orderId: int = None,
         origClientOrderId: str = None,
-        timestamp: int = int(time.time() * 1000)
+        timestamp: int = int(time.time() * 1000),
     ):
         """
         Cancel an active spot order on Binance.
@@ -830,10 +828,7 @@ class TradeHTTP(HTTPManager):
         :param recvWindow: int - Optional timeout window in ms (max: 60000)
         :return: Binance API response
         """
-        payload = {
-            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
-            "timestamp": timestamp
-        }
+        payload = {"symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol), "timestamp": timestamp}
 
         # 至少要提供 orderId 或 origClientOrderId 其中之一
         if orderId is not None:
@@ -844,28 +839,17 @@ class TradeHTTP(HTTPManager):
             raise ValueError("Must provide either orderId or origClientOrderId to cancel an order.")
 
         # 發送 DELETE 請求
-        res = await self._request(
-            method="DELETE",
-            path=SpotTrade.PLACE_SPOT_ORDER,
-            query=payload
-        )
+        res = await self._request(method="DELETE", path=SpotTrade.PLACE_SPOT_ORDER, query=payload)
         return res
-    
-    async def cancel_all_spot_orders(
-        self,
-        product_symbol: str,
-        timestamp: int = int(time.time() * 1000)
-    ):
+
+    async def cancel_all_spot_orders(self, product_symbol: str, timestamp: int = int(time.time() * 1000)):
         """
         Cancel all active spot orders for a symbol on Binance.
 
         :param product_symbol: str - Trading pair symbol (e.g., "BTCUSDT")
         :param timestamp: int - Optional request timeout (max 60000)
         """
-        payload = {
-            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
-            "timestamp": timestamp
-        }
+        payload = {"symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol), "timestamp": timestamp}
 
         res = await self._request(
             method="DELETE",

@@ -11,6 +11,7 @@ from ...utils.common import Common
 
 HTTP_URL = "https://ascendex.com"
 
+
 def get_header(api_key, signature, timestamp):
     return {
         "Content-Type": "application/json",
@@ -43,11 +44,11 @@ class HTTPManager:
         if self.preload_product_table:
             self.ptm = await ProductTableManager.get_instance(Common.ASCENDEX)
         self.endpoint = HTTP_URL
-        
+
         # Fetch account group if API credentials are provided
         if self.api_key and self.api_secret:
             await self._fetch_account_group()
-        
+
         return self
 
     async def _fetch_account_group(self):
@@ -55,12 +56,13 @@ class HTTPManager:
         try:
             # Use the account info endpoint to get account group
             from .endpoints.account import CashAccount
+
             response = await self._request(
                 method="GET",
                 path=CashAccount.ACCOUNT_INFO,
                 signed=True,
             )
-            
+
             # Extract account group from response
             if response and "data" in response:
                 self.account_group = response["data"].get("accountGroup")
@@ -69,7 +71,7 @@ class HTTPManager:
                 self._logger.info(f"Account group fetched: {self.account_group}")
             else:
                 raise ValueError("Invalid response format when fetching account group")
-                
+
         except Exception as e:
             self._logger.error(f"Failed to fetch account group: {e}")
             raise ValueError(f"Could not initialize AscendEX client: {e}")

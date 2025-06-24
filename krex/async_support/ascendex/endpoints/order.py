@@ -34,8 +34,6 @@ class SpotOrder(str, Enum):
         "route": "api/pro/data/v2/order/hist",
         "hash": "data/v2/order/hist",
     }
-    
-
 
     def __str__(self) -> str:
         return self.value

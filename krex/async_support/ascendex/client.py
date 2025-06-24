@@ -18,4 +18,4 @@ class Client(
         """Close the client and clean up resources."""
         if hasattr(self, "session") and self.session is not None:
             await self.session.aclose()
-            self.session = None 
+            self.session = None

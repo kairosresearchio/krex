@@ -13,4 +13,3 @@ class AccountHTTP(HTTPManager):
             query=None,
         )
         return res
-    

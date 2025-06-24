@@ -48,16 +48,16 @@ async def main():
         api_key="your_api_key",
         api_secret="your_api_secret"
     )
-    
+
     try:
         # Get account balance
         balance = await client.get_account_balance()
         print(balance)
-        
+
         # Get market data
         klines = await client.get_klines(symbol="BTCUSDT", interval="1h")
         print(klines)
-        
+
     finally:
         await client.close()
 
