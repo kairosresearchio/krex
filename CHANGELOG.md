@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/kairosresearchio/krex/compare/v0.6.0...v0.6.1) (2025-06-25)
+
+
+### Bug Fixes
+
+* **gateio:** add min notional to gateio ptm ([bc0fd1b](https://github.com/kairosresearchio/krex/commit/bc0fd1b7e045880408fd73d64385aade2c1b230f))
+
 ## [0.6.0](https://github.com/kairosresearchio/krex/compare/v0.5.0...v0.6.0) (2025-06-24)
 
 
