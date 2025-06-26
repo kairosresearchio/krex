@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.0](https://github.com/kairosresearchio/krex/compare/v0.6.1...v0.7.0) (2025-06-26)
+
+
+### Features
+
+* add ascendex spot support ([267b7fa](https://github.com/kairosresearchio/krex/commit/267b7fa7714b519ec5f209664ab454bd8830b93b))
+* add ascendex spot support ([c20992f](https://github.com/kairosresearchio/krex/commit/c20992f17479924b0a3e3da6e64dc2cd61317f0a))
+
 ## [0.6.1](https://github.com/kairosresearchio/krex/compare/v0.6.0...v0.6.1) (2025-06-25)
 
 
