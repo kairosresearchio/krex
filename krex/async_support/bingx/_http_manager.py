@@ -63,9 +63,6 @@ class HTTPManager:
         if not self.session:
             await self.async_init()
 
-        if query is None:
-            query = {}
-
         if signed:
             if not (self.api_key and self.api_secret):
                 raise ValueError("Signed request requires API Key and Secret.")

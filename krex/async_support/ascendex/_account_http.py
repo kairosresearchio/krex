@@ -4,12 +4,11 @@ from .endpoints.account import CashAccount
 
 class AccountHTTP(HTTPManager):
     async def get_account_info(self):
-        """
-        Get account information (uses static endpoint)
-        """
+        payload = {}
         res = await self._request(
             method="GET",
             path=CashAccount.ACCOUNT_INFO,
-            query=None,
+            hash_path=CashAccount.ACCOUNT_INFO.hash,
+            query=payload,
         )
         return res

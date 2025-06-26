@@ -4,10 +4,12 @@ import logging
 import json
 import httpx
 from dataclasses import dataclass, field
+
+from krex.utils.common import Common
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
 from ...utils.helpers import generate_timestamp
-from ...utils.common import Common
+from .endpoints.account import CashAccount
 
 HTTP_URL = "https://ascendex.com"
 
@@ -15,9 +17,9 @@ HTTP_URL = "https://ascendex.com"
 def get_header(api_key, signature, timestamp):
     return {
         "Content-Type": "application/json",
-        "x-auth-key": api_key,
-        "x-auth-timestamp": timestamp,
-        "x-auth-signature": signature,
+        "x-auth-key": str(api_key),
+        "x-auth-timestamp": str(timestamp),
+        "x-auth-signature": str(signature),
     }
 
 
@@ -45,48 +47,28 @@ class HTTPManager:
             self.ptm = await ProductTableManager.get_instance(Common.ASCENDEX)
         self.endpoint = HTTP_URL
 
-        # Fetch account group if API credentials are provided
-        if self.api_key and self.api_secret:
-            await self._fetch_account_group()
-
         return self
 
-    async def _fetch_account_group(self):
-        """Fetch the account group required for authenticated endpoints"""
-        try:
-            # Use the account info endpoint to get account group
-            from .endpoints.account import CashAccount
-
-            response = await self._request(
-                method="GET",
-                path=CashAccount.ACCOUNT_INFO,
-                signed=True,
-            )
-
-            # Extract account group from response
-            if response and "data" in response:
-                self.account_group = response["data"].get("accountGroup")
-                if not self.account_group:
-                    raise ValueError("Account group not found in API response")
-                self._logger.info(f"Account group fetched: {self.account_group}")
-            else:
-                raise ValueError("Invalid response format when fetching account group")
-
-        except Exception as e:
-            self._logger.error(f"Failed to fetch account group: {e}")
-            raise ValueError(f"Could not initialize AscendEX client: {e}")
-
-    def _resolve_path(self, path: str) -> str:
-        """Resolve dynamic path parameters like {ACCOUNT_GROUP}"""
-        if "{ACCOUNT_GROUP}" in path:
-            if not self.account_group:
-                raise ValueError("Account group not available. Ensure client is properly initialized.")
-            return path.replace("{ACCOUNT_GROUP}", self.account_group)
-        return path
-
     def _auth(self, path, timestamp):
-        param_str = f"{timestamp}{path}"
+        """Generate signature for AscendEX API
+        Signature format: HMAC-SHA256(timestamp + path, secret_key)
+        """
+        param_str = f"{timestamp}+{path}"
         return hmac.new(self.api_secret.encode(), param_str.encode(), hashlib.sha256).hexdigest()
+
+    async def _fetch_account_group_raw(self):
+        url = self.endpoint + CashAccount.ACCOUNT_INFO
+        timestamp = generate_timestamp()
+        sign_path = CashAccount.ACCOUNT_INFO.hash
+        signature = self._auth(sign_path, timestamp)
+        headers = get_header(self.api_key, signature, timestamp)
+        async with httpx.AsyncClient(timeout=self.timeout) as session:
+            response = await session.get(url, headers=headers)
+            data = response.json()
+            if data.get("code", 0) == 0 and "data" in data:
+                return data["data"].get("accountGroup")
+            else:
+                raise ValueError("Failed to fetch account group: " + str(data))
 
     async def _request(
         self,
@@ -94,44 +76,43 @@ class HTTPManager:
         path: str,
         query: dict = None,
         signed: bool = True,
+        hash_path: str = None,
     ):
         if not self.session:
             await self.async_init()
 
-        if query is None:
-            query = {}
+        path = await self._resolve_path(path)
 
         timestamp = generate_timestamp()
 
-        if method.upper() == "GET":
+        url = self.endpoint + path
+        payload = ""
+
+        if method.upper() == "GET" or method.upper() == "DELETE":
             if query:
                 sorted_query = "&".join(f"{k}={v}" for k, v in sorted(query.items()) if v)
-                path += "?" + sorted_query if sorted_query else ""
+                url += "?" + sorted_query if sorted_query else ""
                 payload = sorted_query
-            else:
-                payload = ""
         else:
             payload = json.dumps(query, separators=(",", ":"), ensure_ascii=False)
 
         if signed:
             if not (self.api_key and self.api_secret):
                 raise ValueError("Signed request requires API Key and Secret.")
-            if self.account_group is None:
-                await self._fetch_account_group()
-            signature = self._auth(path["hash"], timestamp)
+
+            sign_path = hash_path if hash_path else path
+            signature = self._auth(sign_path, timestamp)
             headers = get_header(self.api_key, signature, timestamp)
-            route = self._resolve_path(path["route"])
         else:
             headers = get_header_no_sign()
-            route = path["route"]
-
-        url = self.endpoint + route
 
         try:
             if method.upper() == "GET":
                 response = await self.session.get(url, headers=headers)
             elif method.upper() == "POST":
                 response = await self.session.post(url, headers=headers, json=query if query else {})
+            elif method.upper() == "DELETE":
+                response = await self.session.delete(url, headers=headers)
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -140,8 +121,6 @@ class HTTPManager:
             except Exception:
                 data = {}
 
-            # Note: AscendEX uses different error format than Bybit
-            # Adjust error handling based on AscendEX API documentation
             if data.get("code", 0) != 0:
                 code = data.get("code", "Unknown")
                 error_message = data.get("message", "Unknown error")
@@ -164,11 +143,32 @@ class HTTPManager:
 
             return data
 
+        except httpx.ConnectError as e:
+            # Handle connection errors specifically
+            raise FailedRequestError(
+                request=f"{method.upper()} {url} | Body: {payload}",
+                message=f"Connection failed: {str(e)}",
+                status_code="Connection Error",
+                time=timestamp,
+                resp_headers=None,
+            )
         except httpx.HTTPError as e:
+            # Handle other HTTP errors
+            status_code = getattr(e.request, "status_code", "Unknown") if hasattr(e, "response") else "Unknown"
+            resp_headers = getattr(e.request, "headers", None) if hasattr(e, "response") else None
+
             raise FailedRequestError(
                 request=f"{method.upper()} {url} | Body: {payload}",
                 message=f"Request failed: {str(e)}",
-                status_code=getattr(e.response, "status_code", "Unknown"),
+                status_code=status_code,
                 time=timestamp,
-                resp_headers=getattr(e.response, "headers", None),
+                resp_headers=resp_headers,
             )
+
+    async def _resolve_path(self, path: str) -> str:
+        """Resolve dynamic path parameters like {ACCOUNT_GROUP}"""
+        if "{ACCOUNT_GROUP}" in path:
+            if not self.account_group:
+                self.account_group = await self._fetch_account_group_raw()
+            return path.replace("{ACCOUNT_GROUP}", str(self.account_group))
+        return path
