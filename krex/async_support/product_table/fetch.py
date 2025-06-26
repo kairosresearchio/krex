@@ -573,11 +573,9 @@ async def bingx() -> pl.DataFrame:
         if not symbol.endswith(("USDT", "USDC", "USD")):
             continue
 
-        # 用 - 分割
         if "-" in symbol:
             base, quote = symbol.rsplit("-", 1)
         else:
-            # fallback，保險用
             if symbol.endswith("USDT"):
                 base = symbol[:-4]
                 quote = "USDT"
@@ -616,5 +614,42 @@ async def bingx() -> pl.DataFrame:
             )
         )
 
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
+
+
+async def ascendex() -> pl.DataFrame:
+    from ..ascendex._market_http import MarketHTTP
+
+    market_http = MarketHTTP()
+    await market_http.async_init()
+    markets = []
+    res = await market_http.get_spot_instrument_info()
+    data = res.get("data", [])
+    for market in data:
+        symbol = market.get("symbol", "")
+        if not (symbol.endswith("USDT") or symbol.endswith("USDC") or symbol.endswith("USD")):
+            continue
+
+        if "/" in symbol:
+            base, quote = symbol.split("/")
+        else:
+            continue
+        product_symbol = f"{base}-{quote}-SPOT"
+        markets.append(
+            MarketInfo(
+                exchange=Common.ASCENDEX,
+                exchange_symbol=symbol,
+                product_symbol=product_symbol,
+                product_type="spot",
+                exchange_type="spot",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=str(market.get("tickSize", "")),
+                size_precision=str(market.get("lotSize", "")),
+                min_size=str(market.get("minQty", "")),
+                min_notional=str(market.get("minNotional", "0")),
+            )
+        )
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)

@@ -8,8 +8,8 @@ class Common(str, Enum):
     GATEIO = "gateio"
     BINANCE = "binance"
     HYPERLIQUID = "hyperliquid"
-    ASCENDEX = "ascendex"
     BINGX = "bingx"
+    ASCENDEX = "ascendex"
 
     def __str__(self) -> str:
         return self.value

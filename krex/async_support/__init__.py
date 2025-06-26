@@ -6,6 +6,7 @@ from .bitmart.client import Client as BitmartClient
 from .gateio.client import Client as GateioClient
 from .hyperliquid.client import Client as HyperliquidClient
 from .bingx.client import Client as BingXClient
+from .ascendex.client import Client as AscendexClient
 
 
 async def bybit(**kwargs):
@@ -57,6 +58,13 @@ async def bingx(**kwargs):
     return client
 
 
+async def ascendex(**kwargs):
+    """Create and initialize a AscendEX client instance."""
+    client = AscendexClient(**kwargs)
+    await client.async_init()
+    return client
+
+
 __all__ = [
     "bybit",
     "binance",
@@ -65,4 +73,5 @@ __all__ = [
     "gateio",
     "hyperliquid",
     "bingx",
+    "ascendex",
 ]
