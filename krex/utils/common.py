@@ -10,6 +10,7 @@ class Common(str, Enum):
     HYPERLIQUID = "hyperliquid"
     ASCENDEX = "ascendex"
     BINGX = "bingx"
+    KUCOIN = "kucoin"
 
     def __str__(self) -> str:
         return self.value
