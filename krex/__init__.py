@@ -15,7 +15,7 @@ from .okx.client import Client as OKXClient
 from .bitmart.client import Client as BitmartClient
 from .gateio.client import Client as GateioClient
 from .hyperliquid.client import Client as HyperliquidClient
-
+from .kucoin.client import Client as KuCoinClient
 
 # 在導入時自動應用（如果需要的話）
 auto_apply_nest_asyncio(verbose=False)
@@ -51,6 +51,9 @@ def hyperliquid(**kwargs):
     """Create a Hyperliquid client instance."""
     return HyperliquidClient(**kwargs)
 
+def kucoin(**kwargs):
+    """Create a KuCoin client instance."""
+    return KuCoinClient(**kwargs)
 
 __all__ = [
     "bybit",
@@ -59,4 +62,5 @@ __all__ = [
     "bitmart",
     "gateio",
     "hyperliquid",
+    "kucoin",
 ]

@@ -3,7 +3,7 @@ from .endpoints.account import SpotAccount
 
 
 class AccountHTTP(HTTPManager):
-    async def get_account_balance(
+    def get_account_balance(
         self,
         currency: str = None,
         type: str = None,
@@ -14,9 +14,9 @@ class AccountHTTP(HTTPManager):
         if type:
             payload["type"] = type
 
-        res = await self._request(
+        res = self._request(
             method="GET",
             path=SpotAccount.ACCOUNT_BALANCE,
             query=payload,
         )
-        return res
+        return res 
