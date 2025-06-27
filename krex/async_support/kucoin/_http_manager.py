@@ -91,10 +91,20 @@ class HTTPManager:
         if method.upper() == "GET":
             if query:
                 request_path = f"{path}?{urlencode(query)}"
-                signature_path = f"{path}?{urlencode(query)}"
-        elif method.upper() in ["POST", "PUT", "DELETE"]:
+                signature_path = f"{path}?{urlencode(query)}"  # GET: include query params in signature
+        elif method.upper() in ["POST", "PUT"]:
             body = json.dumps(query) if query else ""
-
+            # POST/PUT/DELETE: don't include query params in signature path
+            signature_path = path
+        elif method.upper() == "DELETE":
+            if query:
+                query_string = urlencode(query)
+                request_path = f"{path}?{query_string}"
+                signature_path = f"{path}?{query_string}"
+            else:
+                request_path = path
+                signature_path = path
+                
         # Generate signature if needed
         signature = ""
         if signed:
@@ -113,9 +123,9 @@ class HTTPManager:
             if method.upper() == "GET":
                 response = await self.session.get(url, headers=headers)
             elif method.upper() == "POST":
-                response = await self.session.post(url, headers=headers, json=query)
+                response = await self.session.post(url, headers=headers, content=body)
             elif method.upper() == "PUT":
-                response = await self.session.put(url, headers=headers, json=query)
+                response = await self.session.put(url, headers=headers, content=body)
             elif method.upper() == "DELETE":
                 response = await self.session.delete(url, headers=headers)
             else:

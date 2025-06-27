@@ -4,7 +4,7 @@ from enum import Enum
 class SpotTrade(str, Enum):
     PLACE_ORDER = "/api/v1/hf/orders"
     BATCH_ORDERS = "/api/v1/hf/orders/multi"
-    CANCEL_ORDER = "/api/v1/hf/orders/{orderId}"  # 這你再注意一下
+    CANCEL_ORDER = "/api/v1/hf/orders/{orderId}" 
     CANCEL_ALL_ORDERS_BY_SYMBOL = "/api/v1/hf/orders"
     CANCEL_ALL_ORDERS = "/api/v1/hf/orders/cancelAll"
 

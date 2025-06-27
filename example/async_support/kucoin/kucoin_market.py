@@ -37,9 +37,9 @@ async def main():
         # print("--------------------------------\n")
 
         # # Test get_spot_orderbook with BTC-USDT
-        # orderbook = await client.get_spot_orderbook(product_symbol="BTC-USDT-SPOT")
-        # print("BTC-USDT Orderbook:")
-        # print(orderbook)
+        orderbook = await client.get_spot_orderbook(product_symbol="BTC-USDT-SPOT")
+        print("BTC-USDT Orderbook:")
+        print(orderbook)
 
         # print("--------------------------------\n")
 
@@ -51,12 +51,12 @@ async def main():
         # print("--------------------------------\n")
 
         # Test get_spot_kline with BTC-USDT
-        kline = await client.get_spot_kline(
-            product_symbol="BTC-USDT-SPOT",
-            type="1hour"
-        )
-        print("BTC-USDT Kline (1hour):")
-        print(kline)
+        # kline = await client.get_spot_kline(
+        #     product_symbol="BTC-USDT-SPOT",
+        #     type="1hour"
+        # )
+        # print("BTC-USDT Kline (1hour):")
+        # print(kline)
 
     except Exception as e:
         print(f"Error: {e}")
