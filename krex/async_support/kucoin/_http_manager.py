@@ -1,38 +1,28 @@
 import hmac
-import hashlib
 import time
 import base64
 import httpx
 import logging
+import json
+import hashlib
 from dataclasses import dataclass, field
 from urllib.parse import urlencode
-from .endpoints.market import SpotMarket
-from .endpoints.trade import SpotTrade
-from .endpoints.account import SpotAccount
+
+from krex.utils.common import Common
 from ..product_table.manager import ProductTableManager
 from ...utils.errors import FailedRequestError
 from ...utils.helpers import generate_timestamp
-from ...utils.common import Common
 
 
-def _sign(message: str, secret_key: str) -> str:
-    """KuCoin signature generation"""
-    mac = hmac.new(
-        bytes(secret_key, encoding="utf8"),
-        bytes(message, encoding="utf-8"),
-        digestmod="sha256",
-    )
-    return base64.b64encode(mac.digest()).decode()
-
-
-def _get_kucoin_signature(timestamp: str, method: str, path: str, body: str, secret_key: str) -> str:
-    """Generate KuCoin API signature"""
-    message = f"{timestamp}{method.upper()}{path}{body}"
-    return _sign(message, secret_key)
+def _sign(plain: bytes, key: bytes) -> str:
+    """KuCoin signature generation using HMAC-SHA256"""
+    hm = hmac.new(key, plain, hashlib.sha256)
+    return base64.b64encode(hm.digest()).decode()
 
 
 @dataclass
 class HTTPManager:
+    base_url: str = field(default="https://api.kucoin.com")
     api_key: str = field(default=None)
     api_secret: str = field(default=None)
     passphrase: str = field(default=None)
@@ -41,88 +31,85 @@ class HTTPManager:
     session: httpx.AsyncClient = field(default=None, init=False)
     ptm: ProductTableManager = field(init=False)
     preload_product_table: bool = field(default=True)
-
-    # KuCoin API base URL
-    base_url: str = field(default="https://api.kucoin.com")
-
-    # API path mapping for different endpoints
-    api_map = {
-        "https://api.kucoin.com": {
-            SpotMarket,
-            SpotTrade,
-            SpotAccount,
-        },
-    }
+    _encrypted_passphrase: str = field(default=None, init=False)
 
     async def async_init(self):
         """Initialize async HTTP manager"""
         self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
+
+        # Encrypt passphrase if credentials are provided
+        if self.passphrase and self.api_secret:
+            self._encrypted_passphrase = _sign(self.passphrase.encode("utf-8"), self.api_secret.encode("utf-8"))
+
         if self.preload_product_table:
             self.ptm = await ProductTableManager.get_instance(Common.KUCOIN)
         return self
 
-    def _get_base_url(self, path):
-        """Get base URL for the given API path"""
-        for base_url, enums in self.api_map.items():
-            if type(path) in enums:
-                return base_url
-        raise ValueError(f"Unknown API path: {path} (type={type(path)})")
-
-    def _headers(self, signed: bool = False, timestamp: str = None, signature: str = None, passphrase: str = None):
+    def _generate_headers(self, timestamp: str, signature: str) -> dict:
         """Generate headers for KuCoin API requests"""
         headers = {
             "Content-Type": "application/json",
         }
-        
-        if signed and self.api_key and signature and passphrase:
-            headers.update({
-                "KC-API-KEY": self.api_key,
-                "KC-API-SIGN": signature,
-                "KC-API-TIMESTAMP": timestamp,
-                "KC-API-PASSPHRASE": passphrase,
-                "KC-API-KEY-VERSION": "2",  # KuCoin API v2
-            })
-        
+
+        if self.api_key and signature and self._encrypted_passphrase:
+            headers.update(
+                {
+                    "KC-API-KEY": self.api_key,
+                    "KC-API-SIGN": signature,
+                    "KC-API-TIMESTAMP": timestamp,
+                    "KC-API-PASSPHRASE": self._encrypted_passphrase,
+                    "KC-API-KEY-VERSION": "2",
+                }
+            )
+
         return headers
 
-    async def _request(self, method: str, path: str, query: dict = None, signed: bool = True):
+    def _create_signature_payload(self, timestamp: str, method: str, path: str, body: str) -> str:
+        """Create the payload for signature generation according to KuCoin API v2"""
+        # For KuCoin API v2, the signature payload is: timestamp + method + path + body
+        return f"{timestamp}{method.upper()}{path}{body}"
+
+    async def _request(
+        self,
+        method: str,
+        path: str,
+        query: dict = None,
+        signed: bool = True,
+    ):
         """Make HTTP request to KuCoin API"""
         if not self.session:
             await self.async_init()
 
-        if query is None:
-            query = {}
-
         # Prepare request data
         timestamp = str(int(time.time() * 1000))
         body = ""
-        
+        request_path = path
+        signature_path = path
+
+        # Handle different HTTP methods
         if method.upper() == "GET":
             if query:
-                path += f"?{urlencode(query)}"
+                request_path = f"{path}?{urlencode(query)}"
+                signature_path = f"{path}?{urlencode(query)}"
         elif method.upper() in ["POST", "PUT", "DELETE"]:
-            body = str(query) if query else ""
+            body = json.dumps(query) if query else ""
 
         # Generate signature if needed
         signature = ""
-        passphrase_encrypted = ""
-        
         if signed:
             if not (self.api_key and self.api_secret and self.passphrase):
                 raise ValueError("Signed request requires API Key, Secret, and Passphrase.")
-            
-            signature = _get_kucoin_signature(timestamp, method, path, body, self.api_secret)
-            # Encrypt passphrase for KuCoin API v2
-            passphrase_encrypted = _sign(self.passphrase, self.api_secret)
+
+            # Create signature payload
+            payload = self._create_signature_payload(timestamp, method, signature_path, body)
+            signature = _sign(payload.encode("utf-8"), self.api_secret.encode("utf-8"))
 
         response = None
         try:
-            base_url = self._get_base_url(path)
-            url = f"{base_url}{path}"
-            
-            headers = self._headers(signed, timestamp, signature, passphrase_encrypted)
-            
+            url = f"{self.base_url}{request_path}"
+            headers = self._generate_headers(timestamp, signature)
+
             if method.upper() == "GET":
                 response = await self.session.get(url, headers=headers)
             elif method.upper() == "POST":
@@ -177,4 +164,4 @@ class HTTPManager:
     async def close(self):
         """Close the HTTP session"""
         if self.session:
-            await self.session.aclose() 
+            await self.session.aclose()

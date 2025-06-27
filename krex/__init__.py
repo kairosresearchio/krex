@@ -15,8 +15,6 @@ from .okx.client import Client as OKXClient
 from .bitmart.client import Client as BitmartClient
 from .gateio.client import Client as GateioClient
 from .hyperliquid.client import Client as HyperliquidClient
-from .async_support.bingx.client import Client as BingXClient
-from .kucoin.client import Client as KuCoinClient
 
 
 # 在導入時自動應用（如果需要的話）
@@ -54,16 +52,6 @@ def hyperliquid(**kwargs):
     return HyperliquidClient(**kwargs)
 
 
-def bingx(**kwargs):
-    """Create a BingX client instance."""
-    return BingXClient(**kwargs)
-
-
-def kucoin(**kwargs):
-    """Create a KuCoin client instance."""
-    return KuCoinClient(**kwargs)
-
-
 __all__ = [
     "bybit",
     "binance",
@@ -71,6 +59,4 @@ __all__ = [
     "bitmart",
     "gateio",
     "hyperliquid",
-    "bingx",
-    "kucoin",
 ]
