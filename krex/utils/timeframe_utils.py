@@ -1,4 +1,7 @@
 def bybit_convert_timeframe(timeframe: str) -> int:
+    """
+    bybit, ascendex
+    """
     if timeframe == "1m":
         return "1"
     elif timeframe == "3m":

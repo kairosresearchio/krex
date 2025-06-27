@@ -15,6 +15,9 @@ async def main():
         res = await client.get_tickers(instType="SPOT")
         print(res)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

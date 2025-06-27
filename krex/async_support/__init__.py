@@ -7,6 +7,7 @@ from .gateio.client import Client as GateioClient
 from .hyperliquid.client import Client as HyperliquidClient
 from .bingx.client import Client as BingXClient
 from .kucoin.client import Client as KuCoinClient
+from .ascendex.client import Client as AscendexClient
 
 
 async def bybit(**kwargs):
@@ -57,10 +58,15 @@ async def bingx(**kwargs):
     await client.async_init()
     return client
 
-
 async def kucoin(**kwargs):
     """Create and initialize a KuCoin client instance."""
     client = KuCoinClient(**kwargs)
+    await client.async_init()
+    return client
+    
+async def ascendex(**kwargs):
+    """Create and initialize a AscendEX client instance."""
+    client = AscendexClient(**kwargs)
     await client.async_init()
     return client
 
@@ -74,4 +80,5 @@ __all__ = [
     "hyperliquid",
     "bingx",
     "kucoin",
+    "ascendex",
 ]

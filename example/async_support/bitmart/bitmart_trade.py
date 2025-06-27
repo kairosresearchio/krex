@@ -37,6 +37,9 @@ async def main():
         )
         print("3. get_contract_position:", res)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

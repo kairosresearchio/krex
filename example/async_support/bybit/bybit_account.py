@@ -46,6 +46,9 @@ async def main():
         # result = await client.set_margin_mode("PORTFOLIO_MARGIN")
         # print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

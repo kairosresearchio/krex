@@ -1,8 +1,14 @@
 from ._account_http import AccountHTTP
+from ._market_http import MarketHTTP
+from ._balance_http import BalanceHTTP
+from ._trade_http import TradeHTTP
 
 
 class Client(
     AccountHTTP,
+    MarketHTTP,
+    BalanceHTTP,
+    TradeHTTP,
 ):
     def __init__(self, **args):
         super().__init__(**args)

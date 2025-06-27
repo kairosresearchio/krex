@@ -95,6 +95,9 @@ async def main():
         result = await client.cancel_twap_order(product_symbol="MELANIA-USDC-SWAP", twap_id=6249)
         print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

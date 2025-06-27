@@ -31,6 +31,9 @@ async def main():
         result = await client.get_spot_account_book()
         print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

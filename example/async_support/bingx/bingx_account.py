@@ -32,6 +32,10 @@ async def main():
         if listen_key:
             keep_alive_response = await client.keep_alive_listen_key(listen_key)
             print(keep_alive_response)
+
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

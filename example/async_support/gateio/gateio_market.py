@@ -45,6 +45,9 @@ async def main():
         result = await client.get_spot_list_tickers(product_symbol="BTC-USDT-SPOT")
         print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

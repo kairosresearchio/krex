@@ -23,6 +23,9 @@ async def main():
         result = await client.get_income_history()
         print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

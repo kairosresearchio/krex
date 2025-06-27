@@ -17,8 +17,8 @@ async def main():
     )
 
     try:
-        account_info = await client.get_account_info()
-        print(account_info)
+        balance = await client.get_cash_account_balance()
+        print(balance)
 
     except Exception as e:
         print(f"Error: {e}")

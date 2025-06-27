@@ -44,6 +44,9 @@ async def main():
         res = await client.get_account_rate_limit()
         print(res)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

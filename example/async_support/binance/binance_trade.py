@@ -125,6 +125,9 @@ async def main():
         # )
         # print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 
