@@ -40,6 +40,9 @@ async def main():
         result = await client.get_status_and_leverage()
         print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

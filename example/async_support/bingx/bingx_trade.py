@@ -133,6 +133,10 @@ async def main():
 
         get_position_mode = await client.get_position_mode()
         print(get_position_mode)
+
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

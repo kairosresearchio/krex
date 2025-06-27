@@ -15,6 +15,9 @@ async def main():
         res = await client.get_funding_rate_history(product_symbol="BTC-USDT-SWAP")
         print(res)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

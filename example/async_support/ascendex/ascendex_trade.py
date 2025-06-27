@@ -111,8 +111,12 @@ async def main():
 
         # account_info = await client.get_list_order_history(product_symbol="BTC-USDT-SPOT")
         # print(account_info)
+
     except Exception as e:
         print(f"Error: {e}")
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

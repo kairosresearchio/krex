@@ -28,6 +28,9 @@ async def main():
         # result = await client.switch_position_mode(0, "BTCUSDT")
         # print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

@@ -10,6 +10,9 @@ async def main():
         result = await client.user_vault_equities(user=wallet_address)
         print(result)
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 

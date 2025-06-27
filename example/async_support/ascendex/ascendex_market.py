@@ -1,8 +1,5 @@
 import asyncio
 import krex.async_support as krex
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 async def main():
@@ -26,6 +23,9 @@ async def main():
 
     except Exception as e:
         print(f"Error: {e}")
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":

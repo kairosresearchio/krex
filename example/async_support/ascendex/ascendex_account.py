@@ -23,6 +23,9 @@ async def main():
     except Exception as e:
         print(f"Error: {e}")
 
+    finally:
+        await client.close()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

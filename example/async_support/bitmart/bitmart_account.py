@@ -42,6 +42,9 @@ async def main():
         res = await client.get_contract_assets()
         print("8. get_contract_assets:", "\n", res, "\n")
 
+    except Exception as e:
+        print(f"Error: {e}")
+
     finally:
         await client.close()
 
