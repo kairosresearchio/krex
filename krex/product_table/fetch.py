@@ -67,7 +67,7 @@ def format_product_symbol(symbol: str) -> str:
         base, quote = match.groups()
         return f"{base}-{quote}-SWAP"
 
-    quote_currencies = {"USDT", "USDC", "PERP", "USD"}
+    quote_currencies = {"USDT", "USDC", "PERP", "USD", "USD1"}
 
     matched_quote = next((quote for quote in quote_currencies if symbol.endswith(quote)), None)
 
@@ -135,7 +135,7 @@ async def bybit() -> pl.DataFrame:
     res_spot = market_http.get_instruments_info(category="spot")
     df_spot = to_dataframe(res_spot["result"]["list"]) if "list" in res_spot.get("result", {}) else pl.DataFrame()
     for market in df_spot.iter_rows(named=True):
-        if not market["symbol"].endswith(("USDT", "USDC")):
+        if not market["symbol"].endswith(("USDT", "USDC", "USD", "USD1")):
             continue
         markets.append(
             MarketInfo(
@@ -192,7 +192,7 @@ async def okx() -> pl.DataFrame:
     res_spot = public_http.get_public_instruments(instType="SPOT")
     df_spot = to_dataframe(res_spot["data"]) if "data" in res_spot else pl.DataFrame()
     for market in df_spot.iter_rows(named=True):
-        if not market["instId"].endswith(("USDT", "USDC", "USD")):
+        if not market["instId"].endswith(("USDT", "USDC", "USD", "USD1")):
             continue
         markets.append(
             MarketInfo(
@@ -245,7 +245,7 @@ async def bitmart() -> pl.DataFrame:
     market_http = MarketHTTP()
 
     markets = []
-    quote_currencies = {"USDT", "USDC", "USD"}
+    quote_currencies = {"USDT", "USDC", "USD", "USD1"}
 
     res_swap = market_http.get_contracts_details()
     df_swap = to_dataframe(res_swap.get("data", {}).get("symbols", []))
@@ -320,7 +320,7 @@ async def gateio() -> pl.DataFrame:
     market_http = MarketHTTP()
 
     markets = []
-    quote_currencies = {"USDT", "USDC", "USD"}
+    quote_currencies = {"USDT", "USDC", "USD", "USD1"}
 
     res_futures = market_http.get_all_futures_contracts()
     df_futures = to_dataframe(res_futures)
@@ -393,7 +393,7 @@ async def gateio() -> pl.DataFrame:
     res_spot = market_http.get_spot_all_currency_pairs()
     df_spot = to_dataframe(res_spot)
     for market in df_spot.iter_rows(named=True):
-        if not market["id"].endswith(("USDT", "USDC", "USD")):
+        if not market["id"].endswith(("USDT", "USDC", "USD", "USD1")):
             continue
         markets.append(
             MarketInfo(
@@ -421,12 +421,12 @@ async def binance() -> pl.DataFrame:
     market_http = MarketHTTP()
 
     markets = []
-    quote_currencies = {"USDT", "USDC", "USD"}
+    quote_currencies = {"USDT", "USDC", "USD", "USD1"}
 
     res_spot = market_http.get_spot_exchange_info()
     df_spot = to_dataframe(res_spot.get("symbols", []))
     for market in df_spot.iter_rows(named=True):
-        if not market["symbol"].endswith(("USDT", "USDC", "USD")):
+        if not market["symbol"].endswith(("USDT", "USDC", "USD", "USD1")):
             continue
 
         matched_quote = next(
@@ -460,7 +460,7 @@ async def binance() -> pl.DataFrame:
     res_futures = market_http.get_futures_exchange_info()
     df_futures = to_dataframe(res_futures.get("symbols", []))
     for market in df_futures.iter_rows(named=True):
-        if not market["symbol"].endswith(("USDT", "USDC", "USD", "BUSD")):
+        if not market["symbol"].endswith(("USDT", "USDC", "USD", "BUSD", "USD1")):
             continue
 
         base = strip_number(market["baseAsset"])
@@ -547,3 +547,47 @@ async def hyperliquid() -> pl.DataFrame:  # TODO: need to be checked
         )
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
+
+
+async def kucoin() -> pl.DataFrame:
+    from ..kucoin._market_http import MarketHTTP
+
+    market_http = MarketHTTP()
+
+    markets = []
+    quote_currencies = {"USDT", "USDC", "USD", "USD1"}
+
+    res = market_http.get_spot_instrument_info()
+    df = to_dataframe(res.get("data", []))
+
+    for market in df.iter_rows(named=True):
+        if not market["symbol"].endswith(("USDT", "USDC", "USD", "USD1")):
+            continue
+
+        matched_quote = next(
+            (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
+            None,
+        )
+
+        if matched_quote:
+            product_symbol = clean_symbol(f"{market['baseCurrency']}-{market['quoteCurrency']}-SPOT")
+
+            markets.append(
+                MarketInfo(
+                    exchange=Common.KUCOIN,
+                    exchange_symbol=market["symbol"],
+                    product_symbol=product_symbol,
+                    product_type="spot",
+                    exchange_type="spot",
+                    base_currency=market["baseCurrency"],
+                    quote_currency=market["quoteCurrency"],
+                    price_precision=market["priceIncrement"],
+                    size_precision=market["baseIncrement"],
+                    min_size=market["baseMinSize"],
+                    min_notional=market["minFunds"] if market["minFunds"] else "0",
+                )
+            )
+
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
+

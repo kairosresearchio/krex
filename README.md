@@ -72,11 +72,12 @@ if __name__ == "__main__":
 | **Binance** | ✅ | ✅ |
 | **Bybit** | ✅ | ✅ |
 | **OKX** | ✅ | ✅ |
-| **BingX** | Developing | Developing |
 | **BitMart** | ✅ | ✅ |
 | **Gate.io** | ✅ | ✅ |
 | **Hyperliquid** | ✅ | ✅ |
+| **BingX** | Developing | Developing |
 | **AscendEX** | Developing | Developing |
+| **KuCoin** | Developing  | Developing  |
 
 ## 🔍 Key Features
 
