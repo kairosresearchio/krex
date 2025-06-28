@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/kairosresearchio/krex/compare/v0.8.0...v0.8.1) (2025-06-28)
+
+
+### Bug Fixes
+
+* **kucoin:** resolve timeframe issue and format code ([427d459](https://github.com/kairosresearchio/krex/commit/427d459516f084ee4a400ba71c1ea20d1dddfe45))
+
 ## [0.8.0](https://github.com/kairosresearchio/krex/compare/v0.7.0...v0.8.0) (2025-06-27)
 
 
