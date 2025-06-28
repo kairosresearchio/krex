@@ -104,7 +104,7 @@ class HTTPManager:
             else:
                 request_path = path
                 signature_path = path
-                
+
         # Generate signature if needed
         signature = ""
         if signed:

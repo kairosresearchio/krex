@@ -58,12 +58,14 @@ async def bingx(**kwargs):
     await client.async_init()
     return client
 
+
 async def kucoin(**kwargs):
     """Create and initialize a KuCoin client instance."""
     client = KuCoinClient(**kwargs)
     await client.async_init()
     return client
-    
+
+
 async def ascendex(**kwargs):
     """Create and initialize a AscendEX client instance."""
     client = AscendexClient(**kwargs)

@@ -1,6 +1,8 @@
+from krex.utils.timeframe_utils import kucoin_convert_timeframe
 from ._http_manager import HTTPManager
 from .endpoints.market import SpotMarket
 from ...utils.common import Common
+
 
 class MarketHTTP(HTTPManager):
     async def get_spot_instrument_info(
@@ -55,7 +57,6 @@ class MarketHTTP(HTTPManager):
             method="GET",
             path=SpotMarket.ORDERBOOK,
             query=payload,
-            signed=True,
         )
         return res
 
@@ -78,15 +79,15 @@ class MarketHTTP(HTTPManager):
     async def get_spot_kline(
         self,
         product_symbol: str,
-        type: str,
+        type_: str,
         startAt: int = None,
         endAt: int = None,
     ):
         payload = {
             "symbol": self.ptm.get_exchange_symbol(Common.KUCOIN, product_symbol),
-            "type": type, # 1min, 5min, 15min, 30min, 1hour, 4hour, 1day
+            "type": kucoin_convert_timeframe(type_),
         }
-        
+
         if startAt is not None:
             payload["startAt"] = startAt
         if endAt is not None:

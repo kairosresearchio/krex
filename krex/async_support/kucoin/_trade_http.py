@@ -26,8 +26,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a new order
-        
         :param product_symbol: str - Product symbol (e.g., "BTC-USDT-SPOT")
         :param side: str - "buy" or "sell"
         :param type_: str - "limit" or "market"
@@ -52,7 +50,7 @@ class TradeHTTP(HTTPManager):
             "side": side,
             "type": type_,
         }
-        
+
         if size is not None:
             payload["size"] = size
         if funds is not None:
@@ -88,7 +86,6 @@ class TradeHTTP(HTTPManager):
             method="POST",
             path=SpotTrade.PLACE_ORDER,
             query=payload,
-            signed=True,
         )
         return res
 
@@ -106,8 +103,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a market order
-        
         :param product_symbol: str - Product symbol
         :param side: str - "buy" or "sell"
         :param size: str - Order size (use either size or funds)
@@ -146,8 +141,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a market buy order
-        
         :param product_symbol: str - Product symbol
         :param size: str - Order size (use either size or funds)
         :param funds: str - Order funds (use either size or funds)
@@ -184,8 +177,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a market sell order
-        
         :param product_symbol: str - Product symbol
         :param size: str - Order size (use either size or funds)
         :param funds: str - Order funds (use either size or funds)
@@ -229,8 +220,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a limit order
-        
         :param product_symbol: str - Product symbol
         :param side: str - "buy" or "sell"
         :param size: str - Order size
@@ -287,8 +276,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a limit buy order
-        
         :param product_symbol: str - Product symbol
         :param size: str - Order size
         :param price: str - Order price
@@ -343,8 +330,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a limit sell order
-        
         :param product_symbol: str - Product symbol
         :param size: str - Order size
         :param price: str - Order price
@@ -399,8 +384,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a post-only limit order
-        
         :param product_symbol: str - Product symbol
         :param side: str - "buy" or "sell"
         :param size: str - Order size
@@ -454,8 +437,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a post-only limit buy order
-        
         :param product_symbol: str - Product symbol
         :param size: str - Order size
         :param price: str - Order price
@@ -507,8 +488,6 @@ class TradeHTTP(HTTPManager):
         clientTimestamp: int = None,
     ):
         """
-        Place a post-only limit sell order
-        
         :param product_symbol: str - Product symbol
         :param size: str - Order size
         :param price: str - Order price
@@ -542,17 +521,11 @@ class TradeHTTP(HTTPManager):
             clientTimestamp=clientTimestamp,
         )
 
-    """
-    place_batch_orders
-    """
-
     async def place_batch_orders(
         self,
         orders: list,
     ):
         """
-        Place multiple orders in a single request (batch orders)
-        
         :param orders: list - List of order dictionaries, each containing:
             - symbol: str (required) - Trading pair symbol
             - type: str (required) - "limit" or "market"
@@ -570,7 +543,7 @@ class TradeHTTP(HTTPManager):
             - hidden: bool (optional) - Hidden order
             - iceberg: bool (optional) - Iceberg order
             - visibleSize: str (optional) - Maximum visible quantity in iceberg orders
-            
+
         Example:
             orders = [
                 {
@@ -592,26 +565,23 @@ class TradeHTTP(HTTPManager):
         """
         if not orders:
             raise ValueError("Orders list cannot be empty")
-        
+
         if len(orders) > 20:
             raise ValueError("Maximum 20 orders can be placed simultaneously")
-        
-        # Convert product symbols to exchange symbols
+
         processed_orders = []
         for order in orders:
             processed_order = order.copy()
             if "symbol" in processed_order:
-                # Convert product symbol to exchange symbol
                 processed_order["symbol"] = self.ptm.get_exchange_symbol(Common.KUCOIN, processed_order["symbol"])
             processed_orders.append(processed_order)
-        
+
         payload = {"orderList": processed_orders}
-        
+
         res = await self._request(
             method="POST",
             path=SpotTrade.BATCH_ORDERS,
             query=payload,
-            signed=True,
         )
         return res
 
@@ -620,8 +590,6 @@ class TradeHTTP(HTTPManager):
         orders: list,
     ):
         """
-        Place multiple limit orders in a single request
-        
         :param orders: list - List of limit order dictionaries, each containing:
             - symbol: str (required) - Trading pair symbol
             - side: str (required) - "buy" or "sell"
@@ -644,7 +612,7 @@ class TradeHTTP(HTTPManager):
             processed_order = order.copy()
             processed_order["type"] = "limit"
             processed_orders.append(processed_order)
-        
+
         return await self.place_batch_orders(processed_orders)
 
     async def place_batch_market_orders(
@@ -652,8 +620,6 @@ class TradeHTTP(HTTPManager):
         orders: list,
     ):
         """
-        Place multiple market orders in a single request
-        
         :param orders: list - List of market order dictionaries, each containing:
             - symbol: str (required) - Trading pair symbol
             :param side: str (required) - "buy" or "sell"
@@ -670,36 +636,29 @@ class TradeHTTP(HTTPManager):
             processed_order = order.copy()
             processed_order["type"] = "market"
             processed_orders.append(processed_order)
-        
+
         return await self.place_batch_orders(processed_orders)
 
-    """
-    cancel_order
-    """
     async def cancel_order(
         self,
         orderId: str,
         product_symbol: str,
     ):
         """
-        Cancel an order by order ID
-        
         :param orderId: str - The unique order ID generated by the trading system
         :param product_symbol: str - Product symbol (e.g., "BTC-USDT-SPOT")
         """
         # Format the path with orderId
         path = SpotTrade.CANCEL_ORDER.format(orderId=orderId)
-        
-        # Add symbol as query parameter
+
         payload = {
             "symbol": self.ptm.get_exchange_symbol(Common.KUCOIN, product_symbol),
         }
-        
+
         res = await self._request(
             method="DELETE",
             path=path,
             query=payload,
-            signed=True,
         )
         return res
 
@@ -708,8 +667,6 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
     ):
         """
-        Cancel all orders for a specific symbol
-        
         :param product_symbol: str - Product symbol
         """
         payload = {
@@ -719,20 +676,15 @@ class TradeHTTP(HTTPManager):
             method="DELETE",
             path=SpotTrade.CANCEL_ALL_ORDERS_BY_SYMBOL,
             query=payload,
-            signed=True,
         )
         return res
 
     async def cancel_all_orders(
         self,
     ):
-        """
-        Cancel all orders
-        """
         res = await self._request(
             method="DELETE",
             path=SpotTrade.CANCEL_ALL_ORDERS,
-            signed=True,
         )
         return res
 
@@ -741,19 +693,16 @@ class TradeHTTP(HTTPManager):
         product_symbol: str = None,
     ):
         """
-        Get open orders
-        
         :param product_symbol: str - Optional product symbol filter
         """
         payload = {}
         if product_symbol:
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.KUCOIN, product_symbol)
-        
+
         res = await self._request(
             method="GET",
             path=SpotTrade.GET_OPEN_ORDERS,
             query=payload,
-            signed=True,
         )
         return res
 
@@ -766,8 +715,6 @@ class TradeHTTP(HTTPManager):
         limit: int = None,
     ):
         """
-        Get trade history
-        
         :param product_symbol: str - Optional product symbol filter
         :param orderId: str - Optional order ID filter
         :param startAt: int - Start time (milliseconds)
@@ -785,11 +732,10 @@ class TradeHTTP(HTTPManager):
             payload["endAt"] = endAt
         if limit:
             payload["limit"] = limit
-        
+
         res = await self._request(
             method="GET",
             path=SpotTrade.GET_TRADE_HISTORY,
             query=payload,
-            signed=True,
         )
-        return res 
+        return res

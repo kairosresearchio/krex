@@ -12,9 +12,8 @@ KUCOIN_API_PASSPHRASE = os.getenv("KUCOIN_API_PASSPHRASE")
 
 
 async def main():
-
     try:
-        client = await krex.kucoin(     
+        client = await krex.kucoin(
             api_key=KUCOIN_API_KEY,
             api_secret=KUCOIN_API_SECRET,
             passphrase=KUCOIN_API_PASSPHRASE,
@@ -36,7 +35,7 @@ async def main():
 
         # print("--------------------------------\n")
 
-        # # Test get_spot_orderbook with BTC-USDT
+        # # Test get_spot_orderbook with BTC-USDT (sign = true)
         orderbook = await client.get_spot_orderbook(product_symbol="BTC-USDT-SPOT")
         print("BTC-USDT Orderbook:")
         print(orderbook)
@@ -51,10 +50,7 @@ async def main():
         # print("--------------------------------\n")
 
         # Test get_spot_kline with BTC-USDT
-        # kline = await client.get_spot_kline(
-        #     product_symbol="BTC-USDT-SPOT",
-        #     type="1hour"
-        # )
+        # kline = await client.get_spot_kline(product_symbol="BTC-USDT-SPOT", type="1m")
         # print("BTC-USDT Kline (1hour):")
         # print(kline)
 

@@ -620,6 +620,7 @@ async def bingx() -> pl.DataFrame:
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
 
+
 async def kucoin() -> pl.DataFrame:
     from ..kucoin._market_http import MarketHTTP
 
@@ -659,10 +660,10 @@ async def kucoin() -> pl.DataFrame:
                     min_notional=market["minFunds"] if market["minFunds"] else "0",
                 )
             )
-          
-          
+
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
+
 
 async def ascendex() -> pl.DataFrame:
     from ..ascendex._market_http import MarketHTTP
@@ -674,7 +675,9 @@ async def ascendex() -> pl.DataFrame:
     data = res.get("data", [])
     for market in data:
         symbol = market.get("symbol", "")
-        if not (symbol.endswith("USDT") or symbol.endswith("USDC") or symbol.endswith("USD")):
+        if not (
+            symbol.endswith("USDT") or symbol.endswith("USDC") or symbol.endswith("USD") or symbol.endswith("USD1")
+        ):
             continue
 
         if "/" in symbol:

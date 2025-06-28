@@ -2,13 +2,13 @@ import asyncio
 import krex.async_support as krex
 import os
 from dotenv import load_dotenv
-import uuid
 
 load_dotenv()
 
 KUCOIN_API_KEY = os.getenv("KUCOIN_API_KEY")
 KUCOIN_API_SECRET = os.getenv("KUCOIN_API_SECRET")
 KUCOIN_API_PASSPHRASE = os.getenv("KUCOIN_API_PASSPHRASE")
+
 
 async def main():
     client = await krex.kucoin(
@@ -64,7 +64,6 @@ async def main():
         # )
         # print("✅ Order placed successfully:")
 
-        
         # Test batch limit orders only
         # print("\nTesting batch limit orders...")
         # limit_orders = [
@@ -87,13 +86,13 @@ async def main():
         #         "price": "0.98",
         #     },
         # ]
-        
+
         # result = await client.place_batch_limit_orders(limit_orders)
         # print("✅ Batch limit orders placed successfully:")
         # print(result)
-        
+
         # await asyncio.sleep(10)
-        
+
         # Test batch market orders only
         # print("\nTesting batch market orders...")
         # market_orders = [
@@ -108,7 +107,7 @@ async def main():
         #         "size": "300",
         #     }
         # ]
-        
+
         # result = await client.place_batch_market_orders(market_orders)
         # print("✅ Batch market orders placed successfully:")
         # print(result)
@@ -126,7 +125,7 @@ async def main():
         # if isinstance(result, dict) and "data" in result:
         #     order_id = result["data"]["orderId"]
         #     print(f"✅ Order ID: {order_id}")
-            
+
         #     # wait 3 seconds
         #     await asyncio.sleep(3)
 
@@ -153,10 +152,9 @@ async def main():
         #     cancel_all_result = await client.cancel_all_orders()
         #     print("✅ Cancel all orders (all symbols) successful:")
         #     print(cancel_all_result)
-            
+
         # except Exception as e:
         #     print(f"❌ Cancel all orders failed: {e}")
-
 
         # await asyncio.sleep(10)
 

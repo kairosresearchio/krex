@@ -11,7 +11,7 @@ KUCOIN_API_PASSPHRASE = os.getenv("KUCOIN_API_PASSPHRASE")
 
 
 def main():
-    client = krex.kucoin(     
+    client = krex.kucoin(
         api_key=KUCOIN_API_KEY,
         api_secret=KUCOIN_API_SECRET,
         passphrase=KUCOIN_API_PASSPHRASE,
@@ -50,10 +50,7 @@ def main():
         print("--------------------------------\n")
 
         # Test get_spot_kline with BTC-USDT
-        kline = client.get_spot_kline(
-            product_symbol="BTC-USDT-SPOT",
-            type="1hour"
-        )
+        kline = client.get_spot_kline(product_symbol="BTC-USDT-SPOT", type="1hour")
         print("BTC-USDT Kline (1hour):")
         print(kline)
 
@@ -65,4 +62,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()
