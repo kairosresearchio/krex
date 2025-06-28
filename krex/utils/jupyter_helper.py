@@ -7,7 +7,7 @@ from typing import Optional
 
 def is_jupyter_environment() -> bool:
     """
-    檢測是否在 Jupyter 環境中運行
+    Check if the code is running in a Jupyter Notebook or JupyterLab environment.
 
     Returns:
         bool: True if running in Jupyter, False otherwise
@@ -37,7 +37,7 @@ def is_jupyter_environment() -> bool:
 
 def has_running_event_loop() -> bool:
     """
-    檢查是否已經有運行中的事件循環
+    Check if there's a running asyncio event loop.
 
     Returns:
         bool: True if there's a running event loop, False otherwise
@@ -51,27 +51,26 @@ def has_running_event_loop() -> bool:
 
 def ensure_nest_asyncio() -> Optional[str]:
     """
-    自動偵測 Jupyter 環境並應用 nest_asyncio
+    Ensure that nest_asyncio is applied if running in a Jupyter environment with an active event loop.
 
     Returns:
-        Optional[str]: 返回狀態訊息，如果不需要應用則返回 None
+        Optional[str]: A message indicating the result of the operation, or None if no action is needed.
     """
-    # 如果不在 Jupyter 環境中，不需要 nest_asyncio
+    # If not in Jupyter environment, no need to apply nest_asyncio
     if not is_jupyter_environment():
         return None
 
-    # 如果沒有運行中的事件循環，也不需要 nest_asyncio
+    # If there's no running event loop, no need to apply nest_asyncio
     if not has_running_event_loop():
         return None
 
     try:
         import nest_asyncio
 
-        # 檢查是否已經應用過
+        # Check if nest_asyncio is already applied
         if hasattr(asyncio, "_nest_patched"):
             return "nest_asyncio already applied"
 
-        # 應用 nest_asyncio
         nest_asyncio.apply()
 
         return "nest_asyncio applied successfully for Jupyter environment"
@@ -88,10 +87,10 @@ def ensure_nest_asyncio() -> Optional[str]:
 
 def auto_apply_nest_asyncio(verbose: bool = False) -> None:
     """
-    自動應用 nest_asyncio（如果需要的話）
+    Automatically check and apply nest_asyncio if running in a Jupyter environment with an active event loop.
 
     Args:
-        verbose (bool): 是否顯示詳細訊息
+        verbose (bool): If True, prints the result of the operation.
     """
     result = ensure_nest_asyncio()
 
@@ -99,5 +98,5 @@ def auto_apply_nest_asyncio(verbose: bool = False) -> None:
         print(f"[krex] {result}")
 
 
-# 在模組導入時自動檢查並應用
+# Automatically apply nest_asyncio if in Jupyter environment with active event loop
 auto_apply_nest_asyncio(verbose=False)

@@ -5,7 +5,6 @@ A comprehensive library for cryptocurrency exchange interactions with both sync 
 Automatically handles Jupyter Notebook compatibility with nest_asyncio.
 """
 
-# 自動處理 Jupyter 環境的 nest_asyncio
 from .utils.jupyter_helper import auto_apply_nest_asyncio
 
 # Import exchange client classes and create callable functions
@@ -14,10 +13,7 @@ from .binance.client import Client as BinanceClient
 from .okx.client import Client as OKXClient
 from .bitmart.client import Client as BitmartClient
 from .gateio.client import Client as GateioClient
-from .hyperliquid.client import Client as HyperliquidClient
-from .kucoin.client import Client as KuCoinClient
 
-# 在導入時自動應用（如果需要的話）
 auto_apply_nest_asyncio(verbose=False)
 
 
@@ -47,20 +43,10 @@ def gateio(**kwargs):
     return GateioClient(**kwargs)
 
 
-def hyperliquid(**kwargs):
-    """Create a Hyperliquid client instance."""
-    return HyperliquidClient(**kwargs)
-
-def kucoin(**kwargs):
-    """Create a KuCoin client instance."""
-    return KuCoinClient(**kwargs)
-
 __all__ = [
     "bybit",
     "binance",
     "okx",
     "bitmart",
     "gateio",
-    "hyperliquid",
-    "kucoin",
 ]
