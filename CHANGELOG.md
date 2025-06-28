@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.8.0](https://github.com/kairosresearchio/krex/compare/v0.7.0...v0.8.0) (2025-06-27)
+
+
+### Features
+
+* **kucoin:** add market function in both async and sync method ([3d278df](https://github.com/kairosresearchio/krex/commit/3d278df456e356b46453cc6c4da2141631d25997))
+* **kucoin:** add product table and market/account example ([87e3902](https://github.com/kairosresearchio/krex/commit/87e3902f8f5e9fd0ef4e3e45b4cc79d3cbd5f057))
+* **kucoin:** add trade function and fix http manager ([fb0eda5](https://github.com/kairosresearchio/krex/commit/fb0eda5229f03a6377abf59e8dcce3a0a1d18ca9))
+
+
+### Bug Fixes
+
+* **kucoin:** resolve HTTP manager bugs ([7abb502](https://github.com/kairosresearchio/krex/commit/7abb50231adba4b38109bb8b3dca03ae41458c91))
+
 ## [0.7.0](https://github.com/kairosresearchio/krex/compare/v0.6.1...v0.7.0) (2025-06-26)
 
 
