@@ -88,3 +88,26 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
+
+    async def get_public_trades(
+        self,
+        product_symbol: str,
+        limit: int = None,
+    ):
+        """
+        :param product_symbol: str
+        :param limit: int
+        """
+        payload = {
+            "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
+        }
+        if limit is not None:
+            payload["limit"] = str(limit)
+
+        res = await self._request(
+            method="GET",
+            path=Market.GET_PUBLIC_TRADES,
+            query=payload,
+            signed=False,
+        )
+        return res
