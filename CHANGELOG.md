@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/kairosresearchio/krex/compare/v0.8.1...v0.9.0) (2025-07-04)
+
+
+### Features
+
+* **okx:** add get public trades func ([86e5636](https://github.com/kairosresearchio/krex/commit/86e56360b91d79d1d038554deda04411e927609f))
+
 ## [0.8.1](https://github.com/kairosresearchio/krex/compare/v0.8.0...v0.8.1) (2025-06-28)
 
 
