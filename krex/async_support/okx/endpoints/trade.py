@@ -3,6 +3,7 @@ from enum import Enum
 
 class Trade(str, Enum):
     PLACE_ORDER = "/api/v5/trade/order"
+    PLACE_BATCH_ORDERS = "/api/v5/trade/batch-orders"
     CANCEL_ORDER = "/api/v5/trade/cancel-order"
     CANCEL_BATCH_ORDERS = "/api/v5/trade/cancel-batch-orders"
     AMEND_ORDER = "/api/v5/trade/amend-order"

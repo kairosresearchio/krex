@@ -85,6 +85,20 @@ class TradeHTTP(HTTPManager):
             query=payload,
         )
 
+    async def place_batch_orders(
+        self,
+        orders: list[dict],
+    ):
+        """
+        :param orders: list[dict]
+        """
+
+        return await self._request(
+            method="POST",
+            path=Trade.PLACE_BATCH_ORDERS,
+            query=orders,
+        )
+
     async def place_market_order(
         self,
         product_symbol: str,
@@ -279,6 +293,19 @@ class TradeHTTP(HTTPManager):
             method="POST",
             path=Trade.CANCEL_ORDER,
             query=payload,
+        )
+    
+    async def cancel_batch_orders(
+        self,
+        orders: list[dict],
+    ):
+        """
+        :param orders: list[dict]
+        """
+        return await self._request(
+            method="POST",
+            path=Trade.CANCEL_BATCH_ORDERS,
+            query=orders,
         )
 
     async def cancel_all_orders(
