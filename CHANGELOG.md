@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/kairosresearchio/krex/compare/v0.9.0...v0.9.1) (2025-07-04)
+
+
+### Bug Fixes
+
+* **okx:** add batch orders ([5f11f41](https://github.com/kairosresearchio/krex/commit/5f11f4196db30f18fbe86f04fab184fb2436cdee))
+
 ## [0.9.0](https://github.com/kairosresearchio/krex/compare/v0.8.1...v0.9.0) (2025-07-04)
 
 
