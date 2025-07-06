@@ -1,7 +1,7 @@
 import asyncio
 import polars as pl
 from contextlib import asynccontextmanager
-from .fetch import bybit, okx, bitmart, gateio, binance, hyperliquid
+from .fetch import bybit, okx, bitmart, gateio, binance
 
 VALID_EXCHANGES = [
     bybit,
@@ -9,7 +9,6 @@ VALID_EXCHANGES = [
     bitmart,
     gateio,
     binance,
-    hyperliquid,
 ]
 
 
@@ -83,6 +82,7 @@ class ProductTableManager:
         product_symbol=None,
         exchange=None,
         product_type=None,
+        exchange_type=None,
         exchange_symbol=None,
     ):
         """
@@ -96,6 +96,8 @@ class ProductTableManager:
             data = data.filter(pl.col("exchange") == exchange)
         if product_type is not None:
             data = data.filter(pl.col("product_type") == product_type)
+        if exchange_type is not None:
+            data = data.filter(pl.col("exchange_type") == exchange_type)
         if exchange_symbol is not None:
             data = data.filter(pl.col("exchange_symbol") == exchange_symbol)
 
@@ -164,10 +166,26 @@ class ProductTableManager:
             "size_per_contract": self.get("size_per_contract", product_symbol, exchange),
         }
 
-    def get_exchange_symbols(self, exchange, product_type=None):
-        if product_type is None:
+    def get_exchange_symbols(self, exchange, product_type=None, exchange_type=None):
+        if product_type is None and exchange_type is None:
             return (
                 self.product_table.filter(pl.col("exchange") == exchange)
+                .select("exchange_symbol")
+                .to_series()
+                .to_list()
+            )
+        elif product_type is not None and exchange_type is None:
+            return (
+                self.product_table.filter(pl.col("exchange") == exchange)
+                .filter(pl.col("product_type") == product_type)
+                .select("exchange_symbol")
+                .to_series()
+                .to_list()
+            )
+        elif product_type is None and exchange_type is not None:
+            return (
+                self.product_table.filter(pl.col("exchange") == exchange)
+                .filter(pl.col("exchange_type") == exchange_type)
                 .select("exchange_symbol")
                 .to_series()
                 .to_list()
@@ -176,20 +194,38 @@ class ProductTableManager:
             return (
                 self.product_table.filter(pl.col("exchange") == exchange)
                 .filter(pl.col("product_type") == product_type)
+                .filter(pl.col("exchange_type") == exchange_type)
                 .select("exchange_symbol")
                 .to_series()
                 .to_list()
             )
 
-    def get_product_symbols(self, exchange, product_type=None):
-        if product_type is None:
+    def get_product_symbols(self, exchange, product_type=None, exchange_type=None):
+        if product_type is None and exchange_type is None:
             return (
                 self.product_table.filter(pl.col("exchange") == exchange).select("product_symbol").to_series().to_list()
+            )
+        elif product_type is not None and exchange_type is None:
+            return (
+                self.product_table.filter(pl.col("exchange") == exchange)
+                .filter(pl.col("product_type") == product_type)
+                .select("product_symbol")
+                .to_series()
+                .to_list()
+            )
+        elif product_type is None and exchange_type is not None:
+            return (
+                self.product_table.filter(pl.col("exchange") == exchange)
+                .filter(pl.col("exchange_type") == exchange_type)
+                .select("product_symbol")
+                .to_series()
+                .to_list()
             )
         else:
             return (
                 self.product_table.filter(pl.col("exchange") == exchange)
                 .filter(pl.col("product_type") == product_type)
+                .filter(pl.col("exchange_type") == exchange_type)
                 .select("product_symbol")
                 .to_series()
                 .to_list()
