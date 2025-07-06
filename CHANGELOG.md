@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/kairosresearchio/krex/compare/v0.10.0...v0.10.1) (2025-07-06)
+
+
+### Documentation
+
+* update README ([a8ecfb3](https://github.com/kairosresearchio/krex/commit/a8ecfb3cff1f62d4c2ab60c302fc89c64fad9921))
+
 ## [0.10.0](https://github.com/kairosresearchio/krex/compare/v0.9.1...v0.10.0) (2025-07-06)
 
 
