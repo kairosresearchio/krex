@@ -29,54 +29,10 @@ class MarketInfo:
         return asdict(self)
 
 
-def strip_number(s: str) -> str:
-    return re.sub(r"^\d+", "", s)
-
-
-def clean_symbol(symbol: str) -> str:
-    return re.sub(r"[$_]", "", symbol)
-
-
-def format_product_symbol(symbol: str) -> str:
-    """
-    - BTCUSDT → BTC-USDT-SWAP
-    - BTCUSDT-04APR25 → BTC-USDT-04APR25-FUTURES
-    - ETH-25APR25 → ETH-25APR25-FUTURES
-    - AAVEUSD → AAVE-USD
-    - ETHUSDH25 → ETH-USD-H25
-    """
-    match = re.match(r"([A-Z]+)(USD[T]?)\-([0-9]{2}[A-Z]{3}[0-9]{2})$", symbol)
-    if match:
-        base, quote, date = match.groups()
-        return f"{base}-{quote}-{date}-FUTURES"
-
-    # ETH-25APR25 --> ETH-25APR25-FUTURES
-    match = re.match(r"([A-Z]+)-(\d+[A-Z]{3}\d{2})$", symbol)
-    if match:
-        base, date = match.groups()
-        return f"{base}-{date}-FUTURES"
-
-    # ETHUSDH25 --> ETH-USD-H25-FUTURES
-    match = re.match(r"([A-Z]+)(USD[T]?)([HMUZ]\d{2})$", symbol)
-    if match:
-        base, quote, date = match.groups()
-        return f"{base}-{quote}-{date}-FUTURES"
-
-    # AAVEUSD --> AAVE-USD-SWAP
-    match = re.match(r"([A-Z]+)(USD[T]?)$", symbol)
-    if match:
-        base, quote = match.groups()
-        return f"{base}-{quote}-SWAP"
-
-    quote_currencies = {"USDT", "USDC", "PERP", "USD", "USD1"}
-
-    matched_quote = next((quote for quote in quote_currencies if symbol.endswith(quote)), None)
-
-    if matched_quote:
-        base = symbol[: -len(matched_quote)]
-        return f"{base}-{matched_quote}-SWAP"
-
-    return f"{symbol}-SWAP"
+def clean_symbol_and_strip_number(symbol: str) -> str:
+    symbol = re.sub(r"^\d+", "", symbol)
+    symbol = re.sub(r"[$_]", "", symbol)
+    return symbol
 
 
 async def bybit() -> pl.DataFrame:
@@ -86,23 +42,33 @@ async def bybit() -> pl.DataFrame:
     await market_http.async_init()
 
     markets = []
-
     res_linear = await market_http.get_instruments_info(category="linear")
     df_linear = to_dataframe(res_linear["result"]["list"]) if "list" in res_linear.get("result", {}) else pl.DataFrame()
     for market in df_linear.iter_rows(named=True):
+        base = clean_symbol_and_strip_number(market["baseCoin"])
+        quote = market["quoteCoin"]
+
+        parts = market["symbol"].split("-")
+        if len(parts) >= 2:
+            expiry_str = parts[1]
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
+        else:
+            product_symbol = f"{base}-{quote}-SWAP"
+
         if market["contractType"] == "LinearFutures":
             product_type = "futures"
         else:
             product_type = "swap"
+
         markets.append(
             MarketInfo(
                 exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
-                product_symbol=format_product_symbol(strip_number(market["symbol"])),
+                product_symbol=product_symbol,
                 product_type=product_type,
                 exchange_type="linear",
-                base_currency=strip_number(market["baseCoin"]),
-                quote_currency=market["quoteCoin"],
+                base_currency=base,
+                quote_currency=quote,
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["qtyStep"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -115,19 +81,30 @@ async def bybit() -> pl.DataFrame:
         to_dataframe(res_inverse["result"]["list"]) if "list" in res_inverse.get("result", {}) else pl.DataFrame()
     )
     for market in df_inverse.iter_rows(named=True):
-        if market["contractType"] == "InverseFutures":
+        base = clean_symbol_and_strip_number(market["baseCoin"])
+        quote = market["quoteCoin"]
+
+        parts = market["symbol"].split("-")
+        if len(parts) >= 2:
+            base, expiry_str = clean_symbol_and_strip_number(parts[0]), parts[1]
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
+        else:
+            product_symbol = f"{base}-{quote}-SWAP"
+
+        if market["contractType"] == "LinearFutures":
             product_type = "futures"
         else:
             product_type = "swap"
+
         markets.append(
             MarketInfo(
                 exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
-                product_symbol=format_product_symbol(market["symbol"]),
+                product_symbol=product_symbol,
                 product_type=product_type,
                 exchange_type="inverse",
-                base_currency=strip_number(market["baseCoin"]),
-                quote_currency=market["quoteCoin"],
+                base_currency=base,
+                quote_currency=quote,
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["qtyStep"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -137,17 +114,19 @@ async def bybit() -> pl.DataFrame:
     res_spot = await market_http.get_instruments_info(category="spot")
     df_spot = to_dataframe(res_spot["result"]["list"]) if "list" in res_spot.get("result", {}) else pl.DataFrame()
     for market in df_spot.iter_rows(named=True):
-        if not market["symbol"].endswith(("USDT", "USDC", "USD", "USD1")):
-            continue
+        base = clean_symbol_and_strip_number(market["baseCoin"])
+        quote = market["quoteCoin"]
+        product_symbol = f"{base}-{quote}-SPOT"
+
         markets.append(
             MarketInfo(
                 exchange=Common.BYBIT,
                 exchange_symbol=market["symbol"],
-                product_symbol=f"{market['symbol'][:-4]}-{market['symbol'][-4:]}-SPOT",
+                product_symbol=product_symbol,
                 product_type="spot",
                 exchange_type="spot",
-                base_currency=strip_number(market["baseCoin"]),
-                quote_currency=market["quoteCoin"],
+                base_currency=base,
+                quote_currency=quote,
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["basePrecision"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
@@ -165,23 +144,18 @@ async def okx() -> pl.DataFrame:
     await public_http.async_init()
 
     markets = []
-
     res_swap = await public_http.get_public_instruments(instType="SWAP")
     df_swap = to_dataframe(res_swap["data"]) if "data" in res_swap else pl.DataFrame()
     for market in df_swap.iter_rows(named=True):
-        base = strip_number(market["baseCcy"])
-        quote = market["quoteCcy"]
-
-        if not base or not quote:
-            parts = market["instId"].split("-")
-            if len(parts) >= 2:
-                base, quote = parts[0], parts[1]
+        parts = market["instId"].split("-")
+        if len(parts) >= 2:
+            base, quote = clean_symbol_and_strip_number(parts[0]), parts[1]
 
         markets.append(
             MarketInfo(
                 exchange=Common.OKX,
                 exchange_symbol=market["instId"],
-                product_symbol=strip_number(market["instId"]),
+                product_symbol=clean_symbol_and_strip_number(market["instId"]),
                 product_type="swap",
                 exchange_type=market["instType"],
                 base_currency=base,
@@ -196,8 +170,9 @@ async def okx() -> pl.DataFrame:
     res_spot = await public_http.get_public_instruments(instType="SPOT")
     df_spot = to_dataframe(res_spot["data"]) if "data" in res_spot else pl.DataFrame()
     for market in df_spot.iter_rows(named=True):
-        if not market["instId"].endswith(("USDT", "USDC", "USD", "USD1")):
-            continue
+        base = clean_symbol_and_strip_number(market["baseCcy"])
+        quote = market["quoteCcy"]
+
         markets.append(
             MarketInfo(
                 exchange=Common.OKX,
@@ -205,8 +180,8 @@ async def okx() -> pl.DataFrame:
                 product_symbol=market["instId"] + "-SPOT",
                 product_type="spot",
                 exchange_type=market["instType"],
-                base_currency=strip_number(market["baseCcy"]),
-                quote_currency=market["quoteCcy"],
+                base_currency=base,
+                quote_currency=quote,
                 price_precision=market["tickSz"],
                 size_precision=market["lotSz"],
                 min_size=market["minSz"],
@@ -216,19 +191,15 @@ async def okx() -> pl.DataFrame:
     res_futures = await public_http.get_public_instruments(instType="FUTURES")
     df_futures = to_dataframe(res_futures["data"]) if "data" in res_futures else pl.DataFrame()
     for market in df_futures.iter_rows(named=True):
-        base = strip_number(market["baseCcy"])
-        quote = market["quoteCcy"]
-
-        if not base or not quote:
-            parts = market["instId"].split("-")
-            if len(parts) >= 2:
-                base, quote = parts[0], parts[1]
+        parts = market["instId"].split("-")
+        if len(parts) >= 2:
+            base, quote = clean_symbol_and_strip_number(parts[0]), parts[1]
 
         markets.append(
             MarketInfo(
                 exchange=Common.OKX,
                 exchange_symbol=market["instId"],
-                product_symbol=strip_number(market["instId"]),
+                product_symbol=clean_symbol_and_strip_number(market["instId"]),
                 product_type="futures",
                 exchange_type=market["instType"],
                 base_currency=base,
@@ -250,21 +221,12 @@ async def bitmart() -> pl.DataFrame:
     await market_http.async_init()
 
     markets = []
-    quote_currencies = {"USDT", "USDC", "USD", "USD1"}
-
     res_swap = await market_http.get_contracts_details()
     df_swap = to_dataframe(res_swap.get("data", {}).get("symbols", []))
     for market in df_swap.iter_rows(named=True):
-        matched_quote = next(
-            (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
-            None,
-        )
-
-        if matched_quote:
-            base = market["symbol"][: -len(matched_quote)]
-            product_symbol = f"{base}-{matched_quote}-SWAP"
-        else:
-            product_symbol = f"{market['symbol']}-SWAP"
+        base = clean_symbol_and_strip_number(market["base_currency"])
+        quote = market["quote_currency"]
+        product_symbol = f"{base}-{quote}-SWAP"
 
         markets.append(
             MarketInfo(
@@ -273,8 +235,8 @@ async def bitmart() -> pl.DataFrame:
                 product_symbol=product_symbol,
                 product_type="swap",
                 exchange_type="swap",
-                base_currency=strip_number(market["base_currency"]),
-                quote_currency=market["quote_currency"],
+                base_currency=base,
+                quote_currency=quote,
                 price_precision=market["price_precision"],
                 size_precision=market["vol_precision"],
                 min_size=market["min_volume"],
@@ -285,19 +247,9 @@ async def bitmart() -> pl.DataFrame:
     res_spot = await market_http.get_trading_pairs_details()
     df_spot = to_dataframe(res_spot.get("data", {}).get("symbols", []))
     for market in df_spot.iter_rows(named=True):
-        if not market["symbol"].endswith(("USDT", "USDC", "USD")):
-            continue
-
-        matched_quote = next(
-            (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
-            None,
-        )
-
-        if matched_quote:
-            base = clean_symbol(market["symbol"][: -len(matched_quote)])
-            product_symbol = f"{base}-{matched_quote}-SPOT"
-        else:
-            product_symbol = f"{clean_symbol(market['symbol'])}-SPOT"
+        base = clean_symbol_and_strip_number(market["base_currency"])
+        quote = market["quote_currency"]
+        product_symbol = f"{base}-{quote}-SPOT"
 
         markets.append(
             MarketInfo(
@@ -306,8 +258,8 @@ async def bitmart() -> pl.DataFrame:
                 product_symbol=product_symbol,
                 product_type="spot",
                 exchange_type="spot",
-                base_currency=strip_number(market["base_currency"]),
-                quote_currency=market["quote_currency"],
+                base_currency=base,
+                quote_currency=quote,
                 price_precision=reverse_decimal_places(market["price_max_precision"]),
                 size_precision=market["quote_increment"],
                 min_size=market["base_min_size"],
@@ -326,25 +278,16 @@ async def gateio() -> pl.DataFrame:
     await market_http.async_init()
 
     markets = []
-    quote_currencies = {"USDT", "USDC", "USD", "USD1"}
-
     res_futures = await market_http.get_all_futures_contracts()
     df_futures = to_dataframe(res_futures)
     for market in df_futures.iter_rows(named=True):
-        matched_quote = next(
-            (quote for quote in quote_currencies if market["name"].endswith(quote)),
-            None,
-        )
-
-        if matched_quote:
-            base = clean_symbol(market["name"][: -len(matched_quote)])
-            product_symbol = f"{base}-{matched_quote}-SWAP"
-        else:
-            product_symbol = f"{clean_symbol(market['name'])}-SWAP"
-
         parts = market["name"].split("_")
-        if len(parts) >= 2:
-            base, quote = parts[0], parts[1]
+        if len(parts) == 2:
+            base, quote = clean_symbol_and_strip_number(parts[0]), parts[1]
+            product_symbol = f"{base}-{quote}-SWAP"
+        elif len(parts) == 3:
+            base, quote, expiry_str = clean_symbol_and_strip_number(parts[0]), parts[1], parts[2]
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
 
         markets.append(
             MarketInfo(
@@ -365,20 +308,13 @@ async def gateio() -> pl.DataFrame:
     res_delivery = await market_http.get_all_delivery_contracts()
     df_deliver = to_dataframe(res_delivery)
     for market in df_deliver.iter_rows(named=True):
-        matched_quote = next(
-            (quote for quote in quote_currencies if market["name"].split("_")[1].endswith(quote)),
-            None,
-        )
-
-        if matched_quote:
-            base = clean_symbol(market["name"].split("_")[0])
-            product_symbol = f"{base}-{matched_quote}-{market['name'].split('_')[2]}-SWAP"
-        else:
-            product_symbol = f"{clean_symbol(market['name'])}-SWAP"
-
         parts = market["name"].split("_")
-        if len(parts) >= 2:
-            base, quote = parts[0], parts[1]
+        if len(parts) == 2:
+            base, quote = clean_symbol_and_strip_number(parts[0]), parts[1]
+            product_symbol = f"{base}-{quote}-SWAP"
+        elif len(parts) == 3:
+            base, quote, expiry_str = clean_symbol_and_strip_number(parts[0]), parts[1], parts[2]
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
 
         markets.append(
             MarketInfo(
@@ -399,17 +335,19 @@ async def gateio() -> pl.DataFrame:
     res_spot = await market_http.get_spot_all_currency_pairs()
     df_spot = to_dataframe(res_spot)
     for market in df_spot.iter_rows(named=True):
-        if not market["id"].endswith(("USDT", "USDC", "USD", "USD1")):
-            continue
+        base = clean_symbol_and_strip_number(market["base"])
+        quote = market["quote"]
+        product_symbol = f"{base}-{quote}-SPOT"
+
         markets.append(
             MarketInfo(
                 exchange=Common.GATEIO,
                 exchange_symbol=market["id"],
-                product_symbol=f"{market['base']}-{market['quote']}-SPOT",
+                product_symbol=product_symbol,
                 product_type="spot",
                 exchange_type="spot",
-                base_currency=market["base"],
-                quote_currency=market["quote"],
+                base_currency=base,
+                quote_currency=quote,
                 price_precision=reverse_decimal_places(market["precision"]),
                 size_precision=reverse_decimal_places(market["amount_precision"]),
                 min_size=market["min_base_amount"],
@@ -428,21 +366,12 @@ async def binance() -> pl.DataFrame:
     await market_http.async_init()
 
     markets = []
-    quote_currencies = {"USDT", "USDC", "USD", "USD1"}
-
     res_spot = await market_http.get_spot_exchange_info()
     df_spot = to_dataframe(res_spot.get("symbols", []))
     for market in df_spot.iter_rows(named=True):
-        if not market["symbol"].endswith(("USDT", "USDC", "USD", "USD1")):
-            continue
-
-        matched_quote = next(
-            (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
-            None,
-        )
-
-        if matched_quote:
-            product_symbol = clean_symbol(f"{market['baseAsset']}-{market['quoteAsset']}-SPOT")
+        base = clean_symbol_and_strip_number(market["baseAsset"])
+        quote = market["quoteAsset"]
+        product_symbol = f"{base}-{quote}-SPOT"
 
         price_filter = next((f for f in market["filters"] if f["filterType"] == "PRICE_FILTER"), {})
         lot_size_filter = next((f for f in market["filters"] if f["filterType"] == "LOT_SIZE"), {})
@@ -467,12 +396,15 @@ async def binance() -> pl.DataFrame:
     res_futures = await market_http.get_futures_exchange_info()
     df_futures = to_dataframe(res_futures.get("symbols", []))
     for market in df_futures.iter_rows(named=True):
-        if not market["symbol"].endswith(("USDT", "USDC", "USD", "BUSD", "USD1")):
-            continue
-
-        base = strip_number(market["baseAsset"])
+        base = clean_symbol_and_strip_number(market["baseAsset"])
         quote = market["quoteAsset"]
-        product_symbol = f"{base}-{quote}-SWAP"
+
+        parts = market["symbol"].split("_")
+        if len(parts) >= 2:
+            expiry_str = parts[1]
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
+        else:
+            product_symbol = f"{base}-{quote}-SWAP"
 
         price_filter = next((f for f in market["filters"] if f["filterType"] == "PRICE_FILTER"), {})
         lot_size_filter = next((f for f in market["filters"] if f["filterType"] == "LOT_SIZE"), {})
@@ -505,7 +437,6 @@ async def hyperliquid() -> pl.DataFrame:
     await market_http.async_init()
 
     markets = []
-
     res_prep = await market_http.meta()
     df_prep = to_dataframe(res_prep.get("universe", []))
 
@@ -564,40 +495,22 @@ async def bingx() -> pl.DataFrame:
     await market_http.async_init()
 
     markets = []
-
     res = await market_http.get_swap_instrument_info()
     df = to_dataframe(res.get("data", []))
 
     for market in df.iter_rows(named=True):
         symbol = market["symbol"]
-        if not symbol.endswith(("USDT", "USDC", "USD", "USD1")):
-            continue
 
         if "-" in symbol:
-            base, quote = symbol.rsplit("-", 1)
-        else:
-            if symbol.endswith("USDT"):
-                base = symbol[:-4]
-                quote = "USDT"
-            elif symbol.endswith("USDC"):
-                base = symbol[:-4]
-                quote = "USDC"
-            elif symbol.endswith("USD"):
-                base = symbol[:-3]
-                quote = "USD"
-            elif symbol.endswith("USD1"):
-                base = symbol[:-4]
-                quote = "USD1"
-            else:
-                continue
+            base, quote = clean_symbol_and_strip_number(symbol).rsplit("-", 1)
 
         product_symbol = f"{base}-{quote}-SWAP"
 
         price_precision_val = int(market.get("pricePrecision", 0))
         quantity_precision_val = int(market.get("quantityPrecision", 0))
 
-        price_precision = str(10 ** (-price_precision_val)) if price_precision_val > 0 else "1"
-        size_precision = str(10 ** (-quantity_precision_val)) if quantity_precision_val > 0 else "1"
+        price_precision = str(reverse_decimal_places(price_precision_val)) if price_precision_val > 0 else "0"
+        size_precision = str(reverse_decimal_places(quantity_precision_val)) if quantity_precision_val > 0 else "0"
         min_size = size_precision
 
         markets.append(
@@ -628,38 +541,29 @@ async def kucoin() -> pl.DataFrame:
     await market_http.async_init()
 
     markets = []
-    quote_currencies = {"USDT", "USDC", "USD", "USD1"}
-
     res = await market_http.get_spot_instrument_info()
     df = to_dataframe(res.get("data", []))
 
     for market in df.iter_rows(named=True):
-        if not market["symbol"].endswith(("USDT", "USDC", "USD", "USD1")):
-            continue
+        base = clean_symbol_and_strip_number(market["baseCurrency"])
+        quote = market["quoteCurrency"]
+        product_symbol = f"{base}-{quote}-SPOT"
 
-        matched_quote = next(
-            (quote for quote in quote_currencies if market["symbol"].endswith(quote)),
-            None,
-        )
-
-        if matched_quote:
-            product_symbol = clean_symbol(f"{market['baseCurrency']}-{market['quoteCurrency']}-SPOT")
-
-            markets.append(
-                MarketInfo(
-                    exchange=Common.KUCOIN,
-                    exchange_symbol=market["symbol"],
-                    product_symbol=product_symbol,
-                    product_type="spot",
-                    exchange_type="spot",
-                    base_currency=market["baseCurrency"],
-                    quote_currency=market["quoteCurrency"],
-                    price_precision=market["priceIncrement"],
-                    size_precision=market["baseIncrement"],
-                    min_size=market["baseMinSize"],
-                    min_notional=market["minFunds"] if market["minFunds"] else "0",
-                )
+        markets.append(
+            MarketInfo(
+                exchange=Common.KUCOIN,
+                exchange_symbol=market["symbol"],
+                product_symbol=product_symbol,
+                product_type="spot",
+                exchange_type="spot",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=market["priceIncrement"],
+                size_precision=market["baseIncrement"],
+                min_size=market["baseMinSize"],
+                min_notional=market["minFunds"] if market["minFunds"] else "0",
             )
+        )
 
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
@@ -675,16 +579,12 @@ async def ascendex() -> pl.DataFrame:
     data = res.get("data", [])
     for market in data:
         symbol = market.get("symbol", "")
-        if not (
-            symbol.endswith("USDT") or symbol.endswith("USDC") or symbol.endswith("USD") or symbol.endswith("USD1")
-        ):
-            continue
 
         if "/" in symbol:
             base, quote = symbol.split("/")
         else:
             continue
-        product_symbol = f"{base}-{quote}-SPOT"
+        product_symbol = f"{clean_symbol_and_strip_number(base)}-{quote}-SPOT"
         markets.append(
             MarketInfo(
                 exchange=Common.ASCENDEX,
@@ -694,11 +594,77 @@ async def ascendex() -> pl.DataFrame:
                 exchange_type="spot",
                 base_currency=base,
                 quote_currency=quote,
-                price_precision=str(market.get("tickSize", "")),
-                size_precision=str(market.get("lotSize", "")),
-                min_size=str(market.get("minQty", "")),
+                price_precision=str(market.get("tickSize", "0")),
+                size_precision=str(market.get("lotSize", "0")),
+                min_size=str(market.get("minQty", "0")),
                 min_notional=str(market.get("minNotional", "0")),
             )
         )
     markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
+
+
+async def bitmex() -> pl.DataFrame:
+    from ..bitmex._market_http import MarketHTTP
+
+    market_http = MarketHTTP()
+    await market_http.async_init()
+
+    res = await market_http.get_instrument_info(filter={"state": ["FFWCSX", "FFCCSX", "IFXXXP"]})
+
+    if not isinstance(res, list):
+        res = []
+
+    typ_map = {
+        "FFWCSX": "swap",
+        "FFCCSX": "futures",
+        "IFXXXP": "spot",
+    }
+
+    markets = []
+    for market in res:
+        typ = market.get("typ", "")
+        product_type = typ_map.get(typ)
+        if not product_type:
+            continue
+
+        symbol = market.get("symbol", "")
+        base = clean_symbol_and_strip_number(market.get("underlying", ""))
+        quote = market.get("quoteCurrency", "")
+        price_precision = str(market.get("tickSize", "0"))
+        size_precision = str(reverse_decimal_places(market.get("lotSize", "0")))
+        min_size = str(reverse_decimal_places(market.get("lotSize", "0")))
+        size_per_contract = str(market.get("multiplier", "1"))
+        min_notional = "0"
+
+        if typ == "IFXXXP":
+            product_symbol = f"{base}-{quote}-SPOT"
+        elif typ == "FFWCSX":
+            product_symbol = f"{base}-{quote}-SWAP"
+        elif typ == "FFCCSX":
+            if (base + quote) in symbol:
+                expiry_str = symbol.replace(base + quote, "", 1)
+            else:
+                expiry_str = symbol.replace(base, "", 1)
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
+        else:
+            product_symbol = symbol
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.BITMEX,
+                exchange_symbol=symbol,
+                product_symbol=product_symbol,
+                product_type=product_type,
+                exchange_type=typ,
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=price_precision,
+                size_precision=size_precision,
+                min_size=min_size,
+                min_notional=min_notional,
+                size_per_contract=size_per_contract,
+            ).to_dict()
+        )
+
     return pl.DataFrame(markets)

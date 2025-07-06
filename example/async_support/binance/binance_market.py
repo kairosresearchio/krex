@@ -15,7 +15,7 @@ async def main():
         result = await client.get_futures_ticker(product_symbol="BTC-USDT-SWAP")
         print(result)
 
-        result = await client.get_futures_kline(product_symbol="BTC-USDT-SWAP", interval="1m")
+        result = await client.get_kline(product_symbol="BTC-USDT-SWAP", interval="1m")
         print(result)
 
         result = await client.get_futures_premium_index(product_symbol="BTC-USDT-SWAP")

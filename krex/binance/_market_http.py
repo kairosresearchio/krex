@@ -33,18 +33,25 @@ class MarketHTTP(HTTPManager):
         )
         return res
 
-    def get_futures_exchange_info(
+    def get_spot_orderbook(
         self,
+        product_symbol: str,
+        limit: int = None,
     ):
+        payload = {
+            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
+        }
+        if limit is not None:
+            payload["limit"] = limit
         res = self._request(
             method="GET",
-            path=FuturesMarket.EXCHANGE_INFO,
-            query=None,
+            path=SpotMarket.ORDERBOOK,
+            query=payload,
             signed=False,
         )
         return res
 
-    def get_spot_orderbook(
+    def get_spot_trades(
         self,
         product_symbol: str,
         limit: int = None,
@@ -57,7 +64,7 @@ class MarketHTTP(HTTPManager):
 
         res = self._request(
             method="GET",
-            path=SpotMarket.ORDERBOOK,
+            path=SpotMarket.TRADES,
             query=payload,
             signed=False,
         )
@@ -82,9 +89,20 @@ class MarketHTTP(HTTPManager):
         res = self._request(
             method="GET",
             path=SpotMarket.KLINE
-            if self.ptm.get_exchange_type(Common.BINANCE) == BinanceExchangeType.SPOT
+            if self.ptm.get_exchange_type(Common.BINANCE, product_symbol=product_symbol) == BinanceExchangeType.SPOT
             else FuturesMarket.KLINE,
             query=payload,
+            signed=False,
+        )
+        return res
+
+    def get_futures_exchange_info(
+        self,
+    ):
+        res = self._request(
+            method="GET",
+            path=FuturesMarket.EXCHANGE_INFO,
+            query=None,
             signed=False,
         )
         return res
@@ -95,45 +113,11 @@ class MarketHTTP(HTTPManager):
     ):
         payload = {}
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(product_symbol, Common.BINANCE)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol)
 
         res = self._request(
             method="GET",
             path=FuturesMarket.BOOK_TICKER,
-            query=payload,
-            signed=False,
-        )
-        return res
-
-    def get_futures_kline(
-        self,
-        product_symbol: str,
-        interval: str,
-        startTime: int = None,
-        endTime: int = None,
-        limit: int = None,
-    ):
-        """
-        :param product_symbol: str
-        :param interval: str
-        :param startTime: int
-        :param endTime: int
-        :param limit: int (Default 500; max 1500.
-        """
-        payload = {
-            "symbol": self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol),
-            "interval": interval,
-        }
-        if startTime is not None:
-            payload["startTime"] = startTime
-        if endTime is not None:
-            payload["endTime"] = endTime
-        if limit is not None:
-            payload["limit"] = limit
-
-        res = self._request(
-            method="GET",
-            path=FuturesMarket.KLINE,
             query=payload,
             signed=False,
         )

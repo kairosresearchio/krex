@@ -11,6 +11,7 @@ class Common(str, Enum):
     BINGX = "bingx"
     KUCOIN = "kucoin"
     ASCENDEX = "ascendex"
+    BITMEX = "bitmex"
 
     def __str__(self) -> str:
         return self.value

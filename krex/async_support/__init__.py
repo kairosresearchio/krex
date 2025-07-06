@@ -8,6 +8,7 @@ from .hyperliquid.client import Client as HyperliquidClient
 from .bingx.client import Client as BingXClient
 from .kucoin.client import Client as KuCoinClient
 from .ascendex.client import Client as AscendexClient
+from .bitmex.client import Client as BitmexClient
 
 
 async def bybit(**kwargs):
@@ -73,6 +74,13 @@ async def ascendex(**kwargs):
     return client
 
 
+async def bitmex(**kwargs):
+    """Create and initialize a BitMEX client instance."""
+    client = BitmexClient(**kwargs)
+    await client.async_init()
+    return client
+
+
 __all__ = [
     "bybit",
     "binance",
@@ -83,4 +91,5 @@ __all__ = [
     "bingx",
     "kucoin",
     "ascendex",
+    "bitmex",
 ]

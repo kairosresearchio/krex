@@ -64,6 +64,8 @@ body:
         - "AscendEX"
         - "OKX"
         - "Gate"
+        - "KuCoin"
+        - "BitMEX"
         - "Other (please specify in description)"
     validations:
       required: true

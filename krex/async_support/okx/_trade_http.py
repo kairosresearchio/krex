@@ -294,7 +294,7 @@ class TradeHTTP(HTTPManager):
             path=Trade.CANCEL_ORDER,
             query=payload,
         )
-    
+
     async def cancel_batch_orders(
         self,
         orders: list[dict],
