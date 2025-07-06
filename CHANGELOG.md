@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.10.0](https://github.com/kairosresearchio/krex/compare/v0.9.1...v0.10.0) (2025-07-06)
+
+
+### Features
+
+* add bitmex support ([e20cac4](https://github.com/kairosresearchio/krex/commit/e20cac459db4d5e50ea2a5bf6d90227ee670ce86))
+* **bitmex:** add async support ([5d41e24](https://github.com/kairosresearchio/krex/commit/5d41e245c026ebaa2d6cbeefe54ee6185ae84f9b))
+
+
+### Bug Fixes
+
+* **binance:** add missing code ([1a389a3](https://github.com/kairosresearchio/krex/commit/1a389a368bd3fa4884db3ea37ac05259a6e7bc43))
+
 ## [0.9.1](https://github.com/kairosresearchio/krex/compare/v0.9.0...v0.9.1) (2025-07-04)
 
 
