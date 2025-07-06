@@ -75,7 +75,7 @@ if __name__ == "__main__":
 | **BitMart** | ✅ | ✅ |
 | **Gate.io** | ✅ | ✅ |
 | **Hyperliquid** | ✅ | ✅ |
-| **BitMEX** | ✅ | ✅ |
+| **BitMEX** | Developing | ✅ |
 | **BingX** | Developing | Developing |
 | **AscendEX** | Developing | Developing |
 | **KuCoin** | Developing  | Developing  |
@@ -138,6 +138,9 @@ git clone https://github.com/kairosresearchio/krex.git
 cd krex
 
 # We use `uv` to manage the project, you can install it with `pip install uv`
+# Create a virtual environment
+uv venv
+
 # Install the dependencies
 uv sync
 ```
