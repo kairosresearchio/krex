@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.2](https://github.com/kairosresearchio/krex/compare/v0.10.1...v0.10.2) (2025-07-07)
+
+
+### Bug Fixes
+
+* **okx:** add param in close positions ([67ab5aa](https://github.com/kairosresearchio/krex/commit/67ab5aaecd0653dda219f4351a09fc98c9924d20))
+
 ## [0.10.1](https://github.com/kairosresearchio/krex/compare/v0.10.0...v0.10.1) (2025-07-06)
 
 
