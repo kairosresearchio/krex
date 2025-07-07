@@ -451,12 +451,14 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         mgnMode: str,
         posSide: str = None,
+        autoCxl: bool = None,
         ccy: str = None,
     ):
         """
         :param product_symbol: str
         :param mgnMode: str
         :param posSide: str
+        :param autoCxl: bool
         :param ccy: str
         """
         payload = {
@@ -465,6 +467,8 @@ class TradeHTTP(HTTPManager):
         }
         if posSide is not None:
             payload["posSide"] = posSide
+        if autoCxl is not None:
+            payload["autoCxl"] = autoCxl
         if ccy is not None:
             payload["ccy"] = ccy
 
