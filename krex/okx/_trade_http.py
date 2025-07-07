@@ -424,6 +424,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         mgnMode: str,
         posSide: str = None,
+        autoCxl: bool = None,
         ccy: str = None,
     ):
         """
@@ -438,6 +439,8 @@ class TradeHTTP(HTTPManager):
         }
         if posSide is not None:
             payload["posSide"] = posSide
+        if autoCxl is not None:
+            payload["autoCxl"] = autoCxl
         if ccy is not None:
             payload["ccy"] = ccy
 
