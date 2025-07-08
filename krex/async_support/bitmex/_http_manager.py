@@ -6,10 +6,10 @@ import httpx
 import logging
 from dataclasses import dataclass, field
 from urllib.parse import urlencode
-from ..product_table.manager import ProductTableManager
-from ...utils.common import Common
-from ...utils.errors import FailedRequestError
-from ...utils.helpers import generate_timestamp
+from krex.utils.common import Common
+from krex.utils.errors import FailedRequestError
+from krex.utils.helpers import generate_timestamp
+from krex.async_support.product_table.manager import ProductTableManager
 
 
 @dataclass

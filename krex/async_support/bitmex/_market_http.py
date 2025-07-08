@@ -1,7 +1,7 @@
 import json
+from krex.utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.market import Market
-from ...utils.common import Common
 
 
 class MarketHTTP(HTTPManager):
@@ -254,25 +254,6 @@ class MarketHTTP(HTTPManager):
         res = await self._request(
             method="GET",
             path=Market.FUNDING,
-            query=payload,
-            signed=False,
-        )
-        return res
-
-    async def get_stats(
-        self,
-        product_symbol: str = None,
-    ):
-        """
-        :param product_symbol: str
-        """
-        payload = {}
-        if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
-
-        res = await self._request(
-            method="GET",
-            path=Market.STATS,
             query=payload,
             signed=False,
         )
