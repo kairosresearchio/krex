@@ -13,6 +13,7 @@ from .binance.client import Client as BinanceClient
 from .okx.client import Client as OKXClient
 from .bitmart.client import Client as BitmartClient
 from .gateio.client import Client as GateioClient
+from .bitmex.client import Client as BitmexClient
 
 auto_apply_nest_asyncio(verbose=False)
 
@@ -43,10 +44,16 @@ def gateio(**kwargs):
     return GateioClient(**kwargs)
 
 
+def bitmex(**kwargs):
+    """Create a BitMEX client instance."""
+    return BitmexClient(**kwargs)
+
+
 __all__ = [
     "bybit",
     "binance",
     "okx",
     "bitmart",
     "gateio",
+    "bitmex",
 ]
