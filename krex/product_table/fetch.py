@@ -423,3 +423,68 @@ async def binance() -> pl.DataFrame:
 
     markets = [market.to_dict() for market in markets]
     return pl.DataFrame(markets)
+
+
+async def bitmex() -> pl.DataFrame:
+    from ..bitmex._market_http import MarketHTTP
+
+    market_http = MarketHTTP(preload_product_table=False)
+
+    res = market_http.get_instrument_info(filter={"state": ["FFWCSX", "FFCCSX", "IFXXXP"]})
+
+    if not isinstance(res, list):
+        res = []
+
+    typ_map = {
+        "FFWCSX": "swap",
+        "FFCCSX": "futures",
+        "IFXXXP": "spot",
+    }
+
+    markets = []
+    for market in res:
+        typ = market.get("typ", "")
+        product_type = typ_map.get(typ)
+        if not product_type:
+            continue
+
+        symbol = market.get("symbol", "")
+        base = clean_symbol_and_strip_number(market.get("underlying", ""))
+        quote = market.get("quoteCurrency", "")
+        price_precision = str(market.get("tickSize", "0"))
+        size_precision = str(reverse_decimal_places(market.get("lotSize", "0")))
+        min_size = str(reverse_decimal_places(market.get("lotSize", "0")))
+        size_per_contract = str(market.get("multiplier", "1"))
+        min_notional = "0"
+
+        if typ == "IFXXXP":
+            product_symbol = f"{base}-{quote}-SPOT"
+        elif typ == "FFWCSX":
+            product_symbol = f"{base}-{quote}-SWAP"
+        elif typ == "FFCCSX":
+            if (base + quote) in symbol:
+                expiry_str = symbol.replace(base + quote, "", 1)
+            else:
+                expiry_str = symbol.replace(base, "", 1)
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
+        else:
+            product_symbol = symbol
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.BITMEX,
+                exchange_symbol=symbol,
+                product_symbol=product_symbol,
+                product_type=product_type,
+                exchange_type=typ,
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=price_precision,
+                size_precision=size_precision,
+                min_size=min_size,
+                min_notional=min_notional,
+                size_per_contract=size_per_contract,
+            ).to_dict()
+        )
+
+    return pl.DataFrame(markets)

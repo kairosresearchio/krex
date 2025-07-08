@@ -6,10 +6,11 @@ import httpx
 import logging
 from dataclasses import dataclass, field
 from urllib.parse import urlencode
+import requests
 from krex.utils.common import Common
 from krex.utils.errors import FailedRequestError
 from krex.utils.helpers import generate_timestamp
-from krex.async_support.product_table.manager import ProductTableManager
+from krex.product_table.manager import ProductTableManager
 
 
 @dataclass
@@ -18,19 +19,21 @@ class HTTPManager:
     api_secret: str = field(default=None)
     timeout: int = field(default=30)
     logger: logging.Logger = field(default=None)
-    session: httpx.AsyncClient = field(default=None, init=False)
+    session: requests.Session = field(default_factory=requests.Session, init=False)
     ptm: ProductTableManager = field(default=None, init=False)
     preload_product_table: bool = field(default=True)
 
     # Bitmex API base URL
     base_url = "https://www.bitmex.com"
 
-    async def async_init(self):
-        self.session = httpx.AsyncClient(timeout=self.timeout)
-        self._logger = self.logger or logging.getLogger(__name__)
+    def __post_init__(self):
+        if self.logger is None:
+            self._logger = logging.getLogger(__name__)
+        else:
+            self._logger = self.logger
+
         if self.preload_product_table:
-            self.ptm = await ProductTableManager.get_instance(Common.BITMEX)
-        return self
+            self.ptm = ProductTableManager.get_instance(Common.BITMEX)
 
     def _sign(self, method: str, path: str, expires: int, body: str = "") -> str:
         """Generate Bitmex API signature according to BitMEX documentation"""
@@ -49,16 +52,13 @@ class HTTPManager:
 
         return headers
 
-    async def _request(
+    def _request(
         self,
         method,
         path: str,
         query: dict = None,
         signed: bool = True,
     ):
-        if not self.session:
-            await self.async_init()
-
         response = None
         try:
             url = f"{self.base_url}{path}"
@@ -70,28 +70,28 @@ class HTTPManager:
                     query_string = urlencode(query)
                     url += f"?{query_string}"
                     full_path += f"?{query_string}"
-                response = await self.session.get(url, headers=self._headers(method, full_path, signed=signed))
+                response = self.session.get(url, headers=self._headers(method, full_path, signed=signed))
             elif method.upper() == "POST":
                 body = json.dumps(query, separators=(",", ":")) if query else ""
-                response = await self.session.post(
+                response = self.session.post(
                     url,
                     headers=self._headers(method, full_path, body, signed=signed),
-                    content=body,
+                    data=body,
                 )
             elif method.upper() == "PUT":
                 body = json.dumps(query, separators=(",", ":")) if query else ""
-                response = await self.session.put(
+                response = self.session.put(
                     url,
                     headers=self._headers(method, full_path, body, signed=signed),
-                    content=body,
+                    data=body,
                 )
             elif method.upper() == "DELETE":
                 body = json.dumps(query, separators=(",", ":")) if query else ""
-                response = await self.session.request(
+                response = self.session.request(
                     method="DELETE",
                     url=url,
                     headers=self._headers(method, full_path, body, signed=signed),
-                    content=body,
+                    data=body,
                 )
             else:
                 raise ValueError(f"Unsupported method: {method}")

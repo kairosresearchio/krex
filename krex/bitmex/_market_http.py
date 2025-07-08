@@ -5,7 +5,7 @@ from .endpoints.market import Market
 
 
 class MarketHTTP(HTTPManager):
-    async def get_instrument_info(
+    def get_instrument_info(
         self,
         product_symbol: str = None,
         filter: dict = None,
@@ -24,7 +24,7 @@ class MarketHTTP(HTTPManager):
         if count is not None:
             payload["count"] = count
 
-        res = await self._request(
+        res = self._request(
             method="GET",
             path=Market.INSTRUMENT_INFO,
             query=payload,
@@ -32,7 +32,7 @@ class MarketHTTP(HTTPManager):
         )
         return res
 
-    async def get_orderbook(
+    def get_orderbook(
         self,
         product_symbol: str,
         depth: int = None,
@@ -47,7 +47,7 @@ class MarketHTTP(HTTPManager):
         if depth is not None:
             payload["depth"] = depth
 
-        res = await self._request(
+        res = self._request(
             method="GET",
             path=Market.ORDERBOOK,
             query=payload,
@@ -55,7 +55,7 @@ class MarketHTTP(HTTPManager):
         )
         return res
 
-    async def get_trades(
+    def get_trades(
         self,
         product_symbol: str = None,
         filter: dict = None,
@@ -94,7 +94,7 @@ class MarketHTTP(HTTPManager):
         if endTime is not None:
             payload["endTime"] = endTime
 
-        res = await self._request(
+        res = self._request(
             method="GET",
             path=Market.TRADE,
             query=payload,
@@ -102,7 +102,7 @@ class MarketHTTP(HTTPManager):
         )
         return res
 
-    async def get_ticker(
+    def get_ticker(
         self,
         binSize: str = None,
         partial: bool = None,
@@ -149,7 +149,7 @@ class MarketHTTP(HTTPManager):
         if endTime is not None:
             payload["endTime"] = endTime
 
-        res = await self._request(
+        res = self._request(
             method="GET",
             path=Market.TICKER,
             query=payload,
@@ -157,7 +157,7 @@ class MarketHTTP(HTTPManager):
         )
         return res
 
-    async def get_kline(
+    def get_kline(
         self,
         binSize: str = None,
         partial: bool = None,
@@ -204,7 +204,7 @@ class MarketHTTP(HTTPManager):
         if endTime is not None:
             payload["endTime"] = endTime
 
-        res = await self._request(
+        res = self._request(
             method="GET",
             path=Market.KLINE,
             query=payload,
@@ -212,7 +212,7 @@ class MarketHTTP(HTTPManager):
         )
         return res
 
-    async def get_funding(
+    def get_funding(
         self,
         product_symbol: str = None,
         filter: dict = None,
@@ -251,7 +251,7 @@ class MarketHTTP(HTTPManager):
         if endTime is not None:
             payload["endTime"] = endTime
 
-        res = await self._request(
+        res = self._request(
             method="GET",
             path=Market.FUNDING,
             query=payload,
