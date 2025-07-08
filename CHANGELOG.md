@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.11.0](https://github.com/kairosresearchio/krex/compare/v0.10.3...v0.11.0) (2025-07-08)
+
+
+### Features
+
+* **bitmex:** add trading and position endpoints ([7733b36](https://github.com/kairosresearchio/krex/commit/7733b36b206f1dcdeb5633506a6d679e769b52ba))
+* **bitmex:** complete sync support ([1e6387a](https://github.com/kairosresearchio/krex/commit/1e6387a01ee9cceba9ea04ca5961d53e61ce412a))
+* complete bitmex Support(sync, async) ([b8bddc2](https://github.com/kairosresearchio/krex/commit/b8bddc205b1f6ae185279b9cc98b59e940934e63))
+
 ## [0.10.3](https://github.com/kairosresearchio/krex/compare/v0.10.2...v0.10.3) (2025-07-07)
 
 
