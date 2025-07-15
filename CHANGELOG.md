@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.4](https://github.com/kairosresearchio/krex/compare/v0.11.3...v0.11.4) (2025-07-15)
+
+
+### Bug Fixes
+
+* **ptm:** del print func ([3af18d5](https://github.com/kairosresearchio/krex/commit/3af18d5d6fcc4bd7fed0581a09bebd15a8f609d7))
+
 ## [0.11.3](https://github.com/kairosresearchio/krex/compare/v0.11.2...v0.11.3) (2025-07-15)
 
 
