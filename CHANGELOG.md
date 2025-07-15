@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/kairosresearchio/krex/compare/v0.11.0...v0.11.1) (2025-07-15)
+
+
+### Bug Fixes
+
+* **ptm:** bitmex lot size and tick size are wrong ([c483fe9](https://github.com/kairosresearchio/krex/commit/c483fe997b924be958120fda9edc368d6ab6a5b9))
+
 ## [0.11.0](https://github.com/kairosresearchio/krex/compare/v0.10.3...v0.11.0) (2025-07-08)
 
 
