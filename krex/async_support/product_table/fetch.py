@@ -627,7 +627,6 @@ async def bitmex() -> pl.DataFrame:
         product_type = typ_map.get(typ)
         if not product_type:
             continue
-        print(market)
 
         symbol = market["symbol"]
         base = clean_symbol_and_strip_number(market["underlying"])
