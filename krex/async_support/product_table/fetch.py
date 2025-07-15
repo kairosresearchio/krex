@@ -627,14 +627,15 @@ async def bitmex() -> pl.DataFrame:
         product_type = typ_map.get(typ)
         if not product_type:
             continue
+        print(market)
 
-        symbol = market.get("symbol", "")
-        base = clean_symbol_and_strip_number(market.get("underlying", ""))
-        quote = market.get("quoteCurrency", "")
-        price_precision = str(market.get("tickSize", "0"))
-        size_precision = str(reverse_decimal_places(market.get("lotSize", "0")))
-        min_size = str(reverse_decimal_places(market.get("lotSize", "0")))
-        size_per_contract = str(market.get("multiplier", "1"))
+        symbol = market["symbol"]
+        base = clean_symbol_and_strip_number(market["underlying"])
+        quote = market["quoteCurrency"]
+        price_precision = str(market["tickSize"])
+        size_precision = str(market["lotSize"])
+        min_size = str(market["lotSize"])
+        size_per_contract = str(market["multiplier"])
         min_notional = "0"
 
         if typ == "IFXXXP":
