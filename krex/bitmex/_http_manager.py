@@ -24,7 +24,7 @@ class HTTPManager:
     preload_product_table: bool = field(default=True)
 
     # Bitmex API base URL
-    base_url = "https://www.bitmex.com"
+    base_url: str = "https://www.bitmex.com"
 
     def __post_init__(self):
         if self.logger is None:
