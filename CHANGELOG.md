@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.3](https://github.com/kairosresearchio/krex/compare/v0.11.2...v0.11.3) (2025-07-15)
+
+
+### Bug Fixes
+
+* **bitmex:** base_url need to be modifiable ([5064d9a](https://github.com/kairosresearchio/krex/commit/5064d9a65de1b334537632ad263fc7e88930330f))
+
 ## [0.11.2](https://github.com/kairosresearchio/krex/compare/v0.11.1...v0.11.2) (2025-07-15)
 
 
