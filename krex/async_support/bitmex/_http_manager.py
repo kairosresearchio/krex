@@ -23,7 +23,7 @@ class HTTPManager:
     preload_product_table: bool = field(default=True)
 
     # Bitmex API base URL
-    base_url = "https://www.bitmex.com"
+    base_url: str = "https://www.bitmex.com"
 
     async def async_init(self):
         self.session = httpx.AsyncClient(timeout=self.timeout)
