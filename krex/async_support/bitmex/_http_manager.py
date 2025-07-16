@@ -26,7 +26,14 @@ class HTTPManager:
     last_rate_limit_info: Optional[Dict[str, Any]] = field(default=None, init=False)
 
     async def async_init(self):
-        self.session = httpx.AsyncClient(timeout=self.timeout)
+        self.session = httpx.AsyncClient(
+            timeout=self.timeout,
+            http2=False,
+            limits=httpx.Limits(
+                max_connections=100,
+                max_keepalive_connections=50,
+            ),
+        )
         self._logger = self.logger or logging.getLogger(__name__)
         self.last_rate_limit_info = None
         if self.preload_product_table:
