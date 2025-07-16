@@ -5,6 +5,7 @@ import time
 import httpx
 import logging
 from dataclasses import dataclass, field
+from typing import Dict, Optional, Any
 from urllib.parse import urlencode
 from krex.utils.common import Common
 from krex.utils.errors import FailedRequestError
@@ -14,26 +15,28 @@ from krex.async_support.product_table.manager import ProductTableManager
 
 @dataclass
 class HTTPManager:
-    api_key: str = field(default=None)
-    api_secret: str = field(default=None)
-    timeout: int = field(default=30)
-    logger: logging.Logger = field(default=None)
-    session: httpx.AsyncClient = field(default=None, init=False)
-    ptm: ProductTableManager = field(default=None, init=False)
-    preload_product_table: bool = field(default=True)
-
-    # Bitmex API base URL
     base_url: str = "https://www.bitmex.com"
+    api_key: str | None = field(default=None)
+    api_secret: str | None = field(default=None)
+    timeout: int = field(default=30)
+    logger: logging.Logger | None = field(default=None)
+    session: httpx.AsyncClient | None = field(default=None, init=False)
+    ptm: ProductTableManager | None = field(default=None, init=False)
+    preload_product_table: bool = field(default=True)
+    last_rate_limit_info: Optional[Dict[str, Any]] = field(default=None, init=False)
 
     async def async_init(self):
         self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
+        self.last_rate_limit_info = None
         if self.preload_product_table:
             self.ptm = await ProductTableManager.get_instance(Common.BITMEX)
         return self
 
     def _sign(self, method: str, path: str, expires: int, body: str = "") -> str:
         """Generate Bitmex API signature according to BitMEX documentation"""
+        if self.api_secret is None:
+            raise ValueError("api_secret is required for signing requests")
         message = method + path + str(expires) + body
         signature = hmac.new(self.api_secret.encode("utf-8"), message.encode("utf-8"), hashlib.sha256).hexdigest()
         return signature
@@ -53,11 +56,10 @@ class HTTPManager:
         self,
         method,
         path: str,
-        query: dict = None,
+        query: dict[str, str | int | list[str] | float | bool] | None = None,
         signed: bool = True,
     ):
-        if not self.session:
-            await self.async_init()
+        assert self.session is not None
 
         response = None
         try:
@@ -115,6 +117,8 @@ class HTTPManager:
                     resp_headers=response.headers,
                 )
 
+            self._update_rate_limit_info(response.headers)
+
             return data
 
         except httpx.RequestError as e:
@@ -125,3 +129,15 @@ class HTTPManager:
                 time=timestamp if "timestamp" in locals() else "Unknown",
                 resp_headers=response.headers if response else None,
             )
+
+    def _update_rate_limit_info(self, headers: httpx.Headers):
+        if "x-ratelimit-remaining" in headers:
+            self.last_rate_limit_info = {
+                "limit": headers.get("x-ratelimit-limit"),
+                "remaining": headers.get("x-ratelimit-remaining"),
+                "reset": headers.get("x-ratelimit-reset"),
+                "remaining-1s": headers.get("x-ratelimit-remaining-1s"),
+            }
+
+    def get_rate_limit_info(self) -> Optional[Dict[str, Any]]:
+        return self.last_rate_limit_info

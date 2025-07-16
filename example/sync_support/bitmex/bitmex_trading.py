@@ -13,8 +13,12 @@ client = krex.bitmex(
     api_secret=BITMEX_API_SECRET,
 )
 
-executions = client.get_executions(product_symbol="XBT-USDT-SWAP", count=5)
-print(executions)
+# executions = client.get_executions(product_symbol="XBT-USDT-SWAP", count=5)
+# print(executions)
 
-trade_history = client.get_trade_history(product_symbol="XBT-USDT-SWAP", count=5)
-print(trade_history)
+# trade_history = client.get_trade_history(product_symbol="XBT-USDT-SWAP", count=5)
+# print(trade_history)
+
+trading_volume = client.get_trading_volume()
+print(trading_volume)
+print(client.get_rate_limit_info())

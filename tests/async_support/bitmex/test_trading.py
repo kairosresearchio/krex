@@ -29,3 +29,9 @@ async def test_get_executions(client):
 async def test_get_trade_history(client):
     res = await client.get_trade_history(product_symbol="XBT-USDT-SWAP", count=5)
     assert res is not None
+
+
+@pytest.mark.asyncio
+async def test_get_trading_volume(client):
+    res = await client.get_trading_volume()
+    assert res is not None

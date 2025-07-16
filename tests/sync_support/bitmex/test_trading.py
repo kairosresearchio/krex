@@ -25,3 +25,8 @@ def test_get_executions(client):
 def test_get_trade_history(client):
     res = client.get_trade_history(product_symbol="XBT-USDT-SWAP", count=5)
     assert res is not None
+
+
+def test_get_trading_volume(client):
+    res = client.get_trading_volume()
+    assert res is not None
