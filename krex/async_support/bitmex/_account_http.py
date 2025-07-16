@@ -7,10 +7,10 @@ class AccountHTTP(HTTPManager):
     async def get_wallet_summary(
         self,
         currency: str = "all",
-        start_time: str = None,
-        end_time: str = None,
-        target_account_id: int = None,
-        target_account_ids: Union[list, str] = None,
+        start_time: str | None = None,
+        end_time: str | None = None,
+        target_account_id: int | None = None,
+        target_account_ids: Union[list, str] | None = None,
     ):
         """
         :param currency: str
@@ -19,7 +19,7 @@ class AccountHTTP(HTTPManager):
         :param target_account_id: int
         :param target_account_ids: list[str] or str (can be "*")
         """
-        payload = {
+        payload: dict[str, str | int | list[str] | float | bool] = {
             "currency": currency,
         }
 

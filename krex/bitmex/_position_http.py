@@ -7,11 +7,11 @@ from .endpoints.positions import Positions
 class PositionHTTP(HTTPManager):
     def get_positions(
         self,
-        filter: str = None,
-        columns: str = None,
-        count: int = None,
-        target_account_id: int = None,
-        target_account_ids: Union[list, str] = None,
+        filter: str | None = None,
+        columns: str | None = None,
+        count: int | None = None,
+        target_account_id: int | None = None,
+        target_account_ids: Union[list, str] | None = None,
     ):
         """
         :param filter: str
@@ -20,7 +20,7 @@ class PositionHTTP(HTTPManager):
         :param target_account_id: int
         :param target_account_ids: list[str] or str
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if filter is not None:
             payload["filter"] = filter
@@ -55,7 +55,8 @@ class PositionHTTP(HTTPManager):
         :param product_symbol: str
         :param enabled: bool (Default: True)
         """
-        payload = {
+        assert self.ptm is not None
+        payload: dict[str, str | int | list[str] | float | bool] = {
             "symbol": self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol),
             "enabled": enabled,
         }
@@ -72,7 +73,7 @@ class PositionHTTP(HTTPManager):
         product_symbol: str,
         leverage: float,
         cross_margin: bool = True,
-        target_account_id: int = None,
+        target_account_id: int | None = None,
     ):
         """
         :param product_symbol: str
@@ -80,7 +81,8 @@ class PositionHTTP(HTTPManager):
         :param cross_margin: bool (True for cross margin, false for isolated margin.)
         :param target_account_id: int
         """
-        payload = {
+        assert self.ptm is not None
+        payload: dict[str, str | int | list[str] | float] = {
             "symbol": self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol),
             "leverage": leverage,
             "crossMargin": cross_margin,
@@ -99,13 +101,13 @@ class PositionHTTP(HTTPManager):
     def set_margining_mode(
         self,
         multi_asset: bool = False,
-        target_account_id: int = None,
+        target_account_id: int | None = None,
     ):
         """
         :param multi_asset: bool (True for multi-asset margining, False for single-asset)
         :param target_account_id: int
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if multi_asset:
             payload["marginingMode"] = "MultiAsset"
@@ -123,14 +125,14 @@ class PositionHTTP(HTTPManager):
 
     def get_margining_mode(
         self,
-        target_account_id: int = None,
-        target_account_ids: Union[list, str] = None,
+        target_account_id: int | None = None,
+        target_account_ids: Union[list, str] | None = None,
     ):
         """
         :param target_account_id: int
         :param target_account_ids: list[str] or str
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if target_account_id is not None:
             payload["targetAccountId"] = target_account_id
@@ -148,15 +150,15 @@ class PositionHTTP(HTTPManager):
     def get_margin(
         self,
         currency: str = "all",
-        target_account_id: int = None,
-        target_account_ids: Union[list, str] = None,
+        target_account_id: int | None = None,
+        target_account_ids: Union[list, str] | None = None,
     ):
         """
         :param currency: str
         :param target_account_id: int
         :param target_account_ids: list[str] or str
         """
-        payload = {
+        payload: dict[str, str | int | list[str] | float | bool] = {
             "currency": currency,
         }
 

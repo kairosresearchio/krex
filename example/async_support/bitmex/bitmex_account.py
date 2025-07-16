@@ -25,7 +25,6 @@ async def main():
             print(f"Current Balance: {scaled_amount}")
             print(f"Total Deposit: {scaled_deposited}")
             print("---")
-
     except Exception as e:
         print(f"Error: {e}")
 

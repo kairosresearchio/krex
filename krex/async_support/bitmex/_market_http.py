@@ -7,17 +7,18 @@ from .endpoints.market import Market
 class MarketHTTP(HTTPManager):
     async def get_instrument_info(
         self,
-        product_symbol: str = None,
-        filter: dict = None,
-        count: int = None,
+        product_symbol: str | None = None,
+        filter: dict | None = None,
+        count: int | None = None,
     ):
         """
         :param product_symbol: str
         :param filter: dict
         :param count: int
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
         if product_symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
         if filter is not None:
             payload["filter"] = json.dumps(filter)
@@ -35,13 +36,14 @@ class MarketHTTP(HTTPManager):
     async def get_orderbook(
         self,
         product_symbol: str,
-        depth: int = None,
+        depth: int | None = None,
     ):
         """
         :param product_symbol: str
         :param depth: int
         """
-        payload = {
+        assert self.ptm is not None
+        payload: dict[str, str | int | list[str] | float | bool] = {
             "symbol": self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol),
         }
         if depth is not None:
@@ -57,14 +59,14 @@ class MarketHTTP(HTTPManager):
 
     async def get_trades(
         self,
-        product_symbol: str = None,
-        filter: dict = None,
-        columns: str = None,
-        count: int = None,
-        start: int = None,
-        reverse: bool = None,
-        startTime: str = None,
-        endTime: str = None,
+        product_symbol: str | None = None,
+        filter: dict | None = None,
+        columns: str | None = None,
+        count: int | None = None,
+        start: int | None = None,
+        reverse: bool | None = None,
+        startTime: str | None = None,
+        endTime: str | None = None,
     ):
         """
         :param product_symbol: str
@@ -76,8 +78,9 @@ class MarketHTTP(HTTPManager):
         :param startTime: str
         :param endTime: str
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
         if product_symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
         if filter is not None:
             payload["filter"] = str(filter)
@@ -104,16 +107,16 @@ class MarketHTTP(HTTPManager):
 
     async def get_ticker(
         self,
-        binSize: str = None,
-        partial: bool = None,
-        symbol: str = None,
-        filter: dict = None,
-        columns: str = None,
-        count: int = None,
-        start: int = None,
-        reverse: bool = None,
-        startTime: str = None,
-        endTime: str = None,
+        binSize: str | None = None,
+        partial: bool | None = None,
+        symbol: str | None = None,
+        filter: dict | None = None,
+        columns: str | None = None,
+        count: int | None = None,
+        start: int | None = None,
+        reverse: bool | None = None,
+        startTime: str | None = None,
+        endTime: str | None = None,
     ):
         """
         :param binSize: str
@@ -127,12 +130,13 @@ class MarketHTTP(HTTPManager):
         :param startTime: str
         :param endTime: str
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
         if binSize is not None:
             payload["binSize"] = binSize
         if partial is not None:
             payload["partial"] = partial
         if symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, symbol)
         if filter is not None:
             payload["filter"] = str(filter)
@@ -159,16 +163,16 @@ class MarketHTTP(HTTPManager):
 
     async def get_kline(
         self,
-        binSize: str = None,
-        partial: bool = None,
-        symbol: str = None,
-        filter: dict = None,
-        columns: str = None,
-        count: int = None,
-        start: int = None,
-        reverse: bool = None,
-        startTime: str = None,
-        endTime: str = None,
+        binSize: str | None = None,
+        partial: bool | None = None,
+        symbol: str | None = None,
+        filter: dict | None = None,
+        columns: str | None = None,
+        count: int | None = None,
+        start: int | None = None,
+        reverse: bool | None = None,
+        startTime: str | None = None,
+        endTime: str | None = None,
     ):
         """
         :param binSize: str
@@ -182,12 +186,13 @@ class MarketHTTP(HTTPManager):
         :param startTime: str
         :param endTime: str
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
         if binSize is not None:
             payload["binSize"] = binSize
         if partial is not None:
             payload["partial"] = partial
         if symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, symbol)
         if filter is not None:
             payload["filter"] = str(filter)
@@ -214,14 +219,14 @@ class MarketHTTP(HTTPManager):
 
     async def get_funding(
         self,
-        product_symbol: str = None,
-        filter: dict = None,
-        columns: str = None,
-        count: int = None,
-        start: int = None,
-        reverse: bool = None,
-        startTime: str = None,
-        endTime: str = None,
+        product_symbol: str | None = None,
+        filter: dict | None = None,
+        columns: str | None = None,
+        count: int | None = None,
+        start: int | None = None,
+        reverse: bool | None = None,
+        startTime: str | None = None,
+        endTime: str | None = None,
     ):
         """
         :param product_symbol: str
@@ -233,8 +238,9 @@ class MarketHTTP(HTTPManager):
         :param startTime: str
         :param endTime: str
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
         if product_symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
         if filter is not None:
             payload["filter"] = str(filter)

@@ -34,19 +34,21 @@ async def main():
         # )
         # print(order)
 
-        # order = await client.place_limit_buy_order(
-        #     product_symbol="HYPE-USDT-SWAP",
-        #     orderQty=10,
-        #     price=38,
-        # )
-        # print(order)
+        order = await client.place_limit_buy_order(
+            product_symbol="HYPE-USDT-SWAP",
+            orderQty=10,
+            price=38,
+        )
+        print(order)
+        print(client.get_rate_limit_info())
 
-        # order = await client.place_limit_sell_order(
-        #     product_symbol="HYPE-USDT-SWAP",
-        #     orderQty=10,
-        #     price=38,
-        # )
-        # print(order)
+        order = await client.place_limit_sell_order(
+            product_symbol="HYPE-USDT-SWAP",
+            orderQty=10,
+            price=50,
+        )
+        print(order)
+        print(client.get_rate_limit_info())
 
         # order = await client.place_post_only_buy_order(
         #     product_symbol="HYPE-USDT-SWAP",
@@ -78,10 +80,11 @@ async def main():
         # )
         # print(order)
 
-        order = await client.get_order(
-            product_symbol="HYPE-USDT-SWAP",
-        )
-        print(order)
+        # order = await client.get_order(
+        #     product_symbol="HYPE-USDT-SWAP",
+        # )
+        # print(order)
+        # print(client.get_rate_limit_info())
     except Exception as e:
         print(f"Error: {e}")
 

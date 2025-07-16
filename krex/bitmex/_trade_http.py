@@ -2,6 +2,7 @@ from typing import Union, List
 from krex.utils.common import Common
 from ._http_manager import HTTPManager
 from .endpoints.order import Order
+import json
 
 
 class TradeHTTP(HTTPManager):
@@ -9,20 +10,20 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         side: str,
-        orderQty: int = None,
+        orderQty: int | None = None,
         ordType: str = "Limit",
-        price: float = None,
-        stopPx: float = None,
-        clOrdID: str = None,
-        clOrdLinkID: str = None,
-        contingencyType: str = None,
-        displayQty: int = None,
-        execInst: str = None,
-        pegOffsetValue: float = None,
-        pegPriceType: str = None,
-        timeInForce: str = None,
-        text: str = None,
-        targetAccountId: int = None,
+        price: float | None = None,
+        stopPx: float | None = None,
+        clOrdID: str | None = None,
+        clOrdLinkID: str | None = None,
+        contingencyType: str | None = None,
+        displayQty: int | None = None,
+        execInst: str | None = None,
+        pegOffsetValue: float | None = None,
+        pegPriceType: str | None = None,
+        timeInForce: str | None = None,
+        text: str | None = None,
+        targetAccountId: int | None = None,
     ):
         """
         :param product_symbol: str - Trading symbol (required)
@@ -72,11 +73,12 @@ class TradeHTTP(HTTPManager):
         :param text: str - Order annotation
         :param targetAccountId: int - Target account ID
         """
-        payload = {
-            "symbol": self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol),
-            "side": side,
-            "ordType": ordType,
-        }
+        assert self.ptm is not None
+        payload: dict[str, str | int | list[str] | float | bool] = {}
+
+        payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
+        payload["side"] = side
+        payload["ordType"] = ordType
 
         if orderQty is not None:
             payload["orderQty"] = orderQty
@@ -117,7 +119,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         side: str,
         orderQty: int,
-        clOrdID: str = None,
+        clOrdID: str | None = None,
     ):
         return self.place_order(
             product_symbol=product_symbol,
@@ -131,7 +133,7 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         orderQty: int,
-        clOrdID: str = None,
+        clOrdID: str | None = None,
     ):
         return self.place_market_order(
             product_symbol=product_symbol,
@@ -144,8 +146,7 @@ class TradeHTTP(HTTPManager):
         self,
         product_symbol: str,
         orderQty: int,
-        clOrdID: str = None,
-        execInst: str = None,
+        clOrdID: str | None = None,
     ):
         return self.place_market_order(
             product_symbol=product_symbol,
@@ -160,7 +161,7 @@ class TradeHTTP(HTTPManager):
         side: str,
         orderQty: int,
         price: float,
-        clOrdID: str = None,
+        clOrdID: str | None = None,
         timeInForce: str = "GoodTillCancel",
     ):
         return self.place_order(
@@ -178,7 +179,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         orderQty: int,
         price: float,
-        clOrdID: str = None,
+        clOrdID: str | None = None,
     ):
         return self.place_limit_order(
             product_symbol=product_symbol,
@@ -193,7 +194,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         orderQty: int,
         price: float,
-        clOrdID: str = None,
+        clOrdID: str | None = None,
     ):
         return self.place_limit_order(
             product_symbol=product_symbol,
@@ -209,7 +210,7 @@ class TradeHTTP(HTTPManager):
         side: str,
         orderQty: int,
         price: float,
-        clOrdID: str = None,
+        clOrdID: str | None = None,
         execInst: str = "ParticipateDoNotInitiate",
     ):
         return self.place_order(
@@ -227,7 +228,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         orderQty: int,
         price: float,
-        clOrdID: str = None,
+        clOrdID: str | None = None,
     ):
         return self.place_post_only_order(
             product_symbol=product_symbol,
@@ -242,7 +243,7 @@ class TradeHTTP(HTTPManager):
         product_symbol: str,
         orderQty: int,
         price: float,
-        clOrdID: str = None,
+        clOrdID: str | None = None,
     ):
         return self.place_post_only_order(
             product_symbol=product_symbol,
@@ -254,17 +255,17 @@ class TradeHTTP(HTTPManager):
 
     def amend_order(
         self,
-        orderID: str = None,
-        origClOrdID: str = None,
-        product_symbol: str = None,
-        clOrdID: str = None,
-        leavesQty: int = None,
-        orderQty: int = None,
-        price: float = None,
-        stopPx: float = None,
-        pegOffsetValue: float = None,
-        text: str = None,
-        targetAccountId: int = None,
+        orderID: str | None = None,
+        origClOrdID: str | None = None,
+        product_symbol: str | None = None,
+        clOrdID: str | None = None,
+        leavesQty: int | None = None,
+        orderQty: int | None = None,
+        price: float | None = None,
+        stopPx: float | None = None,
+        pegOffsetValue: float | None = None,
+        text: str | None = None,
+        targetAccountId: int | None = None,
     ):
         """
         :param orderID: str - Order ID to amend (required if origClOrdID not provided)
@@ -282,13 +283,14 @@ class TradeHTTP(HTTPManager):
         if orderID is None and origClOrdID is None:
             raise ValueError("Either orderID or origClOrdID must be provided")
 
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if orderID is not None:
             payload["orderID"] = orderID
         if origClOrdID is not None:
             payload["origClOrdID"] = origClOrdID
         if product_symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
         if clOrdID is not None:
             payload["clOrdID"] = clOrdID
@@ -316,10 +318,10 @@ class TradeHTTP(HTTPManager):
 
     def cancel_order(
         self,
-        orderID: Union[str, List[str]] = None,
-        clOrdID: Union[str, List[str]] = None,
-        targetAccountId: int = None,
-        text: str = None,
+        orderID: Union[str, List[str]] | None = None,
+        clOrdID: Union[str, List[str]] | None = None,
+        targetAccountId: int | None = None,
+        text: str | None = None,
     ):
         """
         :param orderID: Union[str, List[str]] - Order ID(s) to cancel
@@ -327,7 +329,7 @@ class TradeHTTP(HTTPManager):
         :param targetAccountId: int - Account ID on which to cancel these orders
         :param text: str - Optional order annotation. e.g. 'Take profit'
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if orderID is not None:
             payload["orderID"] = orderID
@@ -347,11 +349,11 @@ class TradeHTTP(HTTPManager):
 
     def cancel_all_orders(
         self,
-        product_symbol: str = None,
-        filter: dict = None,
-        targetAccountId: int = None,
-        targetAccountIds: list = None,
-        text: str = None,
+        product_symbol: str | None = None,
+        filter: dict | None = None,
+        targetAccountId: int | None = None,
+        targetAccountIds: list | None = None,
+        text: str | None = None,
     ):
         """
         :param product_symbol: str
@@ -360,12 +362,13 @@ class TradeHTTP(HTTPManager):
         :param targetAccountIds: list
         :param text: str (Optional cancellation annotation. e.g. 'Spread Exceeded')
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if product_symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
         if filter is not None:
-            payload["filter"] = filter
+            payload["filter"] = json.dumps(filter)
         if targetAccountId is not None:
             payload["targetAccountId"] = targetAccountId
         if targetAccountIds is not None:
@@ -382,17 +385,17 @@ class TradeHTTP(HTTPManager):
 
     def get_order(
         self,
-        product_symbol: str = None,
-        targetAccountId: int = None,
-        filter: str = None,
-        columns: str = None,
-        count: int = 100,
-        start: int = 0,
-        reverse: bool = False,
-        startTime: str = None,
-        endTime: str = None,
-        targetAccountIds: str = None,
-        targetAccountIds_array: list = None,
+        product_symbol: str | None = None,
+        targetAccountId: int | None = None,
+        filter: str | None = None,
+        columns: str | None = None,
+        count: int | None = 100,
+        start: int | None = 0,
+        reverse: bool | None = False,
+        startTime: str | None = None,
+        endTime: str | None = None,
+        targetAccountIds: str | None = None,
+        targetAccountIds_array: list | None = None,
     ):
         """
         :param product_symbol: str
@@ -407,9 +410,10 @@ class TradeHTTP(HTTPManager):
         :param targetAccountIds: str
         :param targetAccountIds_array: list
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if product_symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
         if targetAccountId is not None:
             payload["targetAccountId"] = targetAccountId

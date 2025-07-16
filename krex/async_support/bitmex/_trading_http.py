@@ -6,17 +6,17 @@ from .endpoints.trading import Trading
 class TradingHTTP(HTTPManager):
     async def get_executions(
         self,
-        product_symbol: str = None,
-        filter: str = None,
-        columns: str = None,
+        product_symbol: str | None = None,
+        filter: str | None = None,
+        columns: str | None = None,
         count: int = 100,
         start: int = 0,
         reverse: bool = False,
-        startTime: str = None,
-        endTime: str = None,
-        targetAccountId: int = None,
-        targetAccountIds: str = None,
-        targetAccountIds_array: list = None,
+        startTime: str | None = None,
+        endTime: str | None = None,
+        targetAccountId: int | None = None,
+        targetAccountIds: str | None = None,
+        targetAccountIds_array: list | None = None,
     ):
         """
         :param product_symbol: str
@@ -31,9 +31,10 @@ class TradingHTTP(HTTPManager):
         :param targetAccountIds: str
         :param targetAccountIds_array: list
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if product_symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
         if filter is not None:
             payload["filter"] = filter
@@ -65,17 +66,17 @@ class TradingHTTP(HTTPManager):
 
     async def get_trade_history(
         self,
-        product_symbol: str = None,
-        filter: str = None,
-        columns: str = None,
+        product_symbol: str | None = None,
+        filter: str | None = None,
+        columns: str | None = None,
         count: int = 100,
         start: int = 0,
         reverse: bool = False,
-        startTime: str = None,
-        endTime: str = None,
-        targetAccountId: int = None,
-        targetAccountIds: str = None,
-        targetAccountIds_array: list = None,
+        startTime: str | None = None,
+        endTime: str | None = None,
+        targetAccountId: int | None = None,
+        targetAccountIds: str | None = None,
+        targetAccountIds_array: list | None = None,
     ):
         """
         :param product_symbol: str
@@ -90,9 +91,10 @@ class TradingHTTP(HTTPManager):
         :param targetAccountIds: str
         :param targetAccountIds_array: list
         """
-        payload = {}
+        payload: dict[str, str | int | list[str] | float | bool] = {}
 
         if product_symbol is not None:
+            assert self.ptm is not None
             payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
         if filter is not None:
             payload["filter"] = filter
@@ -118,6 +120,18 @@ class TradingHTTP(HTTPManager):
         res = await self._request(
             method="GET",
             path=Trading.GET_TRADE_HISTORY,
+            query=payload,
+        )
+        return res
+
+    async def get_trading_volume(
+        self,
+    ):
+        payload: dict[str, str | int | list[str] | float | bool] = {}
+
+        res = await self._request(
+            method="GET",
+            path=Trading.GET_TRADING_VOLUME,
             query=payload,
         )
         return res
