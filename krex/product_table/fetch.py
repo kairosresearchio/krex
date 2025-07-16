@@ -452,8 +452,8 @@ async def bitmex() -> pl.DataFrame:
         base = clean_symbol_and_strip_number(market["underlying"])
         quote = market["quoteCurrency"]
         price_precision = str(market["tickSize"])
-        size_precision = str(reverse_decimal_places(market["lotSize"]))
-        min_size = str(reverse_decimal_places(market["lotSize"]))
+        size_precision = str(market["lotSize"])
+        min_size = str(market["lotSize"])
         size_per_contract = str(market["multiplier"])
         min_notional = "0"
 
