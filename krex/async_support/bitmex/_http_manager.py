@@ -18,7 +18,7 @@ class HTTPManager:
     base_url: str = "https://www.bitmex.com"
     api_key: str | None = field(default=None)
     api_secret: str | None = field(default=None)
-    timeout: int = field(default=30)
+    timeout: int = field(default=5)
     logger: logging.Logger | None = field(default=None)
     session: httpx.AsyncClient | None = field(default=None, init=False)
     ptm: ProductTableManager | None = field(default=None, init=False)
@@ -30,8 +30,8 @@ class HTTPManager:
             timeout=self.timeout,
             http2=False,
             limits=httpx.Limits(
-                max_connections=100,
-                max_keepalive_connections=50,
+                max_connections=10,
+                max_keepalive_connections=10,
             ),
         )
         self._logger = self.logger or logging.getLogger(__name__)
