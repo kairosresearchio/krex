@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.12.0](https://github.com/kairosresearchio/krex/compare/v0.11.4...v0.12.0) (2025-07-16)
+
+
+### Features
+
+* **bitmex:** add rate limit ([d7ca231](https://github.com/kairosresearchio/krex/commit/d7ca23163e624c2d023798648d710bb88cbd7e8d))
+
+
+### Bug Fixes
+
+* **bitmex:** resolve sync ptm initialization issue ([d2a7430](https://github.com/kairosresearchio/krex/commit/d2a743091ab08987646dfbf45e314dc396304edf))
+
 ## [0.11.4](https://github.com/kairosresearchio/krex/compare/v0.11.3...v0.11.4) (2025-07-15)
 
 
