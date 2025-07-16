@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.1](https://github.com/kairosresearchio/krex/compare/v0.12.0...v0.12.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* **bitmex:** add connection pool ([29a6742](https://github.com/kairosresearchio/krex/commit/29a6742832d4ad6579cfcd9c04986e6cab1898dd))
+
 ## [0.12.0](https://github.com/kairosresearchio/krex/compare/v0.11.4...v0.12.0) (2025-07-16)
 
 
