@@ -33,8 +33,8 @@ class TradeHTTP(HTTPManager):
         positionIdx: int = None,
     ):
         payload = {
-            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
-            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
+            "category": self.ptm.get_exchange_type(Common.ZOOMEX, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.ZOOMEX, product_symbol),
             "side": side,
             "orderType": orderType,
             "qty": qty,
@@ -287,8 +287,8 @@ class TradeHTTP(HTTPManager):
         :param category: str (linear, option, spot, inverse)
         """
         payload = {
-            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
-            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
+            "category": self.ptm.get_exchange_type(Common.ZOOMEX, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.ZOOMEX, product_symbol),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -336,8 +336,8 @@ class TradeHTTP(HTTPManager):
         :param orderId: str
         """
         payload = {
-            "category": self.ptm.get_exchange_type(Common.BYBIT, product_symbol),
-            "symbol": self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol),
+            "category": self.ptm.get_exchange_type(Common.ZOOMEX, product_symbol),
+            "symbol": self.ptm.get_exchange_symbol(Common.ZOOMEX, product_symbol),
         }
         if orderId is not None:
             payload["orderId"] = orderId
@@ -361,8 +361,8 @@ class TradeHTTP(HTTPManager):
             "category": category,
         }
         if product_symbol is not None:
-            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
-            payload["category"] = self.ptm.get_exchange_type(Common.BYBIT, product_symbol)
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.ZOOMEX, product_symbol)
+            payload["category"] = self.ptm.get_exchange_type(Common.ZOOMEX, product_symbol)
 
         return await self._request(
             method="POST",
