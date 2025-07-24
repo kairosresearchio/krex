@@ -9,6 +9,7 @@ from .bingx.client import Client as BingXClient
 from .kucoin.client import Client as KuCoinClient
 from .ascendex.client import Client as AscendexClient
 from .bitmex.client import Client as BitmexClient
+from .zoomex.client import Client as ZoomexClient
 
 
 async def bybit(**kwargs):
@@ -81,6 +82,12 @@ async def bitmex(**kwargs):
     return client
 
 
+async def zoomex(**kwargs):
+    """Create and initialize a Zoomex client instance."""
+    client = ZoomexClient(**kwargs)
+    await client.async_init()
+    return client
+
 __all__ = [
     "bybit",
     "binance",
@@ -92,4 +99,5 @@ __all__ = [
     "kucoin",
     "ascendex",
     "bitmex",
+    "zoomex",
 ]

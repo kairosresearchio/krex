@@ -12,6 +12,7 @@ class Common(str, Enum):
     KUCOIN = "kucoin"
     ASCENDEX = "ascendex"
     BITMEX = "bitmex"
-
+    ZOOMEX = "zoomex"
+    
     def __str__(self) -> str:
         return self.value

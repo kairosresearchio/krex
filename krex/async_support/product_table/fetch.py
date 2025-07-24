@@ -668,3 +668,104 @@ async def bitmex() -> pl.DataFrame:
         )
 
     return pl.DataFrame(markets)
+
+async def zoomex() -> pl.DataFrame:
+    from ..zoomex._market_http import MarketHTTP
+
+    market_http = MarketHTTP()
+    await market_http.async_init()
+
+    markets = []
+    res_linear = await market_http.get_instruments_info(category="linear")
+    df_linear = to_dataframe(res_linear["result"]["list"]) if "list" in res_linear.get("result", {}) else pl.DataFrame()
+    for market in df_linear.iter_rows(named=True):
+        base = clean_symbol_and_strip_number(market["baseCoin"])
+        quote = market["quoteCoin"]
+
+        parts = market["symbol"].split("-")
+        if len(parts) >= 2:
+            expiry_str = parts[1]
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
+        else:
+            product_symbol = f"{base}-{quote}-SWAP"
+
+        if market["contractType"] == "LinearFutures":
+            product_type = "futures"
+        else:
+            product_type = "swap"
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.ZOOMEX,
+                exchange_symbol=market["symbol"],
+                product_symbol=product_symbol,
+                product_type=product_type,
+                exchange_type="linear",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=market["priceFilter"]["tickSize"],
+                size_precision=market["lotSizeFilter"]["qtyStep"],
+                min_size=market["lotSizeFilter"]["minOrderQty"],
+                min_notional=market["lotSizeFilter"].get("minNotionalValue", "0"),
+            )
+        )
+
+    res_inverse = await market_http.get_instruments_info(category="inverse")
+    df_inverse = (
+        to_dataframe(res_inverse["result"]["list"]) if "list" in res_inverse.get("result", {}) else pl.DataFrame()
+    )
+    for market in df_inverse.iter_rows(named=True):
+        base = clean_symbol_and_strip_number(market["baseCoin"])
+        quote = market["quoteCoin"]
+
+        parts = market["symbol"].split("-")
+        if len(parts) >= 2:
+            base, expiry_str = clean_symbol_and_strip_number(parts[0]), parts[1]
+            product_symbol = f"{base}-{quote}-{expiry_str}-SWAP"
+        else:
+            product_symbol = f"{base}-{quote}-SWAP"
+
+        if market["contractType"] == "LinearFutures":
+            product_type = "futures"
+        else:
+            product_type = "swap"
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.ZOOMEX,
+                exchange_symbol=market["symbol"],
+                product_symbol=product_symbol,
+                product_type=product_type,
+                exchange_type="inverse",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=market["priceFilter"]["tickSize"],
+                size_precision=market["lotSizeFilter"]["qtyStep"],
+                min_size=market["lotSizeFilter"]["minOrderQty"],
+            )
+        )
+
+    res_spot = await market_http.get_instruments_info(category="spot")
+    df_spot = to_dataframe(res_spot["result"]["list"]) if "list" in res_spot.get("result", {}) else pl.DataFrame()
+    for market in df_spot.iter_rows(named=True):
+        base = clean_symbol_and_strip_number(market["baseCoin"])
+        quote = market["quoteCoin"]
+        product_symbol = f"{base}-{quote}-SPOT"
+
+        markets.append(
+            MarketInfo(
+                exchange=Common.ZOOMEX,
+                exchange_symbol=market["symbol"],
+                product_symbol=product_symbol,
+                product_type="spot",
+                exchange_type="spot",
+                base_currency=base,
+                quote_currency=quote,
+                price_precision=market["priceFilter"]["tickSize"],
+                size_precision=market["lotSizeFilter"]["basePrecision"],
+                min_size=market["lotSizeFilter"]["minOrderQty"],
+                min_notional=market["lotSizeFilter"].get("minNotionalValue", "0"),
+            )
+        )
+    markets = [market.to_dict() for market in markets]
+    return pl.DataFrame(markets)
