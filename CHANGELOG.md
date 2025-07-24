@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/kairosresearchio/krex/compare/v0.12.2...v0.13.0) (2025-07-24)
+
+
+### Features
+
+* **zoomex:** add async funcs features ([57827bb](https://github.com/kairosresearchio/krex/commit/57827bbd2c9fbbacffb504013444f775f4ee175e))
+
 ## [0.12.2](https://github.com/kairosresearchio/krex/compare/v0.12.1...v0.12.2) (2025-07-16)
 
 
