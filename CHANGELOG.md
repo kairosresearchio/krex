@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://github.com/kairosresearchio/krex/compare/v0.13.0...v0.13.1) (2025-07-24)
+
+
+### Bug Fixes
+
+* **zoomex:** fix exchange name for trade funcs ([fd4c4ce](https://github.com/kairosresearchio/krex/commit/fd4c4cef56274d8629c506c0c859dd9ec7e67478))
+
 ## [0.13.0](https://github.com/kairosresearchio/krex/compare/v0.12.2...v0.13.0) (2025-07-24)
 
 
