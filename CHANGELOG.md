@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.0](https://github.com/kairosresearchio/krex/compare/v0.14.0...v0.15.0) (2025-07-29)
+
+
+### Features
+
+* **Async-Zoomex:** Zoomex add get_wallet_ballance ([04a02b8](https://github.com/kairosresearchio/krex/commit/04a02b81510b0fa647d89bbd2b6251a3f6dec566))
+* **Async-Zoomex:** Zoomex add get_wallet_ballance ([038b9bb](https://github.com/kairosresearchio/krex/commit/038b9bb5a7658798e60d2eba0fdb33f30ba2163a))
+
 ## [0.14.0](https://github.com/kairosresearchio/krex/compare/v0.13.1...v0.14.0) (2025-07-28)
 
 
