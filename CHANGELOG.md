@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.1](https://github.com/kairosresearchio/krex/compare/v0.15.0...v0.15.1) (2025-07-30)
+
+
+### Bug Fixes
+
+* **all:** add check session if closed ([ad3df3e](https://github.com/kairosresearchio/krex/commit/ad3df3e46f14cd01a4af79cd5a78071c73d1bc3b))
+
 ## [0.15.0](https://github.com/kairosresearchio/krex/compare/v0.14.0...v0.15.0) (2025-07-29)
 
 
