@@ -78,7 +78,7 @@ class HTTPManager:
         signed: bool = True,
         hash_path: str = None,
     ):
-        if not self.session:
+        if self.session is None or self.session.is_closed:
             await self.async_init()
 
         path = await self._resolve_path(path)

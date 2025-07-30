@@ -60,7 +60,7 @@ class HTTPManager:
         query: dict = None,
         signed: bool = True,
     ):
-        if not self.session:
+        if self.session is None or self.session.is_closed:
             await self.async_init()
 
         if signed:

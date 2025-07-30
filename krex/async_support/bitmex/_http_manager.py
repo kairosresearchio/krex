@@ -66,7 +66,8 @@ class HTTPManager:
         query: dict[str, str | int | list[str] | float | bool] | None = None,
         signed: bool = True,
     ):
-        assert self.session is not None
+        if self.session is None or self.session.is_closed:
+            await self.async_init()
 
         response = None
         try:

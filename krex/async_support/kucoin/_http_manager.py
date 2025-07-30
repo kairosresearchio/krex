@@ -78,7 +78,7 @@ class HTTPManager:
         signed: bool = True,
     ):
         """Make HTTP request to KuCoin API"""
-        if not self.session:
+        if self.session is None or self.session.is_closed:
             await self.async_init()
 
         # Prepare request data
