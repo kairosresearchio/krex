@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.2](https://github.com/kairosresearchio/krex/compare/v0.15.1...v0.15.2) (2025-08-02)
+
+
+### Bug Fixes
+
+* **bybit:** ptm need to add next page cursor to have all symbol ([9674f40](https://github.com/kairosresearchio/krex/commit/9674f40ccfc38a39b7e709edc8f7496b2420c75e))
+
 ## [0.15.1](https://github.com/kairosresearchio/krex/compare/v0.15.0...v0.15.1) (2025-07-30)
 
 
