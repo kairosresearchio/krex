@@ -12,6 +12,7 @@ class MarketHTTP(HTTPManager):
         status: str = None,
         baseCoin: str = None,
         limit: int = None,
+        cursor: str = None,
     ):
         """
         :param category: str (spot, linear, inverse, option)
@@ -19,6 +20,7 @@ class MarketHTTP(HTTPManager):
         :param status: str
         :param baseCoin: str
         :param limit: int
+        :param cursor: str
         """
         payload = {
             "category": category,
@@ -32,6 +34,8 @@ class MarketHTTP(HTTPManager):
             payload["baseCoin"] = baseCoin
         if limit is not None:
             payload["limit"] = limit
+        if cursor is not None:
+            payload["cursor"] = cursor
 
         res = await self._request(
             method="GET",
