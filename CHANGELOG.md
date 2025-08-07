@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.3](https://github.com/kairosresearchio/krex/compare/v0.15.2...v0.15.3) (2025-08-07)
+
+
+### Bug Fixes
+
+* **zoomex:** ptm add cursor ([925e95d](https://github.com/kairosresearchio/krex/commit/925e95dde3396026a6ab566374c47cbf1381e984))
+
 ## [0.15.2](https://github.com/kairosresearchio/krex/compare/v0.15.1...v0.15.2) (2025-08-02)
 
 
