@@ -685,8 +685,17 @@ async def zoomex() -> pl.DataFrame:
     await market_http.async_init()
 
     markets = []
-    res_linear = await market_http.get_instruments_info(category="linear")
-    df_linear = to_dataframe(res_linear["result"]["list"]) if "list" in res_linear.get("result", {}) else pl.DataFrame()
+    linear_data = []
+    cursor = None
+    while True:
+        res_linear = await market_http.get_instruments_info(category="linear", cursor=cursor)
+        linear_data.extend(res_linear["result"]["list"])
+        if res_linear["result"]["nextPageCursor"] == "":
+            break
+        cursor = res_linear["result"]["nextPageCursor"]
+
+    df_linear = to_dataframe(linear_data)
+    
     for market in df_linear.iter_rows(named=True):
         base = clean_symbol_and_strip_number(market["baseCoin"])
         quote = market["quoteCoin"]
