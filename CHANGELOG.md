@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.4](https://github.com/kairosresearchio/krex/compare/v0.15.3...v0.15.4) (2025-08-07)
+
+
+### Bug Fixes
+
+* **zoomex:** add get instrument info param ([d497910](https://github.com/kairosresearchio/krex/commit/d49791033c1ca8b5cbb7134f964c8ab9a567f78c))
+
 ## [0.15.3](https://github.com/kairosresearchio/krex/compare/v0.15.2...v0.15.3) (2025-08-07)
 
 
