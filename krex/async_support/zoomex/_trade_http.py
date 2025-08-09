@@ -1,3 +1,4 @@
+from itertools import product
 from ._http_manager import HTTPManager
 from .endpoints.trade import Trade
 from ...utils.common import Common
@@ -34,11 +35,15 @@ class TradeHTTP(HTTPManager):
     ):
         payload = {
             "category": self.ptm.get_exchange_type(Common.ZOOMEX, product_symbol),
-            "symbol": self.ptm.get_exchange_symbol(Common.ZOOMEX, product_symbol),
             "side": side,
             "orderType": orderType,
             "qty": qty,
         }
+        if product_symbol in ["BTC-USDT-SWAP", "ETH-USDT-SWAP", "SOL-USDT-SWAP", "GMT-USDT-SWAP"]:
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.ZOOMEX, product_symbol) + "-Perp"
+        else:
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.ZOOMEX, product_symbol)
+            
         if price is not None:
             payload["price"] = price
         if isLeverage is not None:
