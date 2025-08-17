@@ -13,7 +13,6 @@ class TradeHTTP(HTTPManager):
         sz: str,
         ccy: str = None,
         clOrdId: str = None,
-        tag: str = None,
         posSide: str = None,
         px: str = None,
         pxUsd: str = None,
@@ -33,7 +32,6 @@ class TradeHTTP(HTTPManager):
         :param sz: str
         :param ccy: str
         :param clOrdId: str
-        :param tag: str
         :param posSide: str
         :param px: str
         :param pxUsd: str
@@ -51,13 +49,12 @@ class TradeHTTP(HTTPManager):
             "side": side,
             "ordType": ordType,
             "sz": sz,
+            "tag": "29570c5e4c71BCDE",
         }
         if ccy is not None:
             payload["ccy"] = ccy
         if clOrdId is not None:
             payload["clOrdId"] = clOrdId
-        if tag is not None:
-            payload["tag"] = tag
         if posSide is not None:
             payload["posSide"] = posSide
         if px is not None:
@@ -464,6 +461,7 @@ class TradeHTTP(HTTPManager):
         payload = {
             "instId": self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
             "mgnMode": mgnMode,
+            "tag": "29570c5e4c71BCDE",
         }
         if posSide is not None:
             payload["posSide"] = posSide
