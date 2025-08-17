@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.7](https://github.com/kairosresearchio/krex/compare/v0.15.6...v0.15.7) (2025-08-17)
+
+
+### Bug Fixes
+
+* **ruff:** delete ruff check workflow ([503d448](https://github.com/kairosresearchio/krex/commit/503d44843aa85cbdbdd30728ff2342eae9402c7e))
+
 ## [0.15.6](https://github.com/kairosresearchio/krex/compare/v0.15.5...v0.15.6) (2025-08-09)
 
 
