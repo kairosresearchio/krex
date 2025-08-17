@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.6](https://github.com/kairosresearchio/krex/compare/v0.15.5...v0.15.6) (2025-08-09)
+
+
+### Bug Fixes
+
+* **zoomex:** add special cases for swap trading ([522389e](https://github.com/kairosresearchio/krex/commit/522389ebf3bb2b2d312605c933159f921ca6cdfb))
+
 ## [0.15.5](https://github.com/kairosresearchio/krex/compare/v0.15.4...v0.15.5) (2025-08-09)
 
 
