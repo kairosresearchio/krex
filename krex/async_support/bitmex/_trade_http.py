@@ -8,7 +8,7 @@ import json
 class TradeHTTP(HTTPManager):
     async def place_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         side: str,
         orderQty: int | None = None,
         ordType: str = "Limit",
@@ -76,7 +76,7 @@ class TradeHTTP(HTTPManager):
         assert self.ptm is not None
         payload: dict[str, str | int | list[str] | float | bool] = {}
 
-        payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
+        payload["symbol"] = exchange_symbol
         payload["side"] = side
         payload["ordType"] = ordType
 
@@ -116,13 +116,13 @@ class TradeHTTP(HTTPManager):
 
     async def place_market_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         side: str,
         orderQty: int,
         clOrdID: str | None = None,
     ):
         return await self.place_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side=side,
             orderQty=orderQty,
             ordType="Market",
@@ -131,12 +131,12 @@ class TradeHTTP(HTTPManager):
 
     async def place_market_buy_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         orderQty: int,
         clOrdID: str | None = None,
     ):
         return await self.place_market_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side="Buy",
             orderQty=orderQty,
             clOrdID=clOrdID,
@@ -144,12 +144,12 @@ class TradeHTTP(HTTPManager):
 
     async def place_market_sell_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         orderQty: int,
         clOrdID: str | None = None,
     ):
         return await self.place_market_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side="Sell",
             orderQty=orderQty,
             clOrdID=clOrdID,
@@ -157,7 +157,7 @@ class TradeHTTP(HTTPManager):
 
     async def place_limit_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         side: str,
         orderQty: int,
         price: float,
@@ -165,7 +165,7 @@ class TradeHTTP(HTTPManager):
         timeInForce: str = "GoodTillCancel",
     ):
         return await self.place_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side=side,
             orderQty=orderQty,
             ordType="Limit",
@@ -176,13 +176,13 @@ class TradeHTTP(HTTPManager):
 
     async def place_limit_buy_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         orderQty: int,
         price: float,
         clOrdID: str | None = None,
     ):
         return await self.place_limit_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side="Buy",
             orderQty=orderQty,
             price=price,
@@ -191,13 +191,13 @@ class TradeHTTP(HTTPManager):
 
     async def place_limit_sell_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         orderQty: int,
         price: float,
         clOrdID: str | None = None,
     ):
         return await self.place_limit_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side="Sell",
             orderQty=orderQty,
             price=price,
@@ -206,7 +206,7 @@ class TradeHTTP(HTTPManager):
 
     async def place_post_only_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         side: str,
         orderQty: int,
         price: float,
@@ -214,7 +214,7 @@ class TradeHTTP(HTTPManager):
         execInst: str = "ParticipateDoNotInitiate",
     ):
         return await self.place_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side=side,
             orderQty=orderQty,
             ordType="Limit",
@@ -225,13 +225,13 @@ class TradeHTTP(HTTPManager):
 
     async def place_post_only_buy_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         orderQty: int,
         price: float,
         clOrdID: str | None = None,
     ):
         return await self.place_post_only_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side="Buy",
             orderQty=orderQty,
             price=price,
@@ -240,13 +240,13 @@ class TradeHTTP(HTTPManager):
 
     async def place_post_only_sell_order(
         self,
-        product_symbol: str,
+        exchange_symbol: str,
         orderQty: int,
         price: float,
         clOrdID: str | None = None,
     ):
         return await self.place_post_only_order(
-            product_symbol=product_symbol,
+            exchange_symbol=exchange_symbol,
             side="Sell",
             orderQty=orderQty,
             price=price,
@@ -257,7 +257,7 @@ class TradeHTTP(HTTPManager):
         self,
         orderID: str | None = None,
         origClOrdID: str | None = None,
-        product_symbol: str | None = None,
+        exchange_symbol: str | None = None,
         clOrdID: str | None = None,
         leavesQty: int | None = None,
         orderQty: int | None = None,
@@ -270,7 +270,7 @@ class TradeHTTP(HTTPManager):
         """
         :param orderID: str - Order ID to amend (required if origClOrdID not provided)
         :param origClOrdID: str - Client Order ID to amend (required if orderID not provided)
-        :param product_symbol: str - Instrument symbol e.g. 'XBTUSD'
+        :param exchange_symbol: str - Instrument symbol e.g. 'XBTUSD'
         :param clOrdID: str - Optional new Client Order ID, requires origClOrdID
         :param leavesQty: int - Optional leaves quantity in units of the instrument. Useful for amending partially filled orders
         :param orderQty: int - Optional order quantity in units of the instrument
@@ -289,9 +289,8 @@ class TradeHTTP(HTTPManager):
             payload["orderID"] = orderID
         if origClOrdID is not None:
             payload["origClOrdID"] = origClOrdID
-        if product_symbol is not None:
-            assert self.ptm is not None
-            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
+        if exchange_symbol is not None:
+            payload["symbol"] = exchange_symbol
         if clOrdID is not None:
             payload["clOrdID"] = clOrdID
         if leavesQty is not None:
@@ -349,14 +348,14 @@ class TradeHTTP(HTTPManager):
 
     async def cancel_all_orders(
         self,
-        product_symbol: str | None = None,
+        exchange_symbol: str | None = None,
         filter: dict | None = None,
         targetAccountId: int | None = None,
         targetAccountIds: list | None = None,
         text: str | None = None,
     ):
         """
-        :param product_symbol: str
+        :param exchange_symbol: str
         :param filter: dict (Optional filter for cancellation. Use to only cancel some orders, e.g. {"side": "Buy"}.)
         :param targetAccountId: int
         :param targetAccountIds: list
@@ -364,9 +363,8 @@ class TradeHTTP(HTTPManager):
         """
         payload: dict[str, str | int | list[str] | float | bool] = {}
 
-        if product_symbol is not None:
-            assert self.ptm is not None
-            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
+        if exchange_symbol is not None:
+            payload["symbol"] = exchange_symbol
         if filter is not None:
             payload["filter"] = json.dumps(filter)
         if targetAccountId is not None:
@@ -385,7 +383,7 @@ class TradeHTTP(HTTPManager):
 
     async def get_order(
         self,
-        product_symbol: str | None = None,
+        exchange_symbol: str | None = None,
         targetAccountId: int | None = None,
         filter: str | None = None,
         columns: str | None = None,
@@ -398,7 +396,7 @@ class TradeHTTP(HTTPManager):
         targetAccountIds_array: list | None = None,
     ):
         """
-        :param product_symbol: str
+        :param exchange_symbol: str
         :param targetAccountId: int
         :param filter: str
         :param columns: str
@@ -412,9 +410,8 @@ class TradeHTTP(HTTPManager):
         """
         payload: dict[str, str | int | list[str] | float | bool] = {}
 
-        if product_symbol is not None:
-            assert self.ptm is not None
-            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BITMEX, product_symbol)
+        if exchange_symbol is not None:
+            payload["symbol"] = exchange_symbol
         if targetAccountId is not None:
             payload["targetAccountId"] = targetAccountId
         if filter is not None:
