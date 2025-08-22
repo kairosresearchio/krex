@@ -73,7 +73,6 @@ class TradeHTTP(HTTPManager):
         :param text: str - Order annotation
         :param targetAccountId: int - Target account ID
         """
-        assert self.ptm is not None
         payload: dict[str, str | int | list[str] | float | bool] = {}
 
         payload["symbol"] = exchange_symbol
