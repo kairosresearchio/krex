@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.8](https://github.com/kairosresearchio/krex/compare/v0.15.7...v0.15.8) (2025-08-22)
+
+
+### Bug Fixes
+
+* change prod symbol to exchange symbol ([15c2635](https://github.com/kairosresearchio/krex/commit/15c2635f62b2769ffba4517b0091269d9088f5cf))
+
 ## [0.15.7](https://github.com/kairosresearchio/krex/compare/v0.15.6...v0.15.7) (2025-08-17)
 
 
