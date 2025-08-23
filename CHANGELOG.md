@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.10](https://github.com/kairosresearchio/krex/compare/v0.15.9...v0.15.10) (2025-08-23)
+
+
+### Bug Fixes
+
+* **revert:** revert ([c8da811](https://github.com/kairosresearchio/krex/commit/c8da811d950ee707445cc32fb8e183f1389c859e))
+
 ## [0.15.9](https://github.com/kairosresearchio/krex/compare/v0.15.8...v0.15.9) (2025-08-22)
 
 
