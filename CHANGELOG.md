@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.9](https://github.com/kairosresearchio/krex/compare/v0.15.8...v0.15.9) (2025-08-22)
+
+
+### Bug Fixes
+
+* **ptm:** trade remove assert ptm ([a5b61ba](https://github.com/kairosresearchio/krex/commit/a5b61ba1e41ae7ff426356e9a02ae5064f186724))
+
 ## [0.15.8](https://github.com/kairosresearchio/krex/compare/v0.15.7...v0.15.8) (2025-08-22)
 
 
