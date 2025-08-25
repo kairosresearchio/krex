@@ -113,7 +113,7 @@ class HTTPManager:
                 error_message = data.get("retMsg", "Unknown error")
                 raise FailedRequestError(
                     request=f"{method.upper()} {url} | Body: {query}",
-                    message=f"Bybit API Error: [{code}] {error_message}",
+                    message=f"Zoomex API Error: [{code}] {error_message}",
                     status_code=response.status_code,
                     time=timestamp,
                     resp_headers=response.headers,
