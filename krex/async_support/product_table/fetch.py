@@ -724,7 +724,7 @@ async def zoomex() -> pl.DataFrame:
                 price_precision=market["priceFilter"]["tickSize"],
                 size_precision=market["lotSizeFilter"]["qtyStep"],
                 min_size=market["lotSizeFilter"]["minOrderQty"],
-                min_notional=market["lotSizeFilter"].get("minNotionalValue", "0"),
+                min_notional="5",
             )
         )
 
