@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/kairosresearchio/krex/compare/v0.15.11...v0.16.0) (2025-09-09)
+
+
+### Features
+
+* **bybit-&-okx:** add get risk margin ratio ([999fce9](https://github.com/kairosresearchio/krex/commit/999fce971ddcc78ec118c22bad8bb1dea776c44b))
+
 ## [0.15.11](https://github.com/kairosresearchio/krex/compare/v0.15.10...v0.15.11) (2025-08-25)
 
 
