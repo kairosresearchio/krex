@@ -6,8 +6,8 @@ async def main():
     client = await krex.bybit()
 
     try:
-        result = await client.get_instruments_info(cursor="first%3D1000000BABYDOGEUSDT%26last%3DSPECUSDT")
-        print(result)
+        # result = await client.get_instruments_info(cursor="first%3D1000000BABYDOGEUSDT%26last%3DSPECUSDT")
+        # print(result)
 
         # result = await client.get_kline(
         #     product_symbol="BTC-USDT-SPOT",
@@ -33,6 +33,12 @@ async def main():
         #     limit=5,
         # )
         # print(result)
+
+        result = await client.get_risk_limit(
+            category = "linear",
+            product_symbol="BTC-USDT-SWAP"
+        )
+        print(result)
 
     except Exception as e:
         print(f"Error: {e}")

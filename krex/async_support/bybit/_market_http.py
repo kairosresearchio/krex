@@ -183,3 +183,29 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
+    
+    async def get_risk_limit(
+        self,
+        category: str = "linear",
+        product_symbol: str = None,
+        cursor: str = None,
+    ):
+        """
+        :param category: str (linear, inverse)
+        :param symbol: str
+        :param cursor: int
+        """
+        payload = {
+            "category": category
+        }
+
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BYBIT, product_symbol)
+
+        res = await self._request(
+            method="GET",
+            path=Market.GET_RISK_MARKET,
+            query=payload,
+            signed=False,
+        )
+        return res

@@ -84,3 +84,42 @@ class PublicHTTP(HTTPManager):
             signed=False,
         )
         return res
+
+    async def get_position_tiers(
+        self,
+        instType: str = "SWAP",
+        tdMode: str = "isolated",
+        instFamily: str = None,
+        product_symbol: str = None,
+        ccy: str = None,
+        tier: str = None
+    ):
+        """
+        :param instType: str
+        :param tdMode: str
+        :param instFamily: str
+        :param product_symbol: str
+        :param ccy: str
+        :param tier: str
+        """
+        payload = {
+            "instType": instType,
+            "tdMode": tdMode
+        }
+        if instFamily is not None:
+            payload["instFamily"] = instFamily
+        if product_symbol is not None:
+            payload["instId"] = self.ptm.get_exchange_symbol(Common.OKX, product_symbol),
+        if ccy is not None:
+            payload["ccy"] = ccy
+        if tier is not None:
+            payload["tier"] = tier
+
+        res = await self._request(
+            method="GET",
+            path=Public.GET_POSITION_TIERS,
+            query=payload,
+            signed=False,
+        )
+        return res
+
