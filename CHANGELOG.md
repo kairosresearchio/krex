@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://github.com/kairosresearchio/krex/compare/v0.16.0...v0.17.0) (2025-09-10)
+
+
+### Features
+
+* **Binance-Async:** add get spot market prices ([905c78f](https://github.com/kairosresearchio/krex/commit/905c78f9874111dd2887a53def64952b04c6cd57))
+
 ## [0.16.0](https://github.com/kairosresearchio/krex/compare/v0.15.11...v0.16.0) (2025-09-09)
 
 
