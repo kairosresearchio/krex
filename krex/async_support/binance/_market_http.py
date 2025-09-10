@@ -69,6 +69,30 @@ class MarketHTTP(HTTPManager):
             signed=False,
         )
         return res
+    
+    async def get_spot_price(
+        self,
+        product_symbol: str = None,
+        product_symbols: list = None,
+    ):
+        """
+        :param product_symbol: str
+        :param product_symbols: list
+        """
+        payload = {}
+        if product_symbol is not None:
+            payload["symbol"] = self.ptm.get_exchange_symbol(Common.BINANCE, product_symbol)
+        if product_symbols is not None:
+            formatted_symbols = [self.ptm.get_exchange_symbol(Common.BINANCE, symbol) for symbol in product_symbols]
+            payload["symbols"] = str(formatted_symbols).replace("'", '"')
+
+        res = await self._request(
+            method="GET",
+            path=SpotMarket.PRICE,
+            query=payload,
+            signed=False,
+        )
+        return res
 
     async def get_kline(
         self,
