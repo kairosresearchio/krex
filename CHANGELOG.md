@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.17.0](https://github.com/kairosresearchio/krex/compare/v0.16.0...v0.17.0) (2025-09-10)
+
+
+### Features
+
+* **Binance-Async:** add get spot market prices ([905c78f](https://github.com/kairosresearchio/krex/commit/905c78f9874111dd2887a53def64952b04c6cd57))
+
+## [0.16.0](https://github.com/kairosresearchio/krex/compare/v0.15.11...v0.16.0) (2025-09-09)
+
+
+### Features
+
+* **bybit-&-okx:** add get risk margin ratio ([999fce9](https://github.com/kairosresearchio/krex/commit/999fce971ddcc78ec118c22bad8bb1dea776c44b))
+
+## [0.15.11](https://github.com/kairosresearchio/krex/compare/v0.15.10...v0.15.11) (2025-08-25)
+
+
+### Bug Fixes
+
+* **zoomex:** http manager error called bybit ([f82296a](https://github.com/kairosresearchio/krex/commit/f82296a4ace1609ee0178db38f108cca333343d4))
+* **zoomex:** ptm add min notional ([b64f3d3](https://github.com/kairosresearchio/krex/commit/b64f3d350d4f1c1648c314f76f206f5ee8da7112))
+
 ## [0.15.10](https://github.com/kairosresearchio/krex/compare/v0.15.9...v0.15.10) (2025-08-23)
 
 

@@ -8,6 +8,7 @@ class Market(str, Enum):
     GET_TICKERS = "/v5/market/tickers"
     GET_FUNDING_RATE_HISTORY = "/v5/market/funding/history"
     GET_PUBLIC_TRADE_HISTORY = "/v5/market/recent-trade"
+    GET_RISK_MARKET = "/v5/market/risk-limit"
 
     def __str__(self) -> str:
         return self.value
