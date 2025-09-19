@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.1](https://github.com/kairosresearchio/krex/compare/v0.17.0...v0.17.1) (2025-09-19)
+
+
+### Bug Fixes
+
+* **http:** accelerate the ssl cipher ([054f85b](https://github.com/kairosresearchio/krex/commit/054f85bf4f1826aa735310f3499edb7f9692b3f2))
+
 ## [0.17.0](https://github.com/kairosresearchio/krex/compare/v0.16.0...v0.17.0) (2025-09-10)
 
 
