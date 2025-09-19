@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/kairosresearchio/krex/compare/v0.18.0...v0.19.0) (2025-09-19)
+
+
+### Features
+
+* **http:** cipher accelerate ([54b2602](https://github.com/kairosresearchio/krex/commit/54b260285d48e31c5f8c7f8008c7ba77d992272b))
+
 ## [0.18.0](https://github.com/kairosresearchio/krex/compare/v0.17.1...v0.18.0) (2025-09-19)
 
 
