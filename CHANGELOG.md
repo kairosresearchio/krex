@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/kairosresearchio/krex/compare/v0.17.1...v0.18.0) (2025-09-19)
+
+
+### Features
+
+* **http:** ssl context accelerate ([544f7a3](https://github.com/kairosresearchio/krex/commit/544f7a387eb88cf5e7a9400bfdbcfe30d05bad7d))
+
 ## [0.17.1](https://github.com/kairosresearchio/krex/compare/v0.17.0...v0.17.1) (2025-09-19)
 
 
