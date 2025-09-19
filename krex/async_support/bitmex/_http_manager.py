@@ -13,7 +13,7 @@ from krex.utils.errors import FailedRequestError
 from krex.utils.helpers import generate_timestamp
 from krex.async_support.product_table.manager import ProductTableManager
 
-
+ 
 @dataclass
 class HTTPManager:
     base_url: str = "https://www.bitmex.com"
