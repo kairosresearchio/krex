@@ -2,6 +2,7 @@ import json
 import hmac
 import base64
 import logging
+import ssl
 import httpx
 from dataclasses import dataclass, field
 from ..product_table.manager import ProductTableManager
@@ -64,9 +65,12 @@ class HTTPManager:
     session: httpx.AsyncClient = field(init=False)
     ptm: ProductTableManager = field(init=False)
     preload_product_table: bool = field(default=True)
+    context = ssl.create_default_context()
+    context.set_ciphers('ECDHE-RSA-AES128-GCM-SHA256')
+
 
     async def async_init(self):
-        self.session = httpx.AsyncClient(timeout=self.timeout)
+        self.session = httpx.AsyncClient(timeout=self.timeout, verify=self.context)
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
             self.ptm = await ProductTableManager.get_instance(Common.OKX)

@@ -2,6 +2,7 @@ import hmac
 import hashlib
 import json
 import time
+import ssl
 import httpx
 import logging
 from dataclasses import dataclass, field
@@ -23,12 +24,16 @@ class HTTPManager:
     session: httpx.AsyncClient | None = field(default=None, init=False)
     ptm: ProductTableManager | None = field(default=None, init=False)
     preload_product_table: bool = field(default=True)
-    last_rate_limit_info: Optional[Dict[str, Any]] = field(default=None, init=False)
+    last_rate_limit_info: Optional[Dict[str, Any]] = field(default=None, init=False)  
+    context = ssl.create_default_context()
+    context.set_ciphers('ECDHE-RSA-AES128-GCM-SHA256')
+
 
     async def async_init(self):
         self.session = httpx.AsyncClient(
             timeout=self.timeout,
             http2=False,
+            verify=self.context,
             limits=httpx.Limits(
                 max_connections=10,
                 max_keepalive_connections=10,
