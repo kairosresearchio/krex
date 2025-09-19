@@ -66,7 +66,7 @@ class HTTPManager:
     ptm: ProductTableManager = field(init=False)
     preload_product_table: bool = field(default=True)
     context = ssl.create_default_context()
-    context.set_ciphers('ECDHE-RSA-AES128-GCM-SHA256')
+    context.set_ciphers('ECDHE-ECDSA-CHACHA20-POLY1305')
 
 
     async def async_init(self):

@@ -26,7 +26,7 @@ class HTTPManager:
     preload_product_table: bool = field(default=True)
     last_rate_limit_info: Optional[Dict[str, Any]] = field(default=None, init=False)  
     context = ssl.create_default_context()
-    context.set_ciphers('ECDHE-RSA-AES128-GCM-SHA256')
+    context.set_ciphers('ECDHE-ECDSA-CHACHA20-POLY1305')
 
 
     async def async_init(self):
