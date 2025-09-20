@@ -3,6 +3,7 @@ import hmac
 import base64
 import logging
 import ssl
+import socket
 import httpx
 from dataclasses import dataclass, field
 from ..product_table.manager import ProductTableManager
@@ -70,7 +71,23 @@ class HTTPManager:
 
 
     async def async_init(self):
-        self.session = httpx.AsyncClient(timeout=self.timeout, verify=self.context)
+        # Build socket options for TCP optimization (only basic options for compatibility)
+        socket_options = [
+            (socket.IPPROTO_TCP, socket.TCP_NODELAY, 1),  # Disable Nagle's algorithm
+        ]
+
+        # Create custom transport with socket configuration
+        transport = httpx.AsyncHTTPTransport(
+            socket_options=socket_options,
+            # Additional transport settings for performance
+            retries=0,  # Handle retries at application level
+        )
+
+        self.session = httpx.AsyncClient(
+            timeout=self.timeout,
+            verify=self.context,
+            transport=transport
+        )
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
             self.ptm = await ProductTableManager.get_instance(Common.OKX)
