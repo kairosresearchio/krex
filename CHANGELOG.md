@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/kairosresearchio/krex/compare/v0.19.0...v0.20.0) (2025-09-20)
+
+
+### Features
+
+* **http:** disable Nagle algo ([2fc6899](https://github.com/kairosresearchio/krex/commit/2fc6899fad0531f84c5a22cf5c0f97592407d148))
+
 ## [0.19.0](https://github.com/kairosresearchio/krex/compare/v0.18.0...v0.19.0) (2025-09-19)
 
 
