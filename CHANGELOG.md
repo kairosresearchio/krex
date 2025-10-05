@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://github.com/kairosresearchio/krex/compare/v0.20.0...v0.21.0) (2025-10-05)
+
+
+### Features
+
+* **bitmart:** accelerate http ([c5f4c2a](https://github.com/kairosresearchio/krex/commit/c5f4c2a5eb6e137d6e2d2e3fca6396ffb7f90307))
+
 ## [0.20.0](https://github.com/kairosresearchio/krex/compare/v0.19.0...v0.20.0) (2025-09-20)
 
 
