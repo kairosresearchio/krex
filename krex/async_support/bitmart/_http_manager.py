@@ -1,6 +1,7 @@
 import hmac
 import json
 import logging
+import ssl
 import httpx
 import hashlib
 from dataclasses import dataclass, field
@@ -44,6 +45,10 @@ class HTTPManager:
     session: httpx.AsyncClient = field(init=False)
     ptm: ProductTableManager = field(init=False)
     preload_product_table: bool = field(default=True)
+    institutional: bool = field(default=False)
+    context = ssl.create_default_context()
+    context.set_ciphers('ECDHE-ECDSA-CHACHA20-POLY1305')
+       
 
     api_map = {
         "https://api-cloud.bitmart.com": {
@@ -56,16 +61,27 @@ class HTTPManager:
             FuturesMarket,
             FuturesAccount,
         },  # v2 API
+        "https://api-contract-futures-v2.bitmart.com": {
+            FuturesTrade,
+            FuturesMarket,
+            FuturesAccount,
+        },  # institutional API
     }
 
     async def async_init(self):
-        self.session = httpx.AsyncClient(timeout=self.timeout)
+        self.session = httpx.AsyncClient(
+            timeout=self.timeout,
+            verify=self.context,
+        )
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
             self.ptm = await ProductTableManager.get_instance(Common.BITMART)
         return self
 
     def _get_base_url(self, path):
+        if self.institutional:
+            return "https://api-contract-futures-v2.bitmart.com"
+        
         for base_url, enums in self.api_map.items():
             if type(path) in enums:
                 return base_url
