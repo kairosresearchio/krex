@@ -596,7 +596,7 @@ wheels = [
 
 [[package]]
 name = "krex"
-version = "0.18.0"
+version = "0.21.0"
 source = { editable = "." }
 dependencies = [
     { name = "eth-account" },

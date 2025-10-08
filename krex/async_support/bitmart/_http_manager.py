@@ -1,7 +1,6 @@
 import hmac
 import json
 import logging
-import ssl
 import httpx
 import hashlib
 from dataclasses import dataclass, field
@@ -45,10 +44,6 @@ class HTTPManager:
     session: httpx.AsyncClient = field(init=False)
     ptm: ProductTableManager = field(init=False)
     preload_product_table: bool = field(default=True)
-    institutional: bool = field(default=False)
-    context = ssl.create_default_context()
-    context.set_ciphers('ECDHE-ECDSA-CHACHA20-POLY1305')
-       
 
     api_map = {
         "https://api-cloud.bitmart.com": {
@@ -61,27 +56,16 @@ class HTTPManager:
             FuturesMarket,
             FuturesAccount,
         },  # v2 API
-        "https://api-contract-futures-v2.bitmart.com": {
-            FuturesTrade,
-            FuturesMarket,
-            FuturesAccount,
-        },  # institutional API
     }
 
     async def async_init(self):
-        self.session = httpx.AsyncClient(
-            timeout=self.timeout,
-            verify=self.context,
-        )
+        self.session = httpx.AsyncClient(timeout=self.timeout)
         self._logger = self.logger or logging.getLogger(__name__)
         if self.preload_product_table:
             self.ptm = await ProductTableManager.get_instance(Common.BITMART)
         return self
 
     def _get_base_url(self, path):
-        if self.institutional:
-            return "https://api-contract-futures-v2.bitmart.com"
-        
         for base_url, enums in self.api_map.items():
             if type(path) in enums:
                 return base_url
@@ -112,7 +96,9 @@ class HTTPManager:
         if signed:
             if not (self.api_key and self.api_secret and self.memo):
                 raise ValueError("Signed request requires API Key and Secret and Memo.")
-            sign = sign_message(timestamp, self.memo, json.dumps(query), self.api_secret)
+            # For GET requests, body should be empty string; for POST, use JSON string without spaces
+            body = "" if method.upper() == "GET" else json.dumps(query if query else {}, separators=(',', ':'))
+            sign = sign_message(timestamp, self.memo, body, self.api_secret)
             headers = get_header(self.api_key, sign, timestamp, self.memo)
         else:
             headers = get_header_no_sign()
@@ -121,9 +107,10 @@ class HTTPManager:
             if method.upper() == "GET":
                 response = await self.session.get(url, headers=headers)
             elif method.upper() == "POST":
+                # Use data instead of json to ensure exact body matches signature
                 response = await self.session.post(
                     url,
-                    json=query if query else {},
+                    data=body,
                     headers=headers,
                 )
             else:
