@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/kairosresearchio/krex/compare/v0.21.0...v0.22.0) (2025-10-08)
+
+
+### Features
+
+* **bitmart:** http manager fix ([519b0af](https://github.com/kairosresearchio/krex/commit/519b0afe3d6c94eb3da9ba2b98d3e402bd609767))
+
 ## [0.21.0](https://github.com/kairosresearchio/krex/compare/v0.20.0...v0.21.0) (2025-10-05)
 
 
