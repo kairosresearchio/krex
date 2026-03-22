@@ -10,7 +10,7 @@ from .utils.jupyter_helper import auto_apply_nest_asyncio
 # Import exchange client classes and create callable functions
 from .bybit.client import Client as BybitClient
 from .binance.client import Client as BinanceClient
-from .okx.client import Client as OKXClient
+from .okx import Client as OKXClient
 from .bitmart.client import Client as BitmartClient
 from .gateio.client import Client as GateioClient
 from .bitmex.client import Client as BitmexClient
